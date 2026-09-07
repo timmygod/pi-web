@@ -15,8 +15,9 @@ const SOURCE_LABELS = {
 
 // Only prompt templates and skills expand into a normal agent turn over the
 // headless RPC worker. Extension commands drive pi's TUI via
-// extension_ui_request events and never emit agent_end, so sending one leaves
-// the session stuck "running" forever. They are excluded from the palette.
+// extension_ui_request events, which remote Pi Web cannot answer interactively;
+// the worker cancels those requests after a timeout, so they are excluded from
+// the palette rather than offering a command that cannot complete remotely.
 const PALETTE_SOURCES = new Set(['prompt', 'skill']);
 
 export function isPaletteCommand(cmd) {

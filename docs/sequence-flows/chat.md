@@ -179,7 +179,9 @@ The `consume()` goroutine reads JSONL lines from `pi`'s stdout:
 {"type":"response","id":"req-1","success":true}
 ```
 
-It matches by `id` and delivers to the waiting `pending` channel. The worker then updates its status to `idle`.
+It matches by `id` and delivers to the waiting `pending` channel. The prompt
+acknowledgement only confirms that Pi accepted the command; the worker remains
+`running` until the later `agent_settled` event.
 
 ### 6. Streaming Events
 
@@ -191,9 +193,10 @@ While the AI is generating, `pi` may emit stream events:
 {"type":"message_end"}
 {"type":"turn_end"}
 {"type":"agent_end"}
+{"type":"agent_settled"}
 ```
 
-These update `lastStreamActivity` so `Status()` continues to report `running` until the stream completes.
+These update `lastStreamActivity` so `Status()` continues to report `running` until the complete agent run settles. Pi can emit `agent_end` before post-run overflow recovery, automatic compaction, retries, or queued continuations; the worker therefore transitions to `idle` only on `agent_settled`.
 
 ### 7. Error Handling
 
@@ -205,6 +208,13 @@ These update `lastStreamActivity` so `Status()` continues to report `running` un
 | Session not found | 404 `{"error": "not found"}` |
 | Chat disabled | 409 `{"error": "This session can be viewed, but chat is disabled because its working directory no longer exists."}` |
 | RPC failure | 500 `{"error": "…"}` |
+
+Remote workers have no TUI for answering interactive Pi extension requests (for
+example, a permission confirmation), so `select`, `confirm`, `input`, and
+`editor` requests are automatically sent a cancelled response after 30 seconds.
+Normal `agent_settled` runs cancel any outstanding UI-request timers. Long-running
+agent runs are not terminated by a global wall-clock limit; users can cancel them
+explicitly when needed.
 
 ### 8. Worker Lifecycle
 

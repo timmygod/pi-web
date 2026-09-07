@@ -37,7 +37,13 @@ type piRPCWorker struct {
 	lastStreamActivity   atomic.Int64 // unix nanos; stream/turn events keep worker visually running
 	streamSink           StreamEventSink
 	streamPreview        *streamPreviewAccumulator
+	uiTimers             map[string]*time.Timer
 }
+
+// Remote workers have no interactive TUI to answer Pi extension UI requests.
+// A permission/confirmation prompt that is not answered must therefore be
+// cancelled instead of leaving the RPC session running forever.
+var extensionUIRequestTimeout = 30 * time.Second
 
 func (w *piRPCWorker) touch() {
 	w.lastActive.Store(time.Now().UnixNano())
@@ -90,6 +96,7 @@ func NewPiWorkerWithStream(sessionPath string, streamSink StreamEventSink) (work
 		stderrBuf:     &stderrBuf,
 		streamSink:    streamSink,
 		streamPreview: &streamPreviewAccumulator{},
+		uiTimers:      make(map[string]*time.Timer),
 	}
 	if err := cmd.Start(); err != nil {
 		return nil, err
@@ -326,6 +333,12 @@ func (w *piRPCWorker) Status() workers.WorkerStatus {
 }
 
 func (w *piRPCWorker) Close() error {
+	w.mu.Lock()
+	for id, timer := range w.uiTimers {
+		timer.Stop()
+		delete(w.uiTimers, id)
+	}
+	w.mu.Unlock()
 	if w.stdin != nil {
 		_ = w.stdin.Close()
 	}
@@ -432,11 +445,24 @@ func (w *piRPCWorker) handleRPCLine(line string) {
 		w.noteStreamActivity()
 		w.completeStreamPreview()
 	case "agent_end":
+		// Pi emits agent_end at the end of each low-level attempt. The
+		// session may still be compacting, retrying an overflow, or
+		// continuing queued messages after this event. Keep the worker
+		// running until agent_settled, which is the authoritative end of
+		// the complete run.
+		w.completeStreamPreview()
+		w.noteStreamActivity()
+	case "agent_settled":
+		// agent_settled is emitted only after retries, auto-compaction, and
+		// queued continuations have finished.
 		w.completeStreamPreview()
 		w.mu.Lock()
 		w.status = workers.WorkerStatus{State: workers.WorkerStateIdle}
 		w.mu.Unlock()
+		w.clearExtensionUITimers()
 		w.lastStreamActivity.Store(0)
+	case "extension_ui_request":
+		w.handleExtensionUIRequest(line)
 	case "thinking_level_changed":
 		if meta.Level != "" {
 			w.mu.Lock()
@@ -493,6 +519,67 @@ func (w *piRPCWorker) setError(err error) {
 		delete(w.pending, id)
 		ch <- response{ID: id, Type: "response", Success: false, Error: err.Error()}
 	}
+	for id, timer := range w.uiTimers {
+		timer.Stop()
+		delete(w.uiTimers, id)
+	}
+}
+
+func (w *piRPCWorker) clearExtensionUITimers() {
+	w.mu.Lock()
+	for id, timer := range w.uiTimers {
+		timer.Stop()
+		delete(w.uiTimers, id)
+	}
+	w.mu.Unlock()
+}
+
+func (w *piRPCWorker) handleExtensionUIRequest(line string) {
+	var request struct {
+		ID     string `json:"id"`
+		Method string `json:"method"`
+	}
+	if err := json.Unmarshal([]byte(line), &request); err != nil || request.ID == "" {
+		return
+	}
+	// notify/status/widget/title/editor-text are fire-and-forget RPC messages.
+	// Interactive methods need a response; remote Pi Web has no UI surface for
+	// them, so cancel them after a bounded grace period.
+	switch request.Method {
+	case "select", "confirm", "input", "editor":
+	default:
+		return
+	}
+
+	timer := time.AfterFunc(extensionUIRequestTimeout, func() {
+		w.mu.Lock()
+		if current := w.uiTimers[request.ID]; current == nil {
+			w.mu.Unlock()
+			return
+		}
+		delete(w.uiTimers, request.ID)
+		w.mu.Unlock()
+
+		w.writeMu.Lock()
+		err := WriteCommand(w.stdin, map[string]any{
+			"type":      "extension_ui_response",
+			"id":        request.ID,
+			"cancelled": true,
+		})
+		w.writeMu.Unlock()
+		if err != nil {
+			w.setError(fmt.Errorf("extension UI timeout response failed: %w", err))
+		}
+	})
+	w.mu.Lock()
+	if w.uiTimers == nil {
+		w.uiTimers = make(map[string]*time.Timer)
+	}
+	if old := w.uiTimers[request.ID]; old != nil {
+		old.Stop()
+	}
+	w.uiTimers[request.ID] = timer
+	w.mu.Unlock()
 }
 
 func (w *piRPCWorker) withStderr(err error) error {

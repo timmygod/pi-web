@@ -3,6 +3,7 @@ package rpc
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"io"
 	"strings"
 	"testing"
@@ -43,7 +44,7 @@ func TestStatusReportsRunningDuringRecentStreamActivity(t *testing.T) {
 	}
 }
 
-func TestStatusReturnsIdleAfterAgentEnd(t *testing.T) {
+func TestStatusStaysRunningAfterAgentEndUntilSettled(t *testing.T) {
 	w := &piRPCWorker{
 		status:  workers.WorkerStatus{State: workers.WorkerStateRunning},
 		pending: make(map[string]chan response),
@@ -52,8 +53,55 @@ func TestStatusReturnsIdleAfterAgentEnd(t *testing.T) {
 	w.handleRPCLine(`{"type":"message_update","assistantMessageEvent":{"type":"text_delta","delta":"hello"}}`)
 	w.handleRPCLine(`{"type":"agent_end"}`)
 
+	if got := w.Status(); got.State != workers.WorkerStateRunning {
+		t.Fatalf("status = %q, want running while post-agent work is pending", got.State)
+	}
+
+	w.handleRPCLine(`{"type":"agent_settled"}`)
+
 	if got := w.Status(); got.State != workers.WorkerStateIdle {
-		t.Fatalf("status = %q, want idle", got.State)
+		t.Fatalf("status = %q, want idle after agent settles", got.State)
+	}
+}
+
+func TestInteractiveExtensionUIRequestIsCancelledAfterTimeout(t *testing.T) {
+	originalTimeout := extensionUIRequestTimeout
+	extensionUIRequestTimeout = 10 * time.Millisecond
+	defer func() { extensionUIRequestTimeout = originalTimeout }()
+
+	var buf bytes.Buffer
+	w := &piRPCWorker{
+		stdin:    nopWriteCloser{&buf},
+		pending:  make(map[string]chan response),
+		uiTimers: make(map[string]*time.Timer),
+		status:   workers.WorkerStatus{State: workers.WorkerStateRunning},
+	}
+	w.handleRPCLine(`{"type":"extension_ui_request","id":"ui-1","method":"confirm","title":"Permission","message":"Allow?"}`)
+
+	deadline := time.Now().Add(500 * time.Millisecond)
+	for time.Now().Before(deadline) && buf.Len() == 0 {
+		time.Sleep(time.Millisecond)
+	}
+	var response map[string]any
+	if err := json.Unmarshal(bytes.TrimSpace(buf.Bytes()), &response); err != nil {
+		t.Fatalf("timeout response is invalid JSON: %v", err)
+	}
+	if response["type"] != "extension_ui_response" || response["id"] != "ui-1" || response["cancelled"] != true {
+		t.Fatalf("timeout response = %#v", response)
+	}
+}
+
+func TestFireAndForgetExtensionUIRequestDoesNotNeedResponse(t *testing.T) {
+	var buf bytes.Buffer
+	w := &piRPCWorker{
+		stdin:    nopWriteCloser{&buf},
+		pending:  make(map[string]chan response),
+		uiTimers: make(map[string]*time.Timer),
+	}
+	w.handleRPCLine(`{"type":"extension_ui_request","id":"ui-2","method":"notify","message":"hello"}`)
+	time.Sleep(20 * time.Millisecond)
+	if buf.Len() != 0 {
+		t.Fatalf("fire-and-forget request wrote response: %q", buf.String())
 	}
 }
 
