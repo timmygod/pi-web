@@ -22,6 +22,15 @@ Jadikan milik Anda: ganti tema dan font, dan gunakan dalam bahasa Anda sendiri â
 
 </div>
 
+> **Edisi model lokal:** Repositori ini adalah varian pi-web yang dipelihara untuk model bahasa
+> yang diterapkan secara lokal dan di-hosting di LAN. Proyek pi-web asli tetap menjadi sumber hulu
+> untuk fitur dan perbaikan bersama. Kami secara berkala menyinkronkan perubahan hulu, meninjaunya
+> terhadap runtime model lokal, dan menerbitkan lini ini secara independen sehingga pekerjaan model
+> lokal dapat berjalan secara paralel.
+
+Aturan pemeliharaan dan pengembangan untuk edisi ini didokumentasikan dalam
+[Pengembangan edisi model lokal](docs/dev/local-llm-development.md).
+
 > [!WARNING]
 > pi-web saat ini dalam tahap **beta**. Banyak hal akan berubah dan rusak!
 

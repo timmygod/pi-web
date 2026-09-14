@@ -124,6 +124,8 @@ def call_pi(prompt: str) -> str:
         raise RuntimeError(
             f"pi failed (exit {result.returncode}): {result.stderr.strip()}"
         )
+    if not result.stdout.strip():
+        raise RuntimeError("pi returned empty output")
     return result.stdout
 
 

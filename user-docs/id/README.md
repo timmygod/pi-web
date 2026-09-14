@@ -10,6 +10,8 @@
 
 pi-web adalah antarmuka web dan PWA yang indah untuk [pi](https://pi.dev) — agen coding AI sumber terbuka. Ini memungkinkan Anda menjelajahi, membaca, dan melanjutkan sesi pi dari peramban apa pun, di perangkat apa pun, dengan fitur-fitur cermat di setiap langkah.
 
+Repositori ini adalah **edisi local-model dari pi-web**. Ini mempertahankan pengalaman upstream pi-web sambil menambahkan jalur yang dipelihara secara terpisah untuk model yang di-deploy secara lokal dan di-host di LAN. Perubahan upstream disinkronkan secara berkala; perubahan local-model diuji dan dirilis secara paralel di jalur ini.
+
 **pi-web dibangun untuk dua jenis orang:**
 
 - 🧑‍💻 **Untuk pengembang** — yang hidup di terminal tetapi ingin melanjutkan sesi dari ponsel, menyerahkan ke server jarak jauh, atau memantau tugas yang berjalan lama dari mana saja.
@@ -81,6 +83,7 @@ Ingin lebih dari sekadar coding? Ubah menjadi [asisten pribadi](personal-assista
 | Mengapa pi-web ada | [why.md](why.md) |
 | Yang akan datang selanjutnya | [roadmap.md](roadmap.md) |
 | Mengalami masalah instalasi? Biarkan LLM Anda memperbaikinya — tempelkan tautan llm-debug.md ke mereka | [llm-debug.md](llm-debug.md) |
+| catatan pengembangan | [catatan pengembangan](../../docs/dev/local-llm-development.md) |
 
 ---
 

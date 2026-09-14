@@ -22,6 +22,16 @@ Mach es zu deinem: Wechsle Themes und Schriften und nutze es in deiner eigenen S
 
 </div>
 
+> **Lokale Modell-Edition:** Dieses Repository ist eine gepflegte pi-web-Variante für lokal
+> bereitgestellte und LAN-gehostete Sprachmodelle. Das ursprüngliche pi-web-Projekt bleibt die
+> Upstream-Quelle für gemeinsame Funktionen und Korrekturen. Wir synchronisieren Upstream-
+> Änderungen regelmäßig, prüfen sie im Hinblick auf die Laufzeitumgebung des lokalen Modells und
+> veröffentlichen diese Linie unabhängig, damit die Arbeit am lokalen Modell parallel
+> voranschreiten kann.
+
+Die Wartungs- und Entwicklungsregeln für diese Edition sind in
+[Entwicklung der lokalen Modell-Edition](docs/dev/local-llm-development.md) dokumentiert.
+
 > [!WARNING]
 > pi-web befindet sich derzeit in der **beta**-Phase. Dinge werden sich ändern und kaputtgehen!
 

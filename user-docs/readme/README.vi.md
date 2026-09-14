@@ -22,6 +22,15 @@ Hãy biến nó thành của bạn: chuyển đổi chủ đề và phông chữ
 
 </div>
 
+> **Phiên bản mô hình cục bộ:** Kho lưu trữ này là một biến thể pi-web được duy trì cho các mô hình
+> ngôn ngữ được triển khai cục bộ và lưu trữ trên LAN. Dự án pi-web gốc vẫn là nguồn upstream cho
+> các tính năng và bản sửa lỗi được chia sẻ. Chúng tôi định kỳ đồng bộ hóa các thay đổi upstream,
+> xem xét chúng so với thời gian chạy mô hình cục bộ và xuất bản dòng này một cách độc lập để công
+> việc mô hình cục bộ có thể tiến hành song song.
+
+Các quy tắc bảo trì và phát triển cho phiên bản này được tài liệu hóa trong
+[Phát triển phiên bản mô hình cục bộ](docs/dev/local-llm-development.md).
+
 > [!WARNING]
 > pi-web hiện đang trong giai đoạn **beta**. Mọi thứ sẽ thay đổi và có thể bị hỏng!
 

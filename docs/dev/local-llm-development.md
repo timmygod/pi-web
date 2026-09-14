@@ -153,6 +153,11 @@ single-turn translation requests, so no cloud API key is needed. To use another
 configured local model, set `PI_TRANSLATION_MODEL` to its full `provider/model`
 reference, for example:
 
+For Qwen models, include `"thinkingFormat": "qwen"` in the provider `compat`
+settings so pi maps `--thinking off` to the model's `enable_thinking: false`
+option. This keeps translation output focused on the translated text instead
+of emitting a long reasoning trace.
+
 ```bash
 PI_TRANSLATION_MODEL='llama-cpp/your-model-id' python3 scripts/build_readmes.py zh
 ```

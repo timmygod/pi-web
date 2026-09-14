@@ -118,6 +118,8 @@ def translate(body: str, code: str) -> str:
     if result.returncode != 0:
         raise RuntimeError(f"pi failed for {code}: {result.stderr}")
     out = result.stdout.strip()
+    if not out:
+        raise RuntimeError(f"pi returned empty output for {code}")
     # Strip an accidental wrapping code fence if present.
     if out.startswith("```"):
         out = re.sub(r"^```[a-zA-Z]*\n", "", out)

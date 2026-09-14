@@ -22,6 +22,15 @@ Gawin itong sa iyo: magpalit ng mga tema at font, at gamitin ito sa iyong sarili
 
 </div>
 
+> **Edisyon ng lokal na modelo:** Ang repository na ito ay isang pinapanatiling variant ng pi-web
+> para sa mga wika model na na-deploy nang lokal at na-host sa LAN. Ang orihinal na pi-web project
+> ay nananatiling upstream source para sa mga shared feature at fix. Regular naming i-sync ang mga
+> pagbabago mula sa upstream, i-review ang mga ito laban sa runtime ng lokal na modelo, at i-publish
+> ang linya na ito nang hiwalay upang ang trabaho sa lokal na modelo ay maaaring umusad nang parallel.
+
+Ang mga patakaran sa pagpapanatili at pag-unlad para sa edisyong ito ay nakadokumento sa
+[Pag-unlad ng edisyon ng lokal na modelo](docs/dev/local-llm-development.md).
+
 > [!WARNING]
 > Ang pi-web ay kasalukuyang nasa **beta**. Magbabago at masisira ang mga bagay!
 

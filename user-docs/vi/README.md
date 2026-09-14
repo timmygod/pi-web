@@ -10,6 +10,8 @@
 
 pi-web là giao diện web và PWA đẹp mắt dành cho [pi](https://pi.dev) — trợ lý lập trình AI mã nguồn mở. Nó cho phép bạn duyệt, đọc và tiếp tục các phiên pi từ bất kỳ trình duyệt nào, trên bất kỳ thiết bị nào, với những tính năng được chăm chút ở mọi ngóc ngách.
 
+Kho lưu trữ này là **phiên bản local-model của pi-web**. Nó giữ nguyên trải nghiệm upstream của pi-web trong khi thêm một đường dẫn được duy trì riêng biệt cho các mô hình được triển khai cục bộ và lưu trữ trên LAN. Các thay đổi upstream được đồng bộ hóa định kỳ; các thay đổi local-model được kiểm tra và phát hành song song trên dòng này.
+
 **pi-web được xây dựng cho hai kiểu người dùng:**
 
 - 🧑‍💻 **Dành cho lập trình viên** — những người sống trong terminal nhưng muốn tiếp tục phiên làm việc từ điện thoại, chuyển sang máy chủ từ xa, hoặc theo dõi các tác vụ chạy dài từ bất kỳ đâu.
@@ -81,6 +83,7 @@ Muốn nhiều hơn là lập trình? Biến nó thành một [trợ lý cá nh�
 | Tại sao pi-web tồn tại | [why.md](why.md) |
 | Những gì sắp ra mắt | [roadmap.md](roadmap.md) |
 | Gặp vấn đề khi cài đặt? Hãy để LLM của bạn sửa nó — dán liên kết llm-debug.md cho họ | [llm-debug.md](llm-debug.md) |
+| ghi chú phát triển | [ghi chú phát triển](../../docs/dev/local-llm-development.md) |
 
 ---
 

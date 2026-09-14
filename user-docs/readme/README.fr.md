@@ -23,6 +23,16 @@ Faites-la vôtre : changez de thèmes et de polices, et utilisez-la dans votre p
 
 </div>
 
+> **Édition modèle local :** Ce dépôt est une variante maintenue de pi-web pour les modèles
+> de langage déployés localement et hébergés sur LAN. Le projet pi-web original reste la source
+> amont pour les fonctionnalités et correctifs partagés. Nous synchronisons périodiquement les
+> modifications amont, les examinons par rapport à l'environnement d'exécution du modèle local
+> et publions cette ligne indépendamment afin que les travaux sur le modèle local puissent évoluer
+> en parallèle.
+
+Les règles de maintenance et de développement pour cette édition sont documentées dans
+[Développement de l'édition modèle local](docs/dev/local-llm-development.md).
+
 > [!WARNING]
 > pi-web est actuellement en **beta**. Les choses vont changer et casser !
 

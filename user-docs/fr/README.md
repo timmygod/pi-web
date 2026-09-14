@@ -10,6 +10,8 @@
 
 pi-web est une interface web et une PWA élégante pour [pi](https://pi.dev) — l'agent de codage IA open source. Elle vous permet de parcourir, lire et poursuivre vos sessions pi depuis n'importe quel navigateur, sur n'importe quel appareil, avec des fonctionnalités soignées à chaque étape.
 
+Ce dépôt est l'**édition local-model de pi-web**. Il conserve l'expérience upstream de pi-web tout en ajoutant un chemin maintenu séparément pour les modèles déployés localement et hébergés sur LAN. Les modifications upstream sont synchronisées périodiquement ; les modifications de local-model sont testées et publiées en parallèle sur cette ligne.
+
 **pi-web est conçu pour deux types de personnes :**
 
 - 🧑‍💻 **Pour les développeurs** — qui vivent dans le terminal mais veulent continuer leurs sessions depuis un mobile, les déléguer à un serveur distant ou surveiller des tâches longues depuis n'importe où.
@@ -81,6 +83,7 @@ Vous voulez plus que du codage ? Transformez-le en un [assistant personnel](pers
 | Pourquoi pi-web existe | [why.md](why.md) |
 | Ce qui arrive bientôt | [roadmap.md](roadmap.md) |
 | Des soucis d'installation ? Laissez votre LLM les corriger — collez-lui le lien llm-debug.md | [llm-debug.md](llm-debug.md) |
+| notes de développement | [notes de développement](../../docs/dev/local-llm-development.md) |
 
 ---
 

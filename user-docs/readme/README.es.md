@@ -22,6 +22,16 @@ Hazlo tuyo: cambia temas y fuentes, y úsalo en tu propio idioma — pi-web incl
 
 </div>
 
+> **Edición de modelo local:** Este repositorio es una variante mantenida de pi-web para
+> modelos de lenguaje desplegados localmente y alojados en LAN. El proyecto original pi-web
+> sigue siendo la fuente principal para funciones y correcciones compartidas. Sincronizamos
+> periódicamente los cambios principales, los revisamos en relación con el tiempo de ejecución
+> del modelo local y publicamos esta línea de forma independiente para que el trabajo del
+> modelo local pueda avanzar en paralelo.
+
+Las reglas de mantenimiento y desarrollo para esta edición están documentadas en
+[Desarrollo de la edición de modelo local](docs/dev/local-llm-development.md).
+
 > [!WARNING]
 > pi-web está actualmente en **beta**. ¡Las cosas cambiarán y se romperán!
 

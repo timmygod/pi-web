@@ -23,6 +23,15 @@ Jadikannya milik anda: tukar tema dan fon, dan gunakannya dalam bahasa anda send
 
 </div>
 
+> **Edisi model tempatan:** Repositori ini ialah varian pi-web yang diselenggara untuk model bahasa
+> yang digunakan secara tempatan dan dihoskan di LAN. Projek pi-web asal kekal sebagai sumber hulu
+> untuk ciri dan pembetulan bersama. Kami secara berkala menyegerakkan perubahan hulu, menyemaknya
+> terhadap masa jalan model tempatan, dan menerbitkan barisan ini secara bebas supaya kerja model
+> tempatan boleh bergerak secara selari.
+
+Peraturan penyelenggaraan dan pembangunan untuk edisi ini didokumentasikan dalam
+[Pembangunan edisi model tempatan](docs/dev/local-llm-development.md).
+
 > [!WARNING]
 > pi-web kini dalam **beta**. Perkara akan berubah dan rosak!
 

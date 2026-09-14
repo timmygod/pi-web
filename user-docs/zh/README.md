@@ -10,6 +10,8 @@
 
 pi-web 是一款精美的 Web UI 和 PWA，专为 [pi](https://pi.dev)——开源 AI 编程助手打造。它让你可以在任何浏览器、任何设备上浏览、阅读和继续你的 pi 会话，处处都有贴心的功能设计。
 
+此仓库是 **pi-web 的 local-model 版本**。它在保留 upstream pi-web 体验的同时，为本地部署和 LAN 托管的模型添加了一个单独维护的路径。Upstream 更改会定期同步；local-model 更改在此线上并行测试和发布。
+
 **pi-web 为两类人群而生：**
 
 - 🧑‍💻 **面向开发者**——他们离不开终端，但也想从手机上继续会话、交给远程服务器处理，或者随时监控长时间运行的任务。
@@ -81,6 +83,7 @@ pi-web 是一个 PWA（渐进式 Web 应用），因此你可以**像安装原�
 | pi-web 为何而生 | [why.md](why.md) |
 | 后续计划 | [roadmap.md](roadmap.md) |
 | 安装遇到问题？让你的 LLM 来修复——将 llm-debug.md 链接发给它 | [llm-debug.md](llm-debug.md) |
+| 开发说明 | [开发说明](../../docs/dev/local-llm-development.md) |
 
 ---
 
