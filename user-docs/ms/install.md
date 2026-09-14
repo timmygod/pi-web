@@ -21,6 +21,19 @@
 - Kongsi syot kilat statik sebagai GitHub Gist rahsia
 - Sambungan pi `/web`, `/remote`, `/refresh`, `/pi-web token` dan `/pi-web set-token` untuk membuka sesi, QR jauh, penyegerakan sesi, dan pengurusan token
 
+## Pilih mod sesi
+
+Edisi ini menggunakan pembekal dan model yang telah dikonfigurasi dalam pi; Local Mode ialah dasar masa jalan, bukan pemasang model berasingan atau skrin kunci API kedua.
+Pilih mod apabila mencipta sesi, atau tukar selepas larian semasa selesai:
+
+| Mod | Gunakan apabila | Kelakuan |
+|------|-------------|----------|
+| **Auto** | Anda mahu pi-web memutuskan | Menyelesaikan hujung tempatan/LAN daripada metadata pembekal apabila boleh; jika tidak, mengekalkan laluan biasa |
+| **Local** | Model berjalan pada mesin ini atau LAN anda | Mengaktifkan sempadan pemampatan 65%, titik pemeriksaan terhad, Force Compact, dan pemulihan automatik yang dikawal |
+| **Cloud** | Model yang dipilih dihoskan dan harus mengikuti kelakuan upstream | Mengekalkan dasar pemampatan dan pemulihan khusus tempatan di luar sesi |
+
+Pemilihan Local atau Cloud manual mengatasi pengesanan automatik dan kekal merentas muat semula dan mulakan semula. Sesi yang sedang berjalan menolak perubahan mod sehingga pekerjanya selesai, jadi mod yang dipaparkan dalam UI sentiasa sepadan dengan dasar yang sebenarnya digunakan.
+
 ## Keperluan
 
 - [Go](https://go.dev) 1.25+

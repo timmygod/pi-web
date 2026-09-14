@@ -10,7 +10,17 @@
 
 pi-web es una hermosa interfaz web y PWA para [pi](https://pi.dev) — el agente de codificación IA de código abierto. Te permite explorar, leer y continuar tus sesiones de pi desde cualquier navegador, en cualquier dispositivo, con funciones bien pensadas en cada paso.
 
-Este repositorio es la **edición local-model de pi-web**. Mantiene la experiencia upstream de pi-web mientras añade una ruta mantenida por separado para modelos desplegados localmente y alojados en LAN. Los cambios upstream se sincronizan periódicamente; los cambios de local-model se prueban y lanzan en paralelo en esta línea.
+## ¿Qué es diferente en esta edición?
+
+Este repositorio mantiene la interfaz pi-web y las funciones compartidas de upstream, pero cambia cómo se protegen las sesiones cuando el modelo seleccionado se ejecuta localmente o en su LAN.
+
+- **Elija la política de tiempo de ejecución por sesión.** Auto detecta puntos finales locales/LAN cuando los metadatos del proveedor están claros; Local y Cloud son anulaciones manuales persistentes.
+- **Prevenga fallos de contexto temprano.** Local Mode compacta al 65% de uso y verifica nuevamente entre llamadas a herramientas, antes de la siguiente solicitud al proveedor.
+- **Mantenga los resúmenes acotados.** Los puntos de control móviles evitan que un resumen antiguo crezca indefinidamente, reintentan una vez con un presupuesto más ajustado y se detienen de forma segura cuando la compactación no logra un progreso significativo.
+- **Recupere de forma conservadora.** Los desbordamientos de contexto, las interrupciones del transporte seleccionado y las paradas prematuras solo de razonamiento pueden reanudarse automáticamente, pero la deduplicación de incidentes y los interruptores de circuito conscientes del progreso previenen bucles de recuperación.
+- **Deje al usuario en control.** Force Compact es siempre la ruta de rescate manual visible, mientras que Cloud Mode retiene el flujo de trabajo y los controles de upstream.
+
+El resultado práctico es simple: una tarea de larga duración con un modelo local debería compactarse antes de fallar, recuperarse una vez cuando la recuperación sea segura y detenerse limpiamente en lugar de entrar en bucle cuando no lo sea.
 
 **pi-web está diseñado para dos tipos de personas:**
 

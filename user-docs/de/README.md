@@ -10,7 +10,17 @@
 
 pi-web ist eine schöne Web-UI und PWA für [pi](https://pi.dev) — den quelloffenen KI-Coding-Agenten. Sie ermöglicht dir, deine pi-Sitzungen von jedem Browser auf jedem Gerät zu durchsuchen, zu lesen und fortzusetzen — mit durchdachten Funktionen auf Schritt und Tritt.
 
-Dieses Repository ist die **local-model-Ausgabe von pi-web**. Es behält die upstream-Erfahrung von pi-web bei und fügt einen separat gepflegten Pfad für lokal bereitgestellte und LAN-gehostete Modelle hinzu. Upstream-Änderungen werden regelmäßig synchronisiert; local-model-Änderungen werden parallel auf dieser Linie getestet und veröffentlicht.
+## Was ist in dieser Ausgabe anders?
+
+Dieses Repository behält die pi-web-Oberfläche und die gemeinsamen Funktionen von upstream bei, ändert jedoch, wie Sitzungen geschützt werden, wenn das ausgewählte Modell lokal oder in Ihrem LAN ausgeführt wird.
+
+- **Wählen Sie die Laufzeitrichtlinie pro Sitzung.** Auto erkennt lokale/LAN-Endpunkte, wenn die Anbieter-Metadaten eindeutig sind; Local und Cloud sind dauerhafte manuelle Überschreibungen.
+- **Verhindern Sie Kontextfehler frühzeitig.** Local Mode komprimiert bei 65 % Nutzung und prüft zwischen Tool-Aufrufen erneut, bevor die nächste Anbieteranfrage gestellt wird.
+- **Halten Sie Zusammenfassungen begrenzt.** Rollierende Kontrollpunkte verhindern, dass eine alte Zusammenfassung endlos wächst, versuchen es einmal mit einem engeren Budget neu und stoppen sicher, wenn die Komprimierung keinen sinnvollen Fortschritt macht.
+- **Erholen Sie sich konservativ.** Kontextüberläufe, Unterbrechungen des ausgewählten Transports und vorzeitige Stopps, die nur auf Reasoning basieren, können automatisch fortgesetzt werden, aber die Deduplizierung von Vorfällen und fortschrittsbewusste Sicherungen verhindern Wiederherstellungsschleifen.
+- **Behalten Sie die Kontrolle.** Force Compact ist immer der sichtbare manuelle Rettungsmechanismus, während Cloud Mode den upstream-Workflow und die Steuerung beibehält.
+
+Das praktische Ergebnis ist einfach: Eine lange Aufgabe mit einem lokalen Modell sollte komprimiert werden, bevor sie abstürzt, sich einmal erholen, wenn die Erholung sicher ist, und sauber stoppen, anstatt in eine Schleife zu geraten, wenn dies nicht der Fall ist.
 
 **pi-web ist für zwei Arten von Menschen gemacht:**
 

@@ -21,6 +21,19 @@
 - Ibahagi ang mga static snapshot bilang lihim na GitHub Gists
 - `/web`, `/remote`, `/refresh`, `/pi-web token` at `/pi-web set-token` na mga extension ng pi para sa pagbubukas ng mga session, remote QR, session sync, at pamamahala ng token
 
+## Pumili ng mode ng session
+
+Ginagamit ng edisyong ito ang mga provider at model na nakasakudlay na sa pi; ang Local Mode ay isang patakaran sa runtime, hindi isang hiwalay na installer ng model o pangalawang screen ng API-key.
+Pumili ng mode kapag gumagawa ng session, o baguhin ito pagkatapos matapos ang kasalukuyang run:
+
+| Mode | Gamitin kapag | Gawain |
+|------|-------------|----------|
+| **Auto** | Gusto mong desisyonin ng pi-web | Nilalutas ang mga local/LAN endpoint mula sa metadata ng provider kung posible; kung hindi, pinapanatili ang normal na landas |
+| **Local** | Tumatakbo ang model sa makina na ito o sa iyong LAN | Pinapagana ang 65% na hangganan ng compaction, mga bounded checkpoint, Force Compact, at guarded na awtomatikong pagbawi |
+| **Cloud** | Ang napiling model ay naka-host at dapat sumunod sa upstream na gawain | Pinapanatili ang patakaran ng compaction at pagbawi na local-only sa labas ng session |
+
+Ang manu-manong pagpili ng Local o Cloud ang masusunod kaysa sa awtomatikong pagtuklas at nananatili sa mga reload at restart. Tumatanggi ang isang tumatakbong session sa mga pagbabago ng mode hanggang sa matapos ang kanyang worker, kaya ang mode na ipinapakita sa UI ay palaging tumutugma sa patakaran na aktwal na ginagamit.
+
 ## Mga Kinakailangan
 
 - [Go](https://go.dev) 1.25+

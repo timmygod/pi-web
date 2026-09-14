@@ -10,7 +10,17 @@
 
 pi-web là giao diện web và PWA đẹp mắt dành cho [pi](https://pi.dev) — trợ lý lập trình AI mã nguồn mở. Nó cho phép bạn duyệt, đọc và tiếp tục các phiên pi từ bất kỳ trình duyệt nào, trên bất kỳ thiết bị nào, với những tính năng được chăm chút ở mọi ngóc ngách.
 
-Kho lưu trữ này là **phiên bản local-model của pi-web**. Nó giữ nguyên trải nghiệm upstream của pi-web trong khi thêm một đường dẫn được duy trì riêng biệt cho các mô hình được triển khai cục bộ và lưu trữ trên LAN. Các thay đổi upstream được đồng bộ hóa định kỳ; các thay đổi local-model được kiểm tra và phát hành song song trên dòng này.
+## Điều gì khác biệt trong phiên bản này?
+
+Kho lưu trữ này giữ nguyên giao diện pi-web và các tính năng chia sẻ từ upstream, nhưng thay đổi cách bảo vệ các phiên khi mô hình được chọn chạy cục bộ hoặc trên LAN của bạn.
+
+- **Chọn chính sách thời gian chạy cho mỗi phiên.** Auto phát hiện các điểm cuối cục bộ/LAN khi siêu dữ liệu của nhà cung cấp rõ ràng; Local và Cloud là các ghi đè thủ công bền vững.
+- **Ngăn ngừa lỗi ngữ cảnh sớm.** Local Mode nén ở mức sử dụng 65% và kiểm tra lại giữa các lần gọi công cụ, trước yêu cầu tiếp theo của nhà cung cấp.
+- **Giữ các bản tóm tắt có giới hạn.** Các điểm kiểm tra cuộn tránh việc bản tóm tắt cũ phát triển vô hạn, thử lại một lần với ngân sách chặt chẽ hơn và dừng an toàn khi việc nén không đạt được tiến bộ có ý nghĩa.
+- **Phục hồi một cách thận trọng.** Tràn ngữ cảnh, gián đoạn truyền tải được chọn và các lần dừng sớm chỉ liên quan đến suy luận có thể tự động tiếp tục, nhưng việc loại bỏ trùng lặp sự cố và cầu chì nhận thức tiến độ ngăn chặn các vòng lặp phục hồi.
+- **Để người dùng kiểm soát.** Force Compact luôn là con đường cứu hộ thủ công có thể nhìn thấy, trong khi Cloud Mode giữ nguyên quy trình làm việc và các điều khiển của upstream.
+
+Kết quả thực tế rất đơn giản: một tác vụ dài với mô hình cục bộ nên nén trước khi nó gặp sự cố, phục hồi một lần khi việc phục hồi là an toàn và dừng sạch sẽ thay vì lặp lại khi nó không an toàn.
 
 **pi-web được xây dựng cho hai kiểu người dùng:**
 

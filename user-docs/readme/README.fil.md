@@ -16,26 +16,32 @@
 
 I-drive ang iyong [pi](https://pi.dev) coding agent mula sa iyong telepono, tablet, o laptop — kahit saan sa iyong network, o malayuan sa pamamagitan ng Tailscale.
 
-Isa itong ganap na PWA, kaya maaari mo itong i-install at gamitin tulad ng isang native app sa anumang device. Isipin mo ito bilang iyong sariling personal na AI workspace — tulad ng Cowork ng Claude, ngunit may iba't ibang modelo — mag-chat sa iba't ibang modelo, mag-code mula sa iyong telepono, o gawin itong isang [personal assistant](user-docs/en/personal-assistant.md) na naninirahan sa iyong makina.
+Isa itong ganap na PWA, kaya maaari mo itong i-install at gamitin tulad ng isang native app sa anumang device. Isipin mo ito bilang iyong sariling personal na AI workspace — tulad ng Cowork ng Claude, ngunit may iba't ibang modelo — mag-chat sa iba't ibang modelo, mag-code mula sa iyong telepono, o gawin itong isang [personal assistant](../en/personal-assistant.md) na naninirahan sa iyong makina.
 
 Gawin itong sa iyo: magpalit ng mga tema at font, at gamitin ito sa iyong sariling wika — ang pi-web ay may kasamang maraming wika at maaari kang magdagdag ng sarili mo. Marami pang mga feature ang paparating, ngunit hindi ito magiging bloated: anumang hindi mo kailangan ay maaaring i-off sa settings.
 
 </div>
 
-> **Edisyon ng lokal na modelo:** Ang repository na ito ay isang pinapanatiling variant ng pi-web
-> para sa mga wika model na na-deploy nang lokal at na-host sa LAN. Ang orihinal na pi-web project
-> ay nananatiling upstream source para sa mga shared feature at fix. Regular naming i-sync ang mga
-> pagbabago mula sa upstream, i-review ang mga ito laban sa runtime ng lokal na modelo, at i-publish
-> ang linya na ito nang hiwalay upang ang trabaho sa lokal na modelo ay maaaring umusad nang parallel.
+## Bakit ang edisyong ito ng local-model?
 
-Ang mga patakaran sa pagpapanatili at pag-unlad para sa edisyong ito ay nakadokumento sa
-[Pag-unlad ng edisyon ng lokal na modelo](docs/dev/local-llm-development.md).
+Ang orihinal na pi-web ay nananatiling pundasyon ng upstream para sa mga katangian at pag-aayos na ibinahagi. Pinapanatili ng edisyong ito ang karanasang iyon, pagkatapos ay nagdadagdag ng layer ng pagiging maaasahan para sa mga modelong tumatakbo sa iyong sariling makina o sa ibang lugar sa iyong LAN—kung saan ang pagbuo ay madalas na mas mabagal, limitado ang memorya, at ang mahabang konteksto ay maaaring huminto sa isang malusog na session.
+
+| Larangan | Upstream pi-web | Ang edisyong ito |
+|------|-----------------|--------------|
+| Patakaran ng model/runtime | Karaniwang pag-uugali ng pi-web | **Auto / Local / Cloud** na mode bawat session, na may endpoint-aware na pagtukoy ng local at isang persistent na manual override |
+| Paghawak ng mahabang konteksto | Normal na pag-uugali ng pi compaction | Ang Local Mode ay aktibong nagko-compact sa **65%** at muling tinitingnan sa loob ng mahahabang loop ng tool-call bago ang isa pang kahilingan sa provider |
+| Kaligtasan ng compaction | Karaniwang mga buod | Mga bounded rolling checkpoints, isang mas mahigpit na pagsulat muli para sa hindi wastong/capped na output, at pagtukoy ng walang pag-unlad sa halip na walang katapusang re-compaction |
+| Mga pinutol na pagtakbo | Karaniwang paghawak ng worker at error | Bounded recovery para sa context overflow, thinking-only stops, at mga napiling interrupt ng transport, na may persistent loop breakers |
+| Manual na rescue | Karaniwang detalye ng konteksto | Ang **Force Compact** ay nananatiling available bilang isang malinaw na landas ng pagbangon nang hindi binubura ang usapan |
+| Pagkakatugma at mga release | Orihinal na proyekto at linya ng release | Ang mga safeguard na local-only ay nananatili sa likod ng Local Mode; Pinapanatili ng Cloud Mode ang pag-uugali ng upstream, at ang mga pagbabago ng upstream ay sinusuri at inilalathala dito nang hiwalay |
+
+Hindi ito isang pagsulat muli o kapalit para sa upstream. Ito ay isang sinasadyang pinapanatiling operating profile para sa mga taong nais ng privacy at kontrol ng local-model nang hindi tinatanggap ang mga fragile na mahahabang tumatakbong session. Tingnan ang [gabay sa user](../en/README.md) para sa daloy ng trabaho na nakatuon sa user at [pag-unlad ng edisyong local-model](../../docs/dev/local-llm-development.md) para sa implementasyon at patakaran sa synchronization.
 
 > [!WARNING]
 > Ang pi-web ay kasalukuyang nasa **beta**. Magbabago at masisira ang mga bagay!
 
 > [!TIP]
-> Bago ka ba dito? **[Basahin ang user guide →](user-docs/en/README.md)** para sa isang buong tour ng mga feature, mga hakbang sa pag-install, at mga tip. ([Ibang mga wika →](../README.md))
+> Bago ka ba dito? **[Basahin ang user guide →](../en/README.md)** para sa isang buong tour ng mga feature, mga hakbang sa pag-install, at mga tip. ([Ibang mga wika →](../README.md))
 
 ## Mga Screenshot
 
@@ -82,7 +88,7 @@ Kapag na-install na, buksan ang `http://127.0.0.1:31415` sa iyong browser. Mula 
 
 > **Malayuang access sa macOS:** I-install at buksan ang Tailscale nang interactive, aprubahan ang administrator prompt, at mag-sign in. Pagkatapos ay patakbuhin ang `/pi-web restart`, na susundan ng `/remote`.
 
-Para sa mga manu-manong pag-install, pag-download ng binary, o pagbuo mula sa source, tingnan ang [user-docs/install.md](user-docs/en/install.md).
+Para sa mga manu-manong pag-install, pag-download ng binary, o pagbuo mula sa source, tingnan ang [user-docs/install.md](../en/install.md).
 
 ## Integrasyon ng Pi
 
@@ -117,7 +123,7 @@ Upang magtakda ng token para sa malayuang pag-access, lumikha ng `~/.config/pi-w
 PI_WEB_TOKEN=ang-iyong-token-dito
 ```
 
-Para sa higit pang mga detalye (manu-manong pag-setup, mga custom port, mga non-loopback bind), tingnan ang [user-docs/install.md](user-docs/en/install.md).
+Para sa higit pang mga detalye (manu-manong pag-setup, mga custom port, mga non-loopback bind), tingnan ang [user-docs/install.md](../en/install.md).
 
 ## Development
 

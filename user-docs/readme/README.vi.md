@@ -16,26 +16,32 @@
 
 Điều khiển [pi](https://pi.dev) coding agent của bạn từ điện thoại, máy tính bảng hoặc máy tính xách tay — bất kỳ đâu trên mạng của bạn, hoặc từ xa qua Tailscale.
 
-Đây là một PWA hoàn chỉnh, vì vậy bạn có thể cài đặt và sử dụng nó như một ứng dụng gốc trên mọi thiết bị. Hãy coi nó như không gian làm việc AI cá nhân của riêng bạn — giống như Cowork của Claude, nhưng với nhiều mô hình khác nhau — trò chuyện qua nhiều mô hình, lập trình từ điện thoại, hoặc biến nó thành [trợ lý cá nhân](user-docs/en/personal-assistant.md) sống trên máy của bạn.
+Đây là một PWA hoàn chỉnh, vì vậy bạn có thể cài đặt và sử dụng nó như một ứng dụng gốc trên mọi thiết bị. Hãy coi nó như không gian làm việc AI cá nhân của riêng bạn — giống như Cowork của Claude, nhưng với nhiều mô hình khác nhau — trò chuyện qua nhiều mô hình, lập trình từ điện thoại, hoặc biến nó thành [trợ lý cá nhân](../en/personal-assistant.md) sống trên máy của bạn.
 
 Hãy biến nó thành của bạn: chuyển đổi chủ đề và phông chữ, và sử dụng nó bằng ngôn ngữ của bạn — pi-web đi kèm với nhiều ngôn ngữ và bạn có thể thêm ngôn ngữ của riêng mình. Nhiều tính năng hơn đang được phát triển, nhưng nó sẽ không trở nên cồng kềnh: mọi thứ bạn không cần đều có thể tắt trong cài đặt.
 
 </div>
 
-> **Phiên bản mô hình cục bộ:** Kho lưu trữ này là một biến thể pi-web được duy trì cho các mô hình
-> ngôn ngữ được triển khai cục bộ và lưu trữ trên LAN. Dự án pi-web gốc vẫn là nguồn upstream cho
-> các tính năng và bản sửa lỗi được chia sẻ. Chúng tôi định kỳ đồng bộ hóa các thay đổi upstream,
-> xem xét chúng so với thời gian chạy mô hình cục bộ và xuất bản dòng này một cách độc lập để công
-> việc mô hình cục bộ có thể tiến hành song song.
+## Tại sao phiên bản mô hình cục bộ này?
 
-Các quy tắc bảo trì và phát triển cho phiên bản này được tài liệu hóa trong
-[Phát triển phiên bản mô hình cục bộ](docs/dev/local-llm-development.md).
+pi-web gốc vẫn là nền tảng upstream cho các tính năng và bản sửa lỗi được chia sẻ. Phiên bản này giữ nguyên trải nghiệm đó, sau đó thêm một lớp độ tin cậy cho các mô hình chạy trên máy của riêng bạn hoặc ở nơi khác trên LAN của bạn—nơi việc tạo nội dung thường chậm hơn, bộ nhớ có hạn và ngữ cảnh dài có thể làm đình trệ một phiên vốn đang hoạt động bình thường.
+
+| Lĩnh vực | pi-web upstream | Phiên bản này |
+|------|-----------------|--------------|
+| Chính sách mô hình/runtime | Hành vi pi-web tiêu chuẩn | Chế độ **Auto / Local / Cloud** theo từng phiên, với phát hiện cục bộ nhận biết endpoint và ghi đè thủ công bền vững |
+| Xử lý ngữ cảnh dài | Hành vi nén pi thông thường | Local Mode nén chủ động ở mức **65%** và kiểm tra lại trong các vòng lặp gọi công cụ dài trước một yêu cầu nhà cung cấp khác |
+| An toàn nén | Tóm tắt tiêu chuẩn | Điểm kiểm tra cuộn có giới hạn, một lần viết lại chặt chẽ hơn cho đầu ra không hợp lệ/bị giới hạn và phát hiện không tiến triển thay vì nén lại vô tận |
+| Chạy bị gián đoạn | Xử lý worker và lỗi thông thường | Khôi phục có giới hạn cho tràn ngữ cảnh, dừng chỉ suy nghĩ và gián đoạn truyền tải được chọn, với bộ ngắt vòng lặp bền vững |
+| Cứu hộ thủ công | Chi tiết ngữ cảnh tiêu chuẩn | **Force Compact** vẫn khả dụng như một đường dẫn khôi phục rõ ràng mà không xóa cuộc hội thoại |
+| Tương thích và phát hành | Dự án gốc và dòng phát hành | Các biện pháp bảo vệ chỉ dành cho cục bộ vẫn nằm sau Local Mode; Cloud Mode duy trì hành vi upstream, và các thay đổi upstream được xem xét và phát hành ở đây một cách độc lập |
+
+Đây không phải là bản viết lại hay thay thế cho upstream. Đây là một hồ sơ hoạt động được duy trì có chủ đích dành cho những người muốn quyền riêng tư và kiểm soát mô hình cục bộ mà không chấp nhận các phiên chạy dài dễ vỡ. Xem [hướng dẫn người dùng](../en/README.md) để biết quy trình làm việc dành cho người dùng và [phát triển phiên bản mô hình cục bộ](../../docs/dev/local-llm-development.md) để biết việc triển khai và chính sách đồng bộ hóa.
 
 > [!WARNING]
 > pi-web hiện đang trong giai đoạn **beta**. Mọi thứ sẽ thay đổi và có thể bị hỏng!
 
 > [!TIP]
-> Mới ở đây? **[Đọc hướng dẫn sử dụng →](user-docs/en/README.md)** để có cái nhìn toàn diện về tính năng, các bước cài đặt và mẹo. ([Ngôn ngữ khác →](../README.md))
+> Mới ở đây? **[Đọc hướng dẫn sử dụng →](../en/README.md)** để có cái nhìn toàn diện về tính năng, các bước cài đặt và mẹo. ([Ngôn ngữ khác →](../README.md))
 
 ## Ảnh chụp màn hình
 
@@ -81,7 +87,7 @@ Sau khi cài đặt, mở `http://127.0.0.1:31415` trong trình duyệt của b�
 
 > **Truy cập từ xa trên macOS:** Cài đặt và mở Tailscale theo cách tương tác, chấp thuận lời nhắc của quản trị viên rồi đăng nhập. Sau đó chạy `/pi-web restart`, tiếp theo là `/remote`.
 
-Để cài đặt thủ công, tải xuống tệp nhị phân hoặc xây dựng từ mã nguồn, xem [user-docs/install.md](user-docs/en/install.md).
+Để cài đặt thủ công, tải xuống tệp nhị phân hoặc xây dựng từ mã nguồn, xem [user-docs/install.md](../en/install.md).
 
 ## Tích hợp Pi
 
@@ -116,7 +122,7 @@ Lệnh `pi install npm:@ygncode/pi-web@beta` tự động thiết lập điều 
 PI_WEB_TOKEN=your-token-here
 ```
 
-Để biết thêm chi tiết (thiết lập thủ công, cổng tùy chỉnh, liên kết không loopback), xem [user-docs/install.md](user-docs/en/install.md).
+Để biết thêm chi tiết (thiết lập thủ công, cổng tùy chỉnh, liên kết không loopback), xem [user-docs/install.md](../en/install.md).
 
 ## Phát triển
 

@@ -21,6 +21,22 @@
 - Share static snapshots as secret GitHub Gists
 - `/web`, `/remote`, `/refresh`, `/pi-web token` and `/pi-web set-token` pi extensions for opening sessions, remote QR, session sync, and token management
 
+## Choose the session mode
+
+This edition uses the providers and models already configured in pi; Local Mode
+is a runtime policy, not a separate model installer or a second API-key screen.
+Choose a mode when creating a session, or change it after the current run settles:
+
+| Mode | Use it when | Behavior |
+|------|-------------|----------|
+| **Auto** | You want pi-web to decide | Resolves local/LAN endpoints from provider metadata when possible; otherwise keeps the normal path |
+| **Local** | The model is running on this machine or your LAN | Enables the 65% compaction boundary, bounded checkpoints, Force Compact, and guarded automatic recovery |
+| **Cloud** | The selected model is hosted and should follow upstream behavior | Keeps local-only compaction and recovery policy out of the session |
+
+Manual Local or Cloud selection wins over automatic detection and persists across
+reloads and restarts. A running session rejects mode changes until its worker
+settles, so the mode shown in the UI always matches the policy actually in use.
+
 ## Requirements
 
 - [Go](https://go.dev) 1.25+ (only for building from source)

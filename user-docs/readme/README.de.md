@@ -16,27 +16,32 @@
 
 Steuere deinen [pi](https://pi.dev) Coding Agent von deinem Handy, Tablet oder Laptop — überall in deinem Netzwerk oder remote über Tailscale.
 
-Es ist eine vollständige PWA, sodass du sie installieren und wie eine native App auf jedem Gerät nutzen kannst. Betrachte es als deinen persönlichen KI-Arbeitsbereich — wie Claude's Cowork, aber mit verschiedenen Modellen — chatte modellübergreifend, programmiere von deinem Handy aus oder mach es zu einem [persönlichen Assistenten](user-docs/en/personal-assistant.md), der auf deinem Rechner lebt.
+Es ist eine vollständige PWA, sodass du sie installieren und wie eine native App auf jedem Gerät nutzen kannst. Betrachte es als deinen persönlichen KI-Arbeitsbereich — wie Claude's Cowork, aber mit verschiedenen Modellen — chatte modellübergreifend, programmiere von deinem Handy aus oder mach es zu einem [persönlichen Assistenten](../en/personal-assistant.md), der auf deinem Rechner lebt.
 
 Mach es zu deinem: Wechsle Themes und Schriften und nutze es in deiner eigenen Sprache — pi-web wird mit mehreren Sprachen ausgeliefert und du kannst eigene hinzufügen. Weitere Funktionen sind in Arbeit, aber es wird nicht aufgebläht: Alles, was du nicht brauchst, kannst du in den Einstellungen deaktivieren.
 
 </div>
 
-> **Lokale Modell-Edition:** Dieses Repository ist eine gepflegte pi-web-Variante für lokal
-> bereitgestellte und LAN-gehostete Sprachmodelle. Das ursprüngliche pi-web-Projekt bleibt die
-> Upstream-Quelle für gemeinsame Funktionen und Korrekturen. Wir synchronisieren Upstream-
-> Änderungen regelmäßig, prüfen sie im Hinblick auf die Laufzeitumgebung des lokalen Modells und
-> veröffentlichen diese Linie unabhängig, damit die Arbeit am lokalen Modell parallel
-> voranschreiten kann.
+## Warum diese Lokales-Modell-Ausgabe?
 
-Die Wartungs- und Entwicklungsregeln für diese Edition sind in
-[Entwicklung der lokalen Modell-Edition](docs/dev/local-llm-development.md) dokumentiert.
+Das ursprüngliche pi-web bleibt die Upstream-Grundlage für gemeinsame Funktionen und Korrekturen. Diese Ausgabe behält diese Erfahrung bei und fügt eine Zuverlässigkeitsschicht für Modelle hinzu, die auf Ihrem eigenen Rechner oder anderswo in Ihrem LAN laufen – wo die Generierung oft langsamer ist, der Speicher begrenzt ist und ein langer Kontext eine ansonsten gesunde Sitzung blockieren kann.
+
+| Bereich | Upstream pi-web | Diese Ausgabe |
+|------|-----------------|--------------|
+| Modell-/Laufzeitrichtlinie | Standard-pi-web-Verhalten | **Auto / Local / Cloud**-Modus pro Sitzung, mit endpunkt-bewusster lokaler Erkennung und einer dauerhaften manuellen Überschreibung |
+| Langkontext-Verarbeitung | Normales pi-Kompaktierungsverhalten | Der Local Mode komprimiert proaktiv bei **65%** und prüft innerhalb langer Tool-Call-Schleifen erneut, bevor eine weitere Anbieteranfrage gestellt wird |
+| Kompaktierungssicherheit | Standard-Zusammenfassungen | Begrenzte rollierende Prüfpunkte, eine engere Umschreibung für ungültige/begrenzte Ausgaben und keine Fortschritts-Erkennung anstelle endloser Re-Kompaktierung |
+| Unterbrochene Läufe | Normale Worker- und Fehlerbehandlung | Begrenzte Wiederherstellung bei Kontextüberlauf, reinen Denk-Stopps und ausgewählten Transportunterbrechungen, mit dauerhaften Schleifenunterbrechern |
+| Manuelle Rettung | Standard-Kontextdetails | **Force Compact** bleibt als expliziter Wiederherstellungspfad verfügbar, ohne die Konversation zu löschen |
+| Kompatibilität und Releases | Originalprojekt und Release-Linie | Lokale Schutzmaßnahmen bleiben hinter dem Local Mode; der Cloud Mode bewahrt das Upstream-Verhalten, und Upstream-Änderungen werden hier unabhängig überprüft und veröffentlicht |
+
+Dies ist keine Neuschreibung oder ein Ersatz für Upstream. Es ist ein bewusst gepflegtes Betriebsprofil für Personen, die Privatsphäre und Kontrolle lokaler Modelle wünschen, ohne fragile langlaufende Sitzungen zu akzeptieren. Siehe den [Benutzerleitfaden](../en/README.md) für den benutzerorientierten Workflow und [Entwicklung der Lokales-Modell-Ausgabe](../../docs/dev/local-llm-development.md) für die Implementierung und die Synchronisierungsrichtlinie.
 
 > [!WARNING]
 > pi-web befindet sich derzeit in der **beta**-Phase. Dinge werden sich ändern und kaputtgehen!
 
 > [!TIP]
-> Neu hier? **[Lies die Bedienungsanleitung →](user-docs/en/README.md)** für eine vollständige Tour der Funktionen, Installationsschritte und Tipps. ([Andere Sprachen →](../README.md))
+> Neu hier? **[Lies die Bedienungsanleitung →](../en/README.md)** für eine vollständige Tour der Funktionen, Installationsschritte und Tipps. ([Andere Sprachen →](../README.md))
 
 ## Screenshots
 
@@ -82,7 +87,7 @@ Nach der Installation öffne `http://127.0.0.1:31415` in deinem Browser. Verwend
 
 > **Fernzugriff unter macOS:** Installiere und öffne Tailscale interaktiv, bestätige die Administratorabfrage und melde dich an. Führe anschließend `/pi-web restart` und danach `/remote` aus.
 
-Für manuelle Installationen, Binär-Downloads oder das Bauen aus dem Quellcode siehe [user-docs/install.md](user-docs/en/install.md).
+Für manuelle Installationen, Binär-Downloads oder das Bauen aus dem Quellcode siehe [user-docs/install.md](../en/install.md).
 
 ## Pi-Integration
 
@@ -117,7 +122,7 @@ Um ein Token für den Remote-Zugriff festzulegen, erstelle `~/.config/pi-web/env
 PI_WEB_TOKEN=dein-token-hier
 ```
 
-Für weitere Details (manuelle Einrichtung, benutzerdefinierte Ports, nicht-loopback-Bindungen) siehe [user-docs/install.md](user-docs/en/install.md).
+Für weitere Details (manuelle Einrichtung, benutzerdefinierte Ports, nicht-loopback-Bindungen) siehe [user-docs/install.md](../en/install.md).
 
 ## Entwicklung
 

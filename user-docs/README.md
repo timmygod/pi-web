@@ -2,6 +2,9 @@
 
 These guides describe the local-model edition of pi-web. The English files are
 the source of truth; translated copies are regenerated after source changes.
+Unlike the upstream release, this edition adds per-session Auto/Local/Cloud
+policy, proactive 65% compaction, bounded recovery, and a manual Force Compact
+path for models running locally or over LAN.
 For edition-specific maintenance and release rules, see
 [Local-model edition development](../docs/dev/local-llm-development.md).
 

@@ -17,26 +17,32 @@
 
 Pandu ejen pengekodan [pi](https://pi.dev) anda dari telefon, tablet, atau komputer riba — di mana-mana sahaja dalam rangkaian anda, atau dari jauh melalui Tailscale.
 
-Ia adalah PWA penuh, jadi anda boleh memasangnya dan menggunakannya seperti aplikasi asli pada mana-mana peranti. Anggaplah ia sebagai ruang kerja AI peribadi anda sendiri — seperti Cowork Claude, tetapi dengan pelbagai model — berbual merentas model, mengekod dari telefon anda, atau jadikannya sebagai [pembantu peribadi](user-docs/en/personal-assistant.md) yang hidup pada mesin anda.
+Ia adalah PWA penuh, jadi anda boleh memasangnya dan menggunakannya seperti aplikasi asli pada mana-mana peranti. Anggaplah ia sebagai ruang kerja AI peribadi anda sendiri — seperti Cowork Claude, tetapi dengan pelbagai model — berbual merentas model, mengekod dari telefon anda, atau jadikannya sebagai [pembantu peribadi](../en/personal-assistant.md) yang hidup pada mesin anda.
 
 Jadikannya milik anda: tukar tema dan fon, dan gunakannya dalam bahasa anda sendiri — pi-web disertakan dengan pelbagai bahasa dan anda boleh menambah bahasa anda sendiri. Lebih banyak ciri akan datang, tetapi ia tidak akan menjadi gemuk: apa-apa yang anda tidak perlukan boleh dimatikan dalam tetapan.
 
 </div>
 
-> **Edisi model tempatan:** Repositori ini ialah varian pi-web yang diselenggara untuk model bahasa
-> yang digunakan secara tempatan dan dihoskan di LAN. Projek pi-web asal kekal sebagai sumber hulu
-> untuk ciri dan pembetulan bersama. Kami secara berkala menyegerakkan perubahan hulu, menyemaknya
-> terhadap masa jalan model tempatan, dan menerbitkan barisan ini secara bebas supaya kerja model
-> tempatan boleh bergerak secara selari.
+## Mengapa edisi model tempatan ini?
 
-Peraturan penyelenggaraan dan pembangunan untuk edisi ini didokumentasikan dalam
-[Pembangunan edisi model tempatan](docs/dev/local-llm-development.md).
+pi-web asal kekal sebagai asas upstream untuk ciri dan pembetulan yang dikongsi. Edisi ini mengekalkan pengalaman tersebut, kemudian menambah lapisan kebolehpercayaan untuk model yang berjalan pada mesin anda sendiri atau di tempat lain pada LAN anda—di mana penjanaan sering lebih perlahan, memori adalah terhad, dan konteks yang panjang boleh menghentikan sesi yang sihat.
+
+| Kawasan | pi-web upstream | Edisi ini |
+|------|-----------------|--------------|
+| Dasar model/runtime | Kelakuan pi-web standard | Mod **Auto / Local / Cloud** setiap sesi, dengan pengesanan tempatan sedar hujung dan ganti tangan manual yang kekal |
+| Pengendalian konteks panjang | Kelakuan pemampatan pi biasa | Local Mode memampat secara proaktif pada **65%** dan menyemak semula dalam gelung panggilan alat yang panjang sebelum permintaan pembekal lain |
+| Keselamatan pemampatan | Ringkasan standard | Titik pemeriksaan bergolek terhad, satu penulisan semula yang lebih ketat untuk output tidak sah/terhad, dan pengesanan tiada kemajuan dan bukannya pemampatan semula tanpa henti |
+| Larian terganggu | Pengendalian pekerja dan ralat biasa | Pemulihan terhad untuk limpahan konteks, penghentian hanya-pemikiran, dan gangguan pengangkutan terpilih, dengan pemutus gelung yang kekal |
+| Penyelamatan manual | Butiran konteks standard | **Force Compact** kekal tersedia sebagai laluan pemulihan eksplisit tanpa memadam perbualan |
+| Keserasian dan keluaran | Projek asal dan baris keluaran | Langkah keselamatan tempatan sahaja kekal di belakang Local Mode; Cloud Mode mengekalkan kelakuan upstream, dan perubahan upstream disemak dan dikeluarkan di sini secara bebas |
+
+Ini bukan penulisan semula atau pengganti untuk upstream. Ia adalah profil operasi yang diselenggara secara sengaja untuk orang yang menginginkan privasi dan kawalan model tempatan tanpa menerima sesi berjalan lama yang rapuh. Lihat [panduan pengguna](../en/README.md) untuk aliran kerja berorientasikan pengguna dan [pembangunan edisi model tempatan](../../docs/dev/local-llm-development.md) untuk pelaksanaan dan dasar penyegerakan.
 
 > [!WARNING]
 > pi-web kini dalam **beta**. Perkara akan berubah dan rosak!
 
 > [!TIP]
-> Baru di sini? **[Baca panduan pengguna →](user-docs/en/README.md)** untuk lawatan penuh ciri, langkah pemasangan, dan petua. ([Bahasa lain →](../README.md))
+> Baru di sini? **[Baca panduan pengguna →](../en/README.md)** untuk lawatan penuh ciri, langkah pemasangan, dan petua. ([Bahasa lain →](../README.md))
 
 ## Tangkapan Skrin
 
@@ -82,7 +88,7 @@ Setelah dipasang, buka `http://127.0.0.1:31415` dalam pelayar anda. Dari pi, gun
 
 > **Akses jauh macOS:** Pasang dan buka Tailscale secara interaktif, luluskan gesaan pentadbir dan log masuk. Kemudian jalankan `/pi-web restart`, diikuti dengan `/remote`.
 
-Untuk pemasangan manual, muat turun binari, atau binaan dari sumber, lihat [user-docs/install.md](user-docs/en/install.md).
+Untuk pemasangan manual, muat turun binari, atau binaan dari sumber, lihat [user-docs/install.md](../en/install.md).
 
 ## Integrasi Pi
 
@@ -117,7 +123,7 @@ Untuk menetapkan token untuk akses jauh, cipta `~/.config/pi-web/env`:
 PI_WEB_TOKEN=token-anda-di-sini
 ```
 
-Untuk butiran lanjut (persediaan manual, port tersuai, ikatan bukan loopback), lihat [user-docs/install.md](user-docs/en/install.md).
+Untuk butiran lanjut (persediaan manual, port tersuai, ikatan bukan loopback), lihat [user-docs/install.md](../en/install.md).
 
 ## Pembangunan
 

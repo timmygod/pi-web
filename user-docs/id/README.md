@@ -10,7 +10,17 @@
 
 pi-web adalah antarmuka web dan PWA yang indah untuk [pi](https://pi.dev) — agen coding AI sumber terbuka. Ini memungkinkan Anda menjelajahi, membaca, dan melanjutkan sesi pi dari peramban apa pun, di perangkat apa pun, dengan fitur-fitur cermat di setiap langkah.
 
-Repositori ini adalah **edisi local-model dari pi-web**. Ini mempertahankan pengalaman upstream pi-web sambil menambahkan jalur yang dipelihara secara terpisah untuk model yang di-deploy secara lokal dan di-host di LAN. Perubahan upstream disinkronkan secara berkala; perubahan local-model diuji dan dirilis secara paralel di jalur ini.
+## Apa yang berbeda dalam edisi ini?
+
+Repositori ini mempertahankan antarmuka pi-web dan fitur bersama dari upstream, tetapi mengubah cara sesi dilindungi ketika model yang dipilih berjalan secara lokal atau di LAN Anda.
+
+- **Pilih kebijakan runtime per sesi.** Auto mendeteksi endpoint lokal/LAN ketika metadata penyedia jelas; Local dan Cloud adalah pengesampingan manual yang persisten.
+- **Cegah kegagalan konteks lebih awal.** Local Mode melakukan kompresi pada penggunaan 65% dan memeriksa lagi di antara panggilan alat, sebelum permintaan penyedia berikutnya.
+- **Jaga ringkasan tetap terbatas.** Titik pemeriksaan bergulir mencegah ringkasan lama tumbuh tanpa henti, mencoba lagi sekali dengan anggaran yang lebih ketat, dan berhenti dengan aman ketika kompresi tidak membuat kemajuan yang berarti.
+- **Pulihkan secara konservatif.** Overflow konteks, gangguan transportasi yang dipilih, dan penghentian prematur yang hanya melibatkan penalaran dapat dilanjutkan secara otomatis, tetapi deduplikasi insiden dan pemutus sirkuit yang sadar akan kemajuan mencegah loop pemulihan.
+- **Biarkan pengguna tetap memegang kendali.** Force Compact selalu menjadi jalur penyelamatan manual yang terlihat, sementara Cloud Mode mempertahankan alur kerja dan kontrol upstream.
+
+Hasil praktisnya sederhana: tugas model lokal yang panjang harus dikompresi sebelum gagal, pulih sekali ketika pemulihan aman, dan berhenti dengan bersih alih-alih berputar-putar ketika tidak aman.
 
 **pi-web dibangun untuk dua jenis orang:**
 

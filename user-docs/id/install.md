@@ -21,6 +21,19 @@
 - Bagikan snapshot statis sebagai GitHub Gist rahasia
 - Ekstensi pi `/web`, `/remote`, `/refresh`, `/pi-web token` dan `/pi-web set-token` untuk membuka sesi, QR jarak jauh, sinkronisasi sesi, dan manajemen token
 
+## Pilih mode sesi
+
+Edisi ini menggunakan penyedia dan model yang sudah dikonfigurasi di pi; Local Mode adalah kebijakan runtime, bukan penginstal model terpisah atau layar kunci API kedua.
+Pilih mode saat membuat sesi, atau ubah setelah eksekusi saat ini selesai:
+
+| Mode | Gunakan ketika | Perilaku |
+|------|-------------|----------|
+| **Auto** | Anda ingin pi-web memutuskan | Mengurai endpoint lokal/LAN dari metadata penyedia bila memungkinkan; jika tidak, mempertahankan jalur normal |
+| **Local** | Model berjalan di mesin ini atau LAN Anda | Mengaktifkan batas kompresi 65%, checkpoint terbatas, Force Compact, dan pemulihan otomatis yang dijaga |
+| **Cloud** | Model yang dipilih dihosting dan harus mengikuti perilaku upstream | Menjaga kebijakan kompresi dan pemulihan khusus lokal di luar sesi |
+
+Pemilihan Local atau Cloud manual menang atas deteksi otomatis dan bertahan di antara muat ulang dan mulai ulang. Sesi yang sedang berjalan menolak perubahan mode hingga pekerjanya selesai, sehingga mode yang ditampilkan di UI selalu cocok dengan kebijakan yang benar-benar digunakan.
+
 ## Persyaratan
 
 - [Go](https://go.dev) 1.25+

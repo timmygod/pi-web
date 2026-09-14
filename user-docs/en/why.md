@@ -17,3 +17,32 @@ So I am building it here.
 This checkout is maintained as a local-model edition of pi-web. It follows the
 upstream project for shared improvements, while keeping local deployment,
 context stability, and local-model testing on a separately released track.
+
+## Why a local model needs a different operating profile
+
+The original pi-web experience is an excellent foundation, but local inference
+has different failure modes from a typical hosted model. A local model may slow
+down sharply as context grows, share limited memory with the rest of the machine,
+stop after producing only reasoning, or lose a long run to a transient local
+transport failure. Treating those cases exactly like cloud failures makes the UI
+look compatible while the actual session remains fragile.
+
+This edition approaches the problem in layers:
+
+1. **Preserve upstream first.** Shared UI and session behavior continue to come
+   from pi-web; local changes are isolated behind effective Local Mode.
+2. **Prevent before recovering.** A percentage-based 65% context boundary is
+   enforced before subsequent model calls, including calls inside long tool loops.
+3. **Recover only with evidence.** Automatic continuation is limited to recognized
+   context, transport, and thinking-only incidents—not authentication, quota, or
+   arbitrary provider errors.
+4. **Bound every autonomous action.** Recovery incidents are deduplicated,
+   progress is required before another rescue, and startup considers at most one
+   recently active Local session.
+5. **Keep a manual exit.** Force Compact summarizes rather than wipes history, so
+   the user can rescue a session without pretending the context never existed.
+6. **Protect cloud compatibility.** Cloud Mode keeps the upstream semantics and
+   controls; local-model optimizations do not silently redefine cloud sessions.
+
+That is the real difference in this fork: it treats local inference as a distinct
+operational environment, not merely another model name in a dropdown.

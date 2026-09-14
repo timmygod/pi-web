@@ -10,7 +10,17 @@
 
 pi-web ialah UI web dan PWA yang cantik untuk [pi](https://pi.dev) — ejen pengekodan AI sumber terbuka. Ia membolehkan anda melayari, membaca, dan menyambung sesi pi anda dari mana-mana pelayar, pada mana-mana peranti, dengan ciri-ciri yang teliti di setiap langkah.
 
-Repositori ini ialah **edisi local-model bagi pi-web**. Ia mengekalkan pengalaman upstream pi-web sambil menambah laluan yang diselenggara secara berasingan untuk model yang di-deploy secara tempatan dan dihoskan di LAN. Perubahan upstream disegerakkan secara berkala; perubahan local-model diuji dan dikeluarkan secara selari pada barisan ini.
+## Apakah yang berbeza dalam edisi ini?
+
+Repositori ini mengekalkan antara muka pi-web dan ciri-ciri bersama daripada upstream, tetapi mengubah cara sesi dilindungi apabila model yang dipilih berjalan secara tempatan atau pada LAN anda.
+
+- **Pilih dasar masa berjalan setiap sesi.** Auto mengesan hujung tempatan/LAN apabila metadata pembekal jelas; Local dan Cloud adalah pembatalan manual yang kekal.
+- **Cegah kegagalan konteks lebih awal.** Local Mode memadatkan pada penggunaan 65% dan menyemak semula antara panggilan alat, sebelum permintaan pembekal seterusnya.
+- **Kekalkan ringkasan terhad.** Titik pemeriksaan bergolek mengelakkan ringkasan lama daripada membesar tanpa henti, mencuba sekali lagi dengan belanjawan yang lebih ketat, dan berhenti dengan selamat apabila pemadatan tidak membuat kemajuan yang bermakna.
+- **Pulih secara konservatif.** Lebihan konteks, gangguan pengangkutan yang dipilih, dan penghentian awal yang hanya melibatkan penaakulan boleh disambung semula secara automatik, tetapi penduplikatan insiden dan pemutus litar yang sedar kemajuan mencegah gelung pemulihan.
+- **Biarkan pengguna memegang kawalan.** Force Compact sentiasa menjadi laluan penyelamatan manual yang kelihatan, manakala Cloud Mode mengekalkan aliran kerja dan kawalan upstream.
+
+Hasil praktikalnya mudah: tugas model tempatan yang panjang harus dipadatkan sebelum ia gagal, pulih sekali apabila pemulihan adalah selamat, dan berhenti dengan bersih dan bukannya berulang apabila ia tidak selamat.
 
 **pi-web dibina untuk dua jenis orang:**
 

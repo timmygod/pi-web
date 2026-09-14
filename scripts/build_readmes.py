@@ -53,6 +53,15 @@ def extract_body(text: str) -> str:
 
 
 def rewrite_paths(body: str) -> str:
+    body = body.replace(
+        "(user-docs/en/personal-assistant.md)", "(../en/personal-assistant.md)"
+    )
+    body = body.replace("(user-docs/en/README.md)", "(../en/README.md)")
+    body = body.replace("(user-docs/en/install.md)", "(../en/install.md)")
+    body = body.replace(
+        "(docs/dev/local-llm-development.md)",
+        "(../../docs/dev/local-llm-development.md)",
+    )
     body = body.replace("(user-docs/personal-assistant.md)", "(../personal-assistant.md)")
     body = body.replace("(user-docs/README.md)", "(../README.md)")
     body = body.replace('src="user-docs/assets/', 'src="../assets/')

@@ -10,7 +10,17 @@
 
 pi-web est une interface web et une PWA élégante pour [pi](https://pi.dev) — l'agent de codage IA open source. Elle vous permet de parcourir, lire et poursuivre vos sessions pi depuis n'importe quel navigateur, sur n'importe quel appareil, avec des fonctionnalités soignées à chaque étape.
 
-Ce dépôt est l'**édition local-model de pi-web**. Il conserve l'expérience upstream de pi-web tout en ajoutant un chemin maintenu séparément pour les modèles déployés localement et hébergés sur LAN. Les modifications upstream sont synchronisées périodiquement ; les modifications de local-model sont testées et publiées en parallèle sur cette ligne.
+## Qu'est-ce qui est différent dans cette édition ?
+
+Ce dépôt conserve l'interface pi-web et les fonctionnalités partagées de upstream, mais modifie la façon dont les sessions sont protégées lorsque le modèle sélectionné s'exécute localement ou sur votre LAN.
+
+- **Choisissez la politique d'exécution par session.** Auto détecte les points de terminaison locaux/LAN lorsque les métadonnées du fournisseur sont claires ; Local et Cloud sont des remplacements manuels persistants.
+- **Empêchez les échecs de contexte tôt.** Local Mode compresse à 65 % d'utilisation et vérifie à nouveau entre les appels d'outils, avant la prochaine demande au fournisseur.
+- **Gardez les résumés bornés.** Les points de contrôle glissants évitent qu'un ancien résumé ne s'allonge indéfiniment, réessayent une fois avec un budget plus serré et s'arrêtent en toute sécurité lorsque la compression ne fait aucun progrès significatif.
+- **Récupérez de manière conservatrice.** Les débordements de contexte, les interruptions du transport sélectionné et les arrêts prématurés dus uniquement au raisonnement peuvent reprendre automatiquement, mais la déduplication des incidents et les disjoncteurs conscients des progrès empêchent les boucles de récupération.
+- **Laissez l'utilisateur aux commandes.** Force Compact est toujours le chemin de secours manuel visible, tandis que Cloud Mode conserve le flux de travail et les contrôles de upstream.
+
+Le résultat pratique est simple : une tâche longue avec un modèle local devrait se compresser avant de tomber en panne, récupérer une fois lorsque la récupération est sûre, et s'arrêter proprement au lieu de boucler lorsque ce n'est pas le cas.
 
 **pi-web est conçu pour deux types de personnes :**
 

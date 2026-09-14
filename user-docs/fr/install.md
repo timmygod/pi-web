@@ -21,6 +21,19 @@
 - Partagez des instantanés statiques sous forme de Gists GitHub secrets
 - Extensions pi `/web`, `/remote`, `/refresh`, `/pi-web token` et `/pi-web set-token` pour ouvrir des sessions, QR distant, synchronisation de session et gestion du token
 
+## Choisissez le mode de session
+
+Cette édition utilise les fournisseurs et modèles déjà configurés dans pi ; le Mode Local est une politique d'exécution, pas un installateur de modèle séparé ni un deuxième écran de clé API.
+Choisissez un mode lors de la création d'une session, ou modifiez-le après que l'exécution actuelle se stabilise :
+
+| Mode | Utilisez-le quand | Comportement |
+|------|-------------|----------|
+| **Auto** | Vous souhaitez que pi-web décide | Résout les points de terminaison locaux/LAN à partir des métadonnées du fournisseur lorsque possible ; sinon, maintient le chemin normal |
+| **Local** | Le modèle s'exécute sur cette machine ou votre LAN | Active la limite de compaction de 65%, les points de contrôle bornés, Force Compact et la récupération automatique protégée |
+| **Cloud** | Le modèle sélectionné est hébergé et doit suivre le comportement upstream | Maintient la politique de compaction et de récupération locale uniquement hors de la session |
+
+La sélection manuelle de Local ou Cloud l'emporte sur la détection automatique et persiste entre les rechargements et les redémarrages. Une session en cours rejette les changements de mode jusqu'à ce que son worker se stabilise, de sorte que le mode affiché dans l'interface utilisateur correspond toujours à la politique réellement utilisée.
+
 ## Prérequis
 
 - [Go](https://go.dev) 1.25+

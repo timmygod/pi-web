@@ -22,14 +22,29 @@ Make it yours: switch themes and fonts, and use it in your own language — pi-w
 
 </div>
 
-> **Local-model edition:** This repository is a maintained pi-web variant for
-> locally deployed and LAN-hosted language models. The original pi-web project
-> remains the upstream source for shared features and fixes. We periodically
-> sync upstream changes, review them against the local-model runtime, and publish
-> this line independently so local-model work can move in parallel.
+## Why this local-model edition?
 
-The maintenance and development rules for this edition are documented in
-[Local-model edition development](docs/dev/local-llm-development.md).
+The original pi-web remains the upstream foundation for shared features and
+fixes. This edition keeps that experience, then adds a reliability layer for
+models running on your own machine or elsewhere on your LAN—where generation is
+often slower, memory is finite, and a long context can stall an otherwise healthy
+session.
+
+| Area | Upstream pi-web | This edition |
+|------|-----------------|--------------|
+| Model/runtime policy | Standard pi-web behavior | Per-session **Auto / Local / Cloud** mode, with endpoint-aware local detection and a persistent manual override |
+| Long-context handling | Normal pi compaction behavior | Local Mode compacts proactively at **65%** and checks again inside long tool-call loops before the next model request |
+| Compaction safety | Standard summaries | Bounded rolling checkpoints, one tighter rewrite for invalid/capped output, and no-progress detection instead of endless re-compaction |
+| Interrupted runs | Normal worker and error handling | Bounded recovery for context overflow, thinking-only stops, and selected transport interruptions, with persistent loop breakers |
+| Manual rescue | Standard context details | **Force Compact** remains available as an explicit recovery path without erasing the conversation |
+| Compatibility and releases | Original project and release line | Local-only safeguards stay behind Local Mode; Cloud Mode preserves upstream behavior, and upstream changes are reviewed and released here independently |
+
+This is not a rewrite or a replacement for upstream. It is a deliberately
+maintained operating profile for people who want local-model privacy and control
+without accepting fragile long-running sessions. See the
+[user guide](user-docs/en/README.md) for the user-facing workflow and
+[local-model edition development](docs/dev/local-llm-development.md) for the
+implementation and synchronization policy.
 
 > [!WARNING]
 > pi-web is currently in **beta**. Things will change and break!

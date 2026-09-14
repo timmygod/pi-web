@@ -10,10 +10,28 @@
 
 pi-web is a beautiful web UI and PWA for [pi](https://pi.dev) — the open-source AI coding agent. It lets you browse, read, and continue your pi sessions from any browser, on any device, with thoughtful features at every turn.
 
-This repository is the **local-model edition of pi-web**. It keeps the upstream
-pi-web experience while adding a separately maintained path for locally
-deployed and LAN-hosted models. Upstream changes are synchronized periodically;
-local-model changes are tested and released in parallel on this line.
+## What is different in this edition?
+
+This repository keeps the upstream pi-web interface and shared features, but
+changes how sessions are protected when the selected model runs locally or on
+your LAN.
+
+- **Choose the runtime policy per session.** Auto detects local/LAN endpoints when
+  provider metadata is clear; Local and Cloud are persistent manual overrides.
+- **Prevent context failures early.** Local Mode compacts at 65% usage and checks
+  again between tool calls, before the next model request.
+- **Keep summaries bounded.** Rolling checkpoints avoid endlessly growing an old
+  summary, retry once with a tighter budget, and stop safely when compaction makes
+  no meaningful progress.
+- **Recover conservatively.** Context overflow, selected transport interruptions,
+  and reasoning-only premature stops can resume automatically, but incident
+  deduplication and progress-aware circuit breakers prevent recovery loops.
+- **Leave the user in control.** Force Compact is always the visible manual rescue
+  path, while Cloud Mode retains the upstream workflow and controls.
+
+The practical result is simple: a long local-model task should compact before it
+falls over, recover once when recovery is safe, and stop cleanly instead of
+looping when it is not.
 
 **pi-web is built for two kinds of people:**
 

@@ -10,7 +10,17 @@
 
 Ang pi-web ay isang magandang web UI at PWA para sa [pi](https://pi.dev) — ang open-source AI coding agent. Pinapayagan ka nitong mag-browse, magbasa, at magpatuloy ng iyong mga pi session mula sa kahit anong browser, sa kahit anong device, na may mga maingat na feature sa bawat pagkakataon.
 
-Ang repository na ito ay ang **local-model edition ng pi-web**. Pinapanatili nito ang karanasan ng upstream pi-web habang nagdadagdag ng isang hiwalay na pinapanatiling landas para sa mga model na na-deploy nang lokal at na-host sa LAN. Ang mga pagbabago sa upstream ay nagsi-sync nang paminsan-minsan; ang mga pagbabago sa local-model ay sinusubok at inilalabas nang parallel sa linya na ito.
+## Ano ang iba sa edisyong ito?
+
+Pinapanatili ng repository na ito ang interface ng pi-web at mga katangiang ibinahagi mula sa upstream, ngunit binabago nito ang paraan ng pagprotekta sa mga sesyon kapag ang napiling modelo ay tumatakbo nang lokal o sa iyong LAN.
+
+- **Piliin ang patakaran ng runtime bawat sesyon.** Natutukoy ng Auto ang mga lokal/LAN endpoint kapag malinaw ang metadata ng provider; Ang Local at Cloud ay mga permanenteng manual na pagpapalit.
+- **Pigilan ang mga pagkabigo ng kontekstua nang maaga.** Ang Local Mode ay nagko-compact sa 65% paggamit at muling tinitingnan sa pagitan ng mga tawag sa tool, bago ang susunod na kahilingan sa provider.
+- **Panatilihing may hangganan ang mga buod.** Ang mga rolling checkpoint ay iniiwasan ang walang katapusang paglaki ng lumang buod, muling sinusubukan nang isang beses na may mas mahigpit na badyet, at ligtas na humihinto kapag ang pag-compact ay hindi gumagawa ng makahulugang pag-unlad.
+- **Bumawi nang mahinahon.** Ang pagtapon ng konteksto, mga pagkagambala sa napiling transport, at mga maagang paghinto na tungkol lamang sa pag-iisip ay maaaring muling simulan nang awtomatiko, ngunit ang deduplikasyon ng insidente at mga circuit breaker na may kamalayan sa pag-unlad ay humahadlang sa mga loop ng pagbawi.
+- **Iwan ang kontrol sa kamay ng gumagamit.** Ang Force Compact ay palaging ang nakikitang manual na daan ng pagligtas, habang ang Cloud Mode ay pinapanatili ang daloy ng gawain at mga kontrol ng upstream.
+
+Ang praktikal na resulta ay simple: ang isang mahabang gawain ng lokal na modelo ay dapat mag-compact bago ito bumagsak, bumawi nang isang beses kapag ligtas ang pagbawi, at huminto nang maayos sa halip na umikot kapag hindi ito ligtas.
 
 **Ang pi-web ay ginawa para sa dalawang uri ng tao:**
 

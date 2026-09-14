@@ -21,6 +21,19 @@
 - Chia sẻ ảnh chụp tĩnh dưới dạng GitHub Gists bí mật
 - Các tiện ích mở rộng pi `/web`, `/remote`, `/refresh`, `/pi-web token` và `/pi-web set-token` để mở phiên, QR từ xa, đồng bộ phiên và quản lý token
 
+## Chọn chế độ phiên
+
+Phiên bản này sử dụng các nhà cung cấp và mô hình đã được cấu hình trong pi; Local Mode là một chính sách thời gian chạy, không phải là một trình cài đặt mô hình riêng biệt hay một màn hình khóa API thứ hai.
+Chọn chế độ khi tạo phiên, hoặc thay đổi sau khi phiên chạy hiện tại kết thúc:
+
+| Chế độ | Sử dụng khi | Hành vi |
+|------|-------------|----------|
+| **Auto** | Bạn muốn pi-web quyết định | Giải quyết các điểm cuối cục bộ/LAN từ siêu dữ liệu nhà cung cấp khi có thể; nếu không, giữ nguyên đường dẫn thông thường |
+| **Local** | Mô hình đang chạy trên máy này hoặc LAN của bạn | Bật ranh giới nén 65%, các điểm kiểm tra có giới hạn, Force Compact và phục hồi tự động được bảo vệ |
+| **Cloud** | Mô hình được chọn được lưu trữ và nên tuân theo hành vi upstream | Giữ chính sách nén và phục hồi chỉ cục bộ ra khỏi phiên |
+
+Việc chọn Local hoặc Cloud thủ công sẽ ghi đè lên phát hiện tự động và duy trì qua các lần tải lại và khởi động lại. Một phiên đang chạy từ chối thay đổi chế độ cho đến khi worker của nó kết thúc, vì vậy chế độ hiển thị trong UI luôn khớp với chính sách thực sự đang được sử dụng.
+
 ## Yêu cầu
 
 - [Go](https://go.dev) 1.25+

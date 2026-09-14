@@ -21,6 +21,19 @@
 - Statische Snapshots als geheime GitHub Gists teilen
 - `/web`, `/remote`, `/refresh`, `/pi-web token` und `/pi-web set-token` pi-Erweiterungen zum Öffnen von Sitzungen, Remote-QR, Sitzungssynchronisation und Token-Verwaltung
 
+## Sitzungsmodus auswählen
+
+Diese Ausgabe verwendet die in pi bereits konfigurierten Anbieter und Modelle; der Local Mode ist eine Laufzeitrichtlinie, kein separates Modellinstallationsprogramm oder ein zweiter API-Schlüssel-Bildschirm.
+Wählen Sie einen Modus beim Erstellen einer Sitzung aus, oder ändern Sie ihn, nachdem der aktuelle Durchlauf abgeschlossen ist:
+
+| Modus | Verwenden Sie ihn, wenn | Verhalten |
+|------|-------------|----------|
+| **Auto** | Sie möchten, dass pi-web entscheidet | Löst lokale/LAN-Endpunkte aus den Anbieter-Metadaten auf, wenn möglich; andernfalls wird der normale Pfad beibehalten |
+| **Local** | Das Modell läuft auf diesem Rechner oder in Ihrem LAN | Aktiviert die 65%-Kompaktierungsgrenze, begrenzte Checkpoints, Force Compact und gesicherte automatische Wiederherstellung |
+| **Cloud** | Das ausgewählte Modell ist gehostet und sollte dem Upstream-Verhalten folgen | Hält die lokale Kompaktierungs- und Wiederherstellungsrichtlinie aus der Sitzung heraus |
+
+Die manuelle Auswahl von Local oder Cloud hat Vorrang vor der automatischen Erkennung und bleibt nach Neuladen und Neustart erhalten. Eine laufende Sitzung lehnt Modusänderungen ab, bis ihr Worker abgeschlossen ist, sodass der in der Benutzeroberfläche angezeigte Modus immer mit der tatsächlich verwendeten Richtlinie übereinstimmt.
+
 ## Voraussetzungen
 
 - [Go](https://go.dev) 1.25+
