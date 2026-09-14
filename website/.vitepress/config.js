@@ -32,7 +32,7 @@ export default defineConfig({
   cleanUrls: true,
   title: 'pi-web',
   description:
-    'A beautiful web UI and PWA for pi — browse, read, and continue your AI coding sessions from any browser, on any device.',
+    'A local-model and LAN-optimized web UI for pi — control AI coding sessions from any browser, with resilient long-context handling for self-hosted models.',
   // The nav ThemeSwitcher owns theming (4 named themes), so disable VitePress's
   // own light/dark toggle. Set the saved theme (default dracula) before first
   // paint to avoid a flash.

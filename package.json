@@ -1,9 +1,17 @@
 {
   "name": "@timmygod/pi-web-local",
-  "description": "Remote control your pi coding agent from any browser on your network",
-  "version": "0.0.1-beta.37",
+  "description": "Local-model and LAN-optimized web UI for the pi coding agent",
+  "version": "0.0.1-beta.38",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "pi-web",
+    "local-llm",
+    "self-hosted",
+    "lan",
+    "qwen",
+    "ollama",
+    "coding-agent",
+    "pwa"
   ],
   "pi": {
     "extensions": [
