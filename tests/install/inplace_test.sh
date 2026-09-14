@@ -73,7 +73,7 @@ SHIM
   )
   [[ "$mode" == "inplace" ]] && env_vars+=("PI_WEB_INPLACE_UPDATE=1")
   if [[ -n "$package_version" ]]; then
-    env_vars+=("npm_package_name=@ygncode/pi-web" "npm_package_version=$package_version")
+    env_vars+=("npm_package_name=@timmygod/pi-web-local" "npm_package_version=$package_version")
   fi
 
   env -i "${env_vars[@]}" bash "$INSTALL_SH" </dev/null > "$workdir/out.log" 2>&1 \

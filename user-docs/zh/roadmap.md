@@ -19,11 +19,11 @@ pi-web 为两类用户打造：
 
 | # | 功能 | 说明 |
 |---|---|---|
-| [#50](https://github.com/ygncode/pi-web/issues/50) | **Telegram 和 Discord 机器人** | 通过 Telegram 或 Discord 与 pi 聊天——非常适合移动中的个人助理工作流。 |
-| [#49](https://github.com/ygncode/pi-web/issues/49) | **使用洞察** | Token 追踪、成本估算、会话分析——了解你如何使用 pi。 |
-| [#48](https://github.com/ygncode/pi-web/issues/48) | **可配置的默认设置** | 为所有会话设置思考过程、工具调用和工具输出的可见性偏好。 |
-| [#46](https://github.com/ygncode/pi-web/issues/46) | **引导 / 队列** | 在 pi 仍在运行时发送后续指令——中途引导它。 |
-| [#41](https://github.com/ygncode/pi-web/issues/41) | **`/compact` 命令** | 直接从 Web 界面压缩长对话，无需终端。 |
+| [#50](https://github.com/timmygod/pi-web/issues/50) | **Telegram 和 Discord 机器人** | 通过 Telegram 或 Discord 与 pi 聊天——非常适合移动中的个人助理工作流。 |
+| [#49](https://github.com/timmygod/pi-web/issues/49) | **使用洞察** | Token 追踪、成本估算、会话分析——了解你如何使用 pi。 |
+| [#48](https://github.com/timmygod/pi-web/issues/48) | **可配置的默认设置** | 为所有会话设置思考过程、工具调用和工具输出的可见性偏好。 |
+| [#46](https://github.com/timmygod/pi-web/issues/46) | **引导 / 队列** | 在 pi 仍在运行时发送后续指令——中途引导它。 |
+| [#41](https://github.com/timmygod/pi-web/issues/41) | **`/compact` 命令** | 直接从 Web 界面压缩长对话，无需终端。 |
 
 ---
 
@@ -31,9 +31,9 @@ pi-web 为两类用户打造：
 
 | # | 功能 | 说明 |
 |---|---|---|
-| [#47](https://github.com/ygncode/pi-web/issues/47) | **文件浏览器和 Git Diff** | 直接在 pi-web 中浏览项目文件树并查看 git 变更。需主动启用，不会干扰你。 |
-| [#44](https://github.com/ygncode/pi-web/issues/44) | **定时调度器** | 定时自动运行提示——每日站会、晨间摘要、周期性任务。出于安全考虑，需管理员权限。 |
-| [#43](https://github.com/ygncode/pi-web/issues/43) | **可自定义的快捷键** | 重新映射每个键盘快捷键，以匹配你的肌肉记忆。 |
+| [#47](https://github.com/timmygod/pi-web/issues/47) | **文件浏览器和 Git Diff** | 直接在 pi-web 中浏览项目文件树并查看 git 变更。需主动启用，不会干扰你。 |
+| [#44](https://github.com/timmygod/pi-web/issues/44) | **定时调度器** | 定时自动运行提示——每日站会、晨间摘要、周期性任务。出于安全考虑，需管理员权限。 |
+| [#43](https://github.com/timmygod/pi-web/issues/43) | **可自定义的快捷键** | 重新映射每个键盘快捷键，以匹配你的肌肉记忆。 |
 
 ---
 
@@ -47,4 +47,4 @@ pi-web 为两类用户打造：
 
 ---
 
-> 💡 有想法？[提交 Issue](https://github.com/ygncode/pi-web/issues/new) 或加入讨论。
+> 💡 有想法？[提交 Issue](https://github.com/timmygod/pi-web/issues/new) 或加入讨论。

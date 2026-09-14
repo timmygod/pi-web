@@ -4,7 +4,7 @@
   "actions": [
     { "theme": "brand", "text": "Get Started", "to": "guide" },
     { "theme": "alt", "text": "Install", "to": "install" },
-    { "theme": "alt", "text": "View on GitHub", "link": "https://github.com/ygncode/pi-web" }
+    { "theme": "alt", "text": "View on GitHub", "link": "https://github.com/timmygod/pi-web" }
   ],
   "features": [
     {

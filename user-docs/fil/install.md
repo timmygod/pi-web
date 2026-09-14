@@ -45,7 +45,7 @@ Ang manu-manong pagpili ng Local o Cloud ang masusunod kaysa sa awtomatikong pag
 ### Pi package (inirerekomenda)
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 Ang nag-iisang utos na ito ay:
@@ -63,45 +63,45 @@ Sa Linux, ang auto-start ay naka-configure bilang isang user systemd service sa 
 Upang mag-install lamang para sa isang partikular na proyekto (ibinahagi sa iyong team sa pamamagitan ng `.pi/settings.json`):
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 Pagkatapos ay i-restart ang pi (o patakbuhin ang `/reload`), at gamitin ang `/web`, `/pi-web`, `/remote`, `/refresh`. Pamahalaan ang iyong access token gamit ang `/pi-web token` at `/pi-web set-token`.
 
-Kung mag-abort ang npm na may `ENOTEMPTY` habang nire-rename ang `@ygncode/pi-web`, tanggalin ang mga stale hidden backup directory ng npm at muling i-install ang beta channel:
+Kung mag-abort ang npm na may `ENOTEMPTY` habang nire-rename ang `@timmygod/pi-web-local`, tanggalin ang mga stale hidden backup directory ng npm at muling i-install ang beta channel:
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### Mabilisang pag-install (walang build tools na kailangan)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 Dina-download nito ang pinakabagong pi-web binary, ini-install ito sa `/usr/local/bin`, at nagse-set up ng auto-start sa login. Walang Go, Node, o pi na kinakailangan.
 
 ### I-download ang binary
 
-Ang mga pre-built binary ay nakakabit sa bawat [GitHub Release](https://github.com/ygncode/pi-web/releases).
+Ang mga pre-built binary ay nakakabit sa bawat [GitHub Release](https://github.com/timmygod/pi-web/releases).
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
@@ -116,7 +116,7 @@ sudo cp pi-web /usr/local/bin/
 ### Bumuo mula sa source
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # binubuo ang Vite bundle, pagkatapos ay ini-embed ito sa Go binary
 
@@ -132,7 +132,7 @@ ang `go build ./cmd/pi-web`.
 ## Pag-uninstall
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 Pinapatakbo nito ang package `preuninstall` script (`bash uninstall.sh`), na humihinto

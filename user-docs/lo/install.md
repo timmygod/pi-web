@@ -45,7 +45,7 @@
 ### Pi package (ແນະນຳ)
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ຄຳສັ່ງດຽວນີ້:
@@ -63,45 +63,45 @@ pi install npm:@ygncode/pi-web@beta
 ເພື່ອຕິດຕັ້ງສະເພາະສຳລັບໂປຣເຈັກໃດໜຶ່ງ (ແບ່ງປັນກັບທີມຂອງທ່ານຜ່ານ `.pi/settings.json`):
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 ຈາກນັ້ນ restart pi (ຫຼື ເຮັດ `/reload`), ແລະ ໃຊ້ `/web`, `/pi-web`, `/remote`, `/refresh`. ຈັດການ token ການເຂົ້າເຖິງຂອງທ່ານດ້ວຍ `/pi-web token` ແລະ `/pi-web set-token`.
 
-ຖ້າ npm ຢຸດດ້ວຍ `ENOTEMPTY` ໃນຂະນະທີ່ປ່ຽນຊື່ `@ygncode/pi-web`, ໃຫ້ລຶບໄດເຣັກທໍຣີສຳຮອງທີ່ເຊື່ອງໄວ້ທີ່ຄ້າງຢູ່ຂອງ npm ແລະ ຕິດຕັ້ງ beta channel ໃໝ່:
+ຖ້າ npm ຢຸດດ້ວຍ `ENOTEMPTY` ໃນຂະນະທີ່ປ່ຽນຊື່ `@timmygod/pi-web-local`, ໃຫ້ລຶບໄດເຣັກທໍຣີສຳຮອງທີ່ເຊື່ອງໄວ້ທີ່ຄ້າງຢູ່ຂອງ npm ແລະ ຕິດຕັ້ງ beta channel ໃໝ່:
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### ການຕິດຕັ້ງແບບດ່ວນ (ບໍ່ຕ້ອງມີ build tools)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 ຄຳສັ່ງນີ້ດາວໂຫຼດໄບນາຣີ pi-web ລ່າສຸດ, ຕິດຕັ້ງມັນໃສ່ `/usr/local/bin`, ແລະ ຕັ້ງຄ່າການເລີ່ມອັດຕະໂນມັດເມື່ອ login. ບໍ່ຕ້ອງການ Go, Node, ຫຼື pi.
 
 ### ດາວໂຫຼດໄບນາຣີ
 
-ໄບນາຣີທີ່ສ້າງມາກ່ອນຖືກແນບມາໃນແຕ່ລະ [GitHub Release](https://github.com/ygncode/pi-web/releases).
+ໄບນາຣີທີ່ສ້າງມາກ່ອນຖືກແນບມາໃນແຕ່ລະ [GitHub Release](https://github.com/timmygod/pi-web/releases).
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
@@ -116,7 +116,7 @@ sudo cp pi-web /usr/local/bin/
 ### ສ້າງຈາກ source
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # ສ້າງ Vite bundle, ຈາກນັ້ນຝັງມັນໃສ່ Go binary
 
@@ -132,7 +132,7 @@ frontend bundle ຖືກຝັງໂດຍ `web/assets_embed.go`, ດັ່ງ�
 ## ການຖອນການຕິດຕັ້ງ
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 ຄຳສັ່ງນີ້ເຮັດວຽກສະຄຣິບ `preuninstall` ຂອງ package (`bash uninstall.sh`), ເຊິ່ງຢຸດ

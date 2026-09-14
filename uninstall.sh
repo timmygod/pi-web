@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # pi-web uninstaller — removes binary, service config, and runtime state.
-# Triggered as npm preuninstall hook when `pi remove npm:@ygncode/pi-web@beta`
+# Triggered as npm preuninstall hook when `pi remove npm:@timmygod/pi-web-local@beta`
 # is run. The npm package directory itself is removed by npm after this script.
 #
 # Kept intact (survives uninstall → preserves data for reinstall):
@@ -83,7 +83,7 @@ remove_state() {
 
 # ── Clean up stale npm temp dirs ────────────────────────────────────
 cleanup_npm_temps() {
-  local pattern="${HOME}/.pi/agent/npm/node_modules/@ygncode/.pi-web-*"
+  local pattern="${HOME}/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-*"
   local count=0
   for d in $pattern; do
     if [[ -d "$d" ]]; then

@@ -1,10 +1,10 @@
 # pi-web installer for Windows — downloads the binary and sets up auto-start.
 #
 # Standalone (no pi required):
-#   irm https://raw.githubusercontent.com/ygncode/pi-web/main/install.ps1 | iex
+#   irm https://raw.githubusercontent.com/timmygod/pi-web/main/install.ps1 | iex
 #
 # Via pi package (also registers /web, /remote commands):
-#   pi install npm:@ygncode/pi-web@beta
+#   pi install npm:@timmygod/pi-web-local@beta
 #
 # Updates are handled by re-running the same command.
 #
@@ -18,7 +18,7 @@
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
-$Repo = 'ygncode/pi-web'
+$Repo = 'timmygod/pi-web'
 if ($env:PI_WEB_INSTALL_DIR) {
   $InstallDir = $env:PI_WEB_INSTALL_DIR
 } else {
@@ -51,7 +51,7 @@ function Get-Arch {
 function Get-PackageTag {
   # When running as an npm lifecycle script, install the binary that matches
   # the npm package version so pinned installs stay pinned (see install.sh).
-  if ($env:npm_package_name -eq '@ygncode/pi-web' -and $env:npm_package_version) {
+  if ($env:npm_package_name -eq '@timmygod/pi-web-local' -and $env:npm_package_version) {
     return 'v' + $env:npm_package_version.TrimStart('v')
   }
   return $null

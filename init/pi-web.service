@@ -1,6 +1,6 @@
 [Unit]
 Description=pi-web — browser-based pi session viewer and chat
-Documentation=https://github.com/ygncode/pi-web
+Documentation=https://github.com/timmygod/pi-web
 After=network-online.target
 Wants=network-online.target
 

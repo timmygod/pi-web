@@ -45,7 +45,7 @@ Pemilihan Local atau Cloud manual menang atas deteksi otomatis dan bertahan di a
 ### Paket Pi (direkomendasikan)
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 Satu perintah ini:
@@ -63,45 +63,45 @@ Di Linux, auto-start dikonfigurasi sebagai layanan systemd pengguna di `~/.confi
 Untuk menginstal hanya untuk proyek tertentu (dibagikan dengan tim Anda via `.pi/settings.json`):
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 Kemudian mulai ulang pi (atau jalankan `/reload`), dan gunakan `/web`, `/pi-web`, `/remote`, `/refresh`. Kelola token akses Anda dengan `/pi-web token` dan `/pi-web set-token`.
 
-Jika npm gagal dengan `ENOTEMPTY` saat mengganti nama `@ygncode/pi-web`, hapus direktori cadangan tersembunyi npm yang usang dan instal ulang saluran beta:
+Jika npm gagal dengan `ENOTEMPTY` saat mengganti nama `@timmygod/pi-web-local`, hapus direktori cadangan tersembunyi npm yang usang dan instal ulang saluran beta:
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### Instalasi cepat (tanpa alat build)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 Ini mengunduh biner pi-web terbaru, menginstalnya ke `/usr/local/bin`, dan menyiapkan auto-start saat login. Tidak memerlukan Go, Node, atau pi.
 
 ### Unduh biner
 
-Biner yang sudah dibangun tersedia di setiap [GitHub Release](https://github.com/ygncode/pi-web/releases).
+Biner yang sudah dibangun tersedia di setiap [GitHub Release](https://github.com/timmygod/pi-web/releases).
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
@@ -116,7 +116,7 @@ sudo cp pi-web /usr/local/bin/
 ### Build dari sumber
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # membangun bundel Vite, lalu menanamkannya ke biner Go
 
@@ -132,7 +132,7 @@ berurutan; jika Anda membangun secara manual, jalankan `npm --prefix web install
 ## Penghapusan
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 Ini menjalankan skrip `preuninstall` paket (`bash uninstall.sh`), yang menghentikan

@@ -45,7 +45,7 @@ Việc chọn Local hoặc Cloud thủ công sẽ ghi đè lên phát hiện t�
 ### Gói Pi (khuyến nghị)
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 Một lệnh duy nhất này:
@@ -63,45 +63,45 @@ Trên Linux, tự động khởi động được cấu hình dưới dạng d�
 Để chỉ cài đặt cho một dự án cụ thể (chia sẻ với nhóm qua `.pi/settings.json`):
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 Sau đó khởi động lại pi (hoặc chạy `/reload`), và sử dụng `/web`, `/pi-web`, `/remote`, `/refresh`. Quản lý token truy cập của bạn với `/pi-web token` và `/pi-web set-token`.
 
-Nếu npm hủy bỏ với `ENOTEMPTY` khi đổi tên `@ygncode/pi-web`, hãy xóa các thư mục sao lưu ẩn cũ của npm và cài đặt lại kênh beta:
+Nếu npm hủy bỏ với `ENOTEMPTY` khi đổi tên `@timmygod/pi-web-local`, hãy xóa các thư mục sao lưu ẩn cũ của npm và cài đặt lại kênh beta:
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### Cài đặt nhanh (không cần công cụ build)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 Lệnh này tải xuống tệp nhị phân pi-web mới nhất, cài đặt vào `/usr/local/bin` và thiết lập tự động khởi động khi đăng nhập. Không cần Go, Node hoặc pi.
 
 ### Tải xuống tệp nhị phân
 
-Các tệp nhị phân dựng sẵn được đính kèm với mỗi [GitHub Release](https://github.com/ygncode/pi-web/releases).
+Các tệp nhị phân dựng sẵn được đính kèm với mỗi [GitHub Release](https://github.com/timmygod/pi-web/releases).
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
@@ -116,7 +116,7 @@ sudo cp pi-web /usr/local/bin/
 ### Dựng từ mã nguồn
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # dựng gói Vite, sau đó nhúng vào tệp nhị phân Go
 
@@ -132,7 +132,7 @@ trước `go build ./cmd/pi-web`.
 ## Gỡ cài đặt
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 Lệnh này chạy script `preuninstall` của gói (`bash uninstall.sh`), dừng

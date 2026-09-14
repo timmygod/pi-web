@@ -45,7 +45,7 @@ Local သို့မဟုတ် Cloud ကို လက်ဖြင့်ရွ
 ### Pi package (အကြံပြုသည်)
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ဤ command တစ်ခုတည်းသည်-
@@ -63,45 +63,45 @@ Linux တွင်၊ auto-start ကို `~/.config/systemd/user/pi-web.servic
 သီးခြား project တစ်ခုအတွက်သာ (.pi/settings.json မှတစ်ဆင့် သင့်အဖွဲ့နှင့် မျှဝေရန်) တပ်ဆင်ရန်-
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 ထို့နောက် pi ကို ပြန်လည်စတင်ပါ (သို့မဟုတ် `/reload` ကို လုပ်ဆောင်ပါ)၊ ပြီးလျှင် `/web`၊ `/pi-web`၊ `/remote`၊ `/refresh` တို့ကို အသုံးပြုပါ။ `/pi-web token` နှင့် `/pi-web set-token` ဖြင့် သင့်ဝင်ရောက်ခွင့် token ကို စီမံခန့်ခွဲပါ။
 
-`@ygncode/pi-web` ကို အမည်ပြောင်းစဉ် npm မှ `ENOTEMPTY` ဖြင့် ရပ်တန့်သွားပါက၊ npm ၏ ဟောင်းနွမ်းသော ဝှက်ထားသည့် backup directory များကို ဖယ်ရှားပြီး beta channel ကို ပြန်လည်တပ်ဆင်ပါ-
+`@timmygod/pi-web-local` ကို အမည်ပြောင်းစဉ် npm မှ `ENOTEMPTY` ဖြင့် ရပ်တန့်သွားပါက၊ npm ၏ ဟောင်းနွမ်းသော ဝှက်ထားသည့် backup directory များကို ဖယ်ရှားပြီး beta channel ကို ပြန်လည်တပ်ဆင်ပါ-
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### အမြန်တပ်ဆင်ခြင်း (build tools မလိုအပ်ပါ)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 ဤသည်မှာ နောက်ဆုံးထွက် pi-web binary ကို ဒေါင်းလုဒ်လုပ်ပြီး `/usr/local/bin` တွင် တပ်ဆင်ကာ login ဝင်သည့်အခါ အလိုအလျောက် စတင်ရန် သတ်မှတ်ပေးသည်။ Go၊ Node သို့မဟုတ် pi မလိုအပ်ပါ။
 
 ### Binary ဒေါင်းလုဒ်လုပ်ခြင်း
 
-ကြိုတင်တည်ဆောက်ထားသော binary များကို [GitHub Release](https://github.com/ygncode/pi-web/releases) တစ်ခုစီတွင် ပူးတွဲထားသည်။
+ကြိုတင်တည်ဆောက်ထားသော binary များကို [GitHub Release](https://github.com/timmygod/pi-web/releases) တစ်ခုစီတွင် ပူးတွဲထားသည်။
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
@@ -116,7 +116,7 @@ sudo cp pi-web /usr/local/bin/
 ### Source မှတည်ဆောက်ခြင်း
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # Vite bundle ကို တည်ဆောက်ပြီး Go binary ထဲသို့ ထည့်သွင်းသည်
 
@@ -131,7 +131,7 @@ Frontend bundle ကို `web/assets_embed.go` မှ ထည့်သွင်�
 ## ဖယ်ရှားခြင်း
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 ဤသည်မှာ package ၏ `preuninstall` script (`bash uninstall.sh`) ကို လုပ်ဆောင်ပြီး

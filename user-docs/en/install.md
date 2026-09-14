@@ -49,7 +49,7 @@ settles, so the mode shown in the UI always matches the policy actually in use.
 ### Pi package (recommended)
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 This single command:
@@ -67,16 +67,16 @@ On Linux, auto-start is configured as a user systemd service at `~/.config/syste
 To install only for a specific project (shared with your team via `.pi/settings.json`):
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 Then restart pi (or run `/reload`), and use `/web`, `/pi-web`, `/remote`, `/refresh`. Manage your access token with `/pi-web token` and `/pi-web set-token`.
 
-If npm aborts with `ENOTEMPTY` while renaming `@ygncode/pi-web`, remove npm's stale hidden backup directories and reinstall the beta channel:
+If npm aborts with `ENOTEMPTY` while renaming `@timmygod/pi-web-local`, remove npm's stale hidden backup directories and reinstall the beta channel:
 
 ```bash
-rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-*
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### Quick install (no build tools needed)
@@ -84,45 +84,45 @@ pi install npm:@ygncode/pi-web@beta
 macOS / Linux:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 Windows (PowerShell):
 
 ```powershell
-irm https://raw.githubusercontent.com/ygncode/pi-web/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/timmygod/pi-web/main/install.ps1 | iex
 ```
 
 This downloads the latest pi-web binary, installs it to `/usr/local/bin` (`~/.pi/agent/bin` on Windows), and sets up auto-start on login. No Go, Node, or pi required.
 
 ### Download binary
 
-Pre-built binaries are attached to each [GitHub Release](https://github.com/ygncode/pi-web/releases).
+Pre-built binaries are attached to each [GitHub Release](https://github.com/timmygod/pi-web/releases).
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
 ```powershell
 # Windows (x64)
-irm -OutFile pi-web.exe https://github.com/ygncode/pi-web/releases/latest/download/pi-web-windows-amd64.exe
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-amd64.exe
 
 # Windows (ARM64)
-irm -OutFile pi-web.exe https://github.com/ygncode/pi-web/releases/latest/download/pi-web-windows-arm64.exe
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-arm64.exe
 ```
 
 Then move it to your PATH:
@@ -140,7 +140,7 @@ the web application and backend together; local-model safeguards are enabled
 at runtime by the session's effective Local Mode, not by a separate binary.
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # builds the Vite bundle, then embeds it into the Go binary
 
@@ -189,7 +189,7 @@ multi-instance mode.
 ## Uninstall
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 This runs the package `preuninstall` script (`uninstall.sh`, or `uninstall.ps1`

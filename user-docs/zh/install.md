@@ -45,7 +45,7 @@
 ### Pi 包（推荐）
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 仅一条命令即可完成：
@@ -63,45 +63,45 @@ pi install npm:@ygncode/pi-web@beta
 仅为特定项目安装（通过 `.pi/settings.json` 与团队共享）：
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 然后重启 pi（或运行 `/reload`），使用 `/web`、`/pi-web`、`/remote`、`/refresh`。通过 `/pi-web token` 和 `/pi-web set-token` 管理您的访问令牌。
 
-如果 npm 在重命名 `@ygncode/pi-web` 时因 `ENOTEMPTY` 中止，请移除 npm 残留的隐藏备份目录并重新安装 beta 频道：
+如果 npm 在重命名 `@timmygod/pi-web-local` 时因 `ENOTEMPTY` 中止，请移除 npm 残留的隐藏备份目录并重新安装 beta 频道：
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### 快速安装（无需构建工具）
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 此命令会下载最新的 pi-web 二进制文件，安装到 `/usr/local/bin`，并设置登录时自动启动。无需 Go、Node 或 pi。
 
 ### 下载二进制文件
 
-预构建的二进制文件附在每个 [GitHub Release](https://github.com/ygncode/pi-web/releases) 中。
+预构建的二进制文件附在每个 [GitHub Release](https://github.com/timmygod/pi-web/releases) 中。
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
@@ -116,7 +116,7 @@ sudo cp pi-web /usr/local/bin/
 ### 从源码构建
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # 构建 Vite 打包产物，然后嵌入 Go 二进制文件
 
@@ -129,7 +129,7 @@ cp pi-web ~/.pi/agent/bin/
 ## 卸载
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 此命令运行包的 `preuninstall` 脚本（`bash uninstall.sh`），该脚本会停止正在运行的实例并移除：

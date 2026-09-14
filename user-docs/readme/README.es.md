@@ -2,9 +2,9 @@
 
 <div align="center">
 
-[![GitHub stars](https://img.shields.io/github/stars/ygncode/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/ygncode/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@ygncode/pi-web?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@ygncode/pi-web)
-[![license MIT](https://img.shields.io/npm/l/@ygncode/pi-web?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
+[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -78,7 +78,7 @@ Esto no es una reescritura ni un reemplazo para upstream. Es un perfil operativo
 ## Instalación
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 Eso es todo — descarga el binario correspondiente, configura el inicio automático y registra los comandos `/web`, `/pi-web`, `/remote` y `/refresh`.
@@ -91,7 +91,7 @@ Para instalaciones manuales, descargas de binarios o compilación desde el códi
 
 ## Integración con Pi
 
-Después de `pi install npm:@ygncode/pi-web@beta`, obtienes:
+Después de `pi install npm:@timmygod/pi-web-local@beta`, obtienes:
 
 | Comando | Qué hace |
 |---------|----------|
@@ -109,7 +109,7 @@ El paquete también instala el binario de pi-web en `~/.pi/agent/bin/pi-web` y c
 
 ## Inicio automático al iniciar sesión
 
-El comando `pi install npm:@ygncode/pi-web@beta` configura esto automáticamente:
+El comando `pi install npm:@timmygod/pi-web-local@beta` configura esto automáticamente:
 
 | SO | Mecanismo |
 |----|-----------|

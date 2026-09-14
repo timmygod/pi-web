@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const REPO = 'ygncode/pi-web'
+const REPO = 'timmygod/pi-web'
 const CACHE_KEY = 'pi-web-docs-stars'
 const TTL = 6 * 60 * 60 * 1000 // 6h
 

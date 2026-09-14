@@ -223,7 +223,7 @@ async function startPiWeb(pi: ExtensionAPI): Promise<void> {
     const launcher = windowsLauncher();
     if (!existsSync(launcher)) {
       throw new Error(
-        "pi-web launcher not found; reinstall with: pi install npm:@ygncode/pi-web@beta",
+        "pi-web launcher not found; reinstall with: pi install npm:@timmygod/pi-web-local@beta",
       );
     }
     await pi.exec("wscript.exe", [launcher]);
@@ -382,11 +382,11 @@ export function withToken(url: string): string {
 }
 
 export function cleanupPiWebNpmTemps(agentRoot = agentDir()): number {
-  const scopeDir = join(agentRoot, "npm", "node_modules", "@ygncode");
+  const scopeDir = join(agentRoot, "npm", "node_modules", "@timmygod");
   let removed = 0;
   try {
     for (const name of readdirSync(scopeDir)) {
-      if (!name.startsWith(".pi-web-")) continue;
+      if (!name.startsWith(".pi-web-local-")) continue;
       rmSync(join(scopeDir, name), { recursive: true, force: true });
       removed++;
     }
@@ -755,7 +755,7 @@ export default function (pi: ExtensionAPI) {
   // registers a title tool or input handler.
 
   // Start pi-web opportunistically when the extension loads so /remote works on a
-  // fresh shell after `pi install npm:@ygncode/pi-web@beta`.
+  // fresh shell after `pi install npm:@timmygod/pi-web-local@beta`.
   void detectHostPort(pi)
     .then((detected) => {
       if (!detected) return;
@@ -927,7 +927,7 @@ export default function (pi: ExtensionAPI) {
               : "Updating pi-web package...",
             "info",
           );
-          await pi.exec("pi", ["install", "npm:@ygncode/pi-web@beta"]);
+          await pi.exec("pi", ["install", "npm:@timmygod/pi-web-local@beta"]);
           try {
             await restartPiWeb(pi);
           } catch {
@@ -941,7 +941,7 @@ export default function (pi: ExtensionAPI) {
           return;
         } catch (err) {
           ctx.ui.notify(
-            `Failed to update pi-web: ${err}\nTry: rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-* && pi install npm:@ygncode/pi-web@beta`,
+            `Failed to update pi-web: ${err}\nTry: rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-* && pi install npm:@timmygod/pi-web-local@beta`,
             "error",
           );
         }

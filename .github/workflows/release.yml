@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: 'web/package-lock.json'
 
@@ -68,7 +68,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: 'web/package-lock.json'
 
@@ -127,7 +127,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Verify package version matches tag
@@ -143,12 +143,7 @@ jobs:
         run: |
           tag_version="${GITHUB_REF_NAME#v}"
           if [[ "${GITHUB_REF_NAME}" == *"-"* ]]; then
-            npm publish --access public --tag beta --provenance
-            # pi-web is currently beta-only. Keep unqualified installs
-            # (`pi install npm:@ygncode/pi-web`) on the newest beta too.
-            npm dist-tag add "@ygncode/pi-web@${tag_version}" latest
+            npm publish --access public --tag beta
           else
-            npm publish --access public --tag latest --provenance
+            npm publish --access public --tag latest
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

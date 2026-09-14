@@ -1,5 +1,5 @@
 # pi-web uninstaller for Windows — removes binary, auto-start, and runtime
-# state. Triggered as npm preuninstall hook when `pi remove npm:@ygncode/pi-web@beta`
+# state. Triggered as npm preuninstall hook when `pi remove npm:@timmygod/pi-web-local@beta`
 # is run. The npm package directory itself is removed by npm after this script.
 #
 # Kept intact (survives uninstall — preserves data for reinstall):
@@ -65,7 +65,7 @@ if ((Test-Path $stateDir) -and -not (Get-ChildItem $stateDir)) {
 }
 
 # Clean up stale npm temp dirs
-$temps = @(Get-Item (Join-Path $HOME '.pi\agent\npm\node_modules\@ygncode\.pi-web-*') -ErrorAction SilentlyContinue)
+$temps = @(Get-Item (Join-Path $HOME '.pi\agent\npm\node_modules\@timmygod\.pi-web-local-*') -ErrorAction SilentlyContinue)
 foreach ($t in $temps) { Remove-Item $t.FullName -Recurse -Force -ErrorAction SilentlyContinue }
 if ($temps.Count -gt 0) { Info "Cleaned up $($temps.Count) stale npm temp dir(s)" }
 

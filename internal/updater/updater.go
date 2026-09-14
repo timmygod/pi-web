@@ -20,8 +20,8 @@ import (
 )
 
 const (
-	defaultNPMURL    = "https://registry.npmjs.org/@ygncode/pi-web"
-	defaultGitHubAPI = "https://api.github.com/repos/ygncode/pi-web"
+	defaultNPMURL    = "https://registry.npmjs.org/@timmygod/pi-web-local"
+	defaultGitHubAPI = "https://api.github.com/repos/timmygod/pi-web"
 	// npmChannel is the dist-tag pi-web installs from (see pi install command).
 	npmChannel = "beta"
 	// PollInterval is how often the background goroutine refreshes the cache.
@@ -181,7 +181,7 @@ func (c *Checker) fetchLatestVersion(ctx context.Context) (string, error) {
 	if v := doc.DistTags["latest"]; v != "" {
 		return v, nil
 	}
-	return "", fmt.Errorf("no published version found for @ygncode/pi-web")
+	return "", fmt.Errorf("no published version found for @timmygod/pi-web-local")
 }
 
 // fetchChangelog tries the version-specific GitHub release first, then the

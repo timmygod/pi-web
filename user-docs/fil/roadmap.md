@@ -19,11 +19,11 @@ Lahat ng nakalista sa [talahanayan ng mga tampok](README.md#what-you-can-do-with
 
 | # | Tampok | Kung ano ang ginagawa nito |
 |---|---|---|
-| [#50](https://github.com/ygncode/pi-web/issues/50) | **Telegram at Discord bots** | Makipag-chat sa pi sa pamamagitan ng Telegram o Discord — perpekto para sa personal assistant workflows habang naglalakbay. |
-| [#49](https://github.com/ygncode/pi-web/issues/49) | **Mga insight sa paggamit** | Pagsubaybay ng token, pagtatantya ng gastos, analytics ng sesyon — alamin kung paano mo ginagamit ang pi. |
-| [#48](https://github.com/ygncode/pi-web/issues/48) | **Nako-configure na mga default** | Itakda ang iyong gustong visibility para sa thinking, tools, at tool outputs sa lahat ng sesyon. |
-| [#46](https://github.com/ygncode/pi-web/issues/46) | **Pagpipiloto / queue** | Magpadala ng follow-up na mga tagubilin habang tumatakbo pa ang pi — gabayan ito habang nasa kalagitnaan. |
-| [#41](https://github.com/ygncode/pi-web/issues/41) | **Utos na `/compact`** | I-compact ang mahahabang pag-uusap mula mismo sa web UI, hindi na kailangan ng terminal. |
+| [#50](https://github.com/timmygod/pi-web/issues/50) | **Telegram at Discord bots** | Makipag-chat sa pi sa pamamagitan ng Telegram o Discord — perpekto para sa personal assistant workflows habang naglalakbay. |
+| [#49](https://github.com/timmygod/pi-web/issues/49) | **Mga insight sa paggamit** | Pagsubaybay ng token, pagtatantya ng gastos, analytics ng sesyon — alamin kung paano mo ginagamit ang pi. |
+| [#48](https://github.com/timmygod/pi-web/issues/48) | **Nako-configure na mga default** | Itakda ang iyong gustong visibility para sa thinking, tools, at tool outputs sa lahat ng sesyon. |
+| [#46](https://github.com/timmygod/pi-web/issues/46) | **Pagpipiloto / queue** | Magpadala ng follow-up na mga tagubilin habang tumatakbo pa ang pi — gabayan ito habang nasa kalagitnaan. |
+| [#41](https://github.com/timmygod/pi-web/issues/41) | **Utos na `/compact`** | I-compact ang mahahabang pag-uusap mula mismo sa web UI, hindi na kailangan ng terminal. |
 
 ---
 
@@ -31,9 +31,9 @@ Lahat ng nakalista sa [talahanayan ng mga tampok](README.md#what-you-can-do-with
 
 | # | Tampok | Kung ano ang ginagawa nito |
 |---|---|---|
-| [#47](https://github.com/ygncode/pi-web/issues/47) | **File Explorer at Git Diff** | I-browse ang file tree ng proyekto at tingnan ang mga pagbabago sa git nang direkta sa pi-web. Opt-in, kaya hindi ito nakakasagabal. |
-| [#44](https://github.com/ygncode/pi-web/issues/44) | **Taga-iskedyul** | Mag-iskedyul ng mga prompt na awtomatikong tatakbo — araw-araw na standup, mga buod sa umaga, mga paulit-ulit na gawain. Admin-gated para sa kaligtasan. |
-| [#43](https://github.com/ygncode/pi-web/issues/43) | **Nako-customize na mga shortcut** | I-remap ang bawat keyboard shortcut upang tumugma sa iyong muscle memory. |
+| [#47](https://github.com/timmygod/pi-web/issues/47) | **File Explorer at Git Diff** | I-browse ang file tree ng proyekto at tingnan ang mga pagbabago sa git nang direkta sa pi-web. Opt-in, kaya hindi ito nakakasagabal. |
+| [#44](https://github.com/timmygod/pi-web/issues/44) | **Taga-iskedyul** | Mag-iskedyul ng mga prompt na awtomatikong tatakbo — araw-araw na standup, mga buod sa umaga, mga paulit-ulit na gawain. Admin-gated para sa kaligtasan. |
+| [#43](https://github.com/timmygod/pi-web/issues/43) | **Nako-customize na mga shortcut** | I-remap ang bawat keyboard shortcut upang tumugma sa iyong muscle memory. |
 
 ---
 
@@ -47,4 +47,4 @@ Ang pangmatagalang layunin: ang pi-web ay dapat maging **ang interface para sa p
 
 ---
 
-> 💡 May ideya? [Magbukas ng isyu](https://github.com/ygncode/pi-web/issues/new) o sumali sa diskusyon.
+> 💡 May ideya? [Magbukas ng isyu](https://github.com/timmygod/pi-web/issues/new) o sumali sa diskusyon.

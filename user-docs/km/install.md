@@ -45,7 +45,7 @@
 ### Pi package (ណែនាំ)
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ពាក្យបញ្ជាតែមួយនេះ:
@@ -63,45 +63,45 @@ pi install npm:@ygncode/pi-web@beta
 ដើម្បីដំឡើងសម្រាប់តែគម្រោងជាក់លាក់ (ចែករំលែកជាមួយក្រុមរបស់អ្នកតាមរយៈ `.pi/settings.json`):
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 បន្ទាប់មកចាប់ផ្ដើម pi ឡើងវិញ (ឬដំណើរការ `/reload`) ហើយប្រើ `/web`, `/pi-web`, `/remote`, `/refresh`។ គ្រប់គ្រង access token របស់អ្នកជាមួយ `/pi-web token` និង `/pi-web set-token`។
 
-ប្រសិនបើ npm បរាជ័យជាមួយ `ENOTEMPTY` ពេលកំពុងប្ដូរឈ្មោះ `@ygncode/pi-web` សូមលុបថតបម្រុងទុកដែលលាក់ដែលហួសសម័យរបស់ npm ហើយដំឡើង beta channel ឡើងវិញ:
+ប្រសិនបើ npm បរាជ័យជាមួយ `ENOTEMPTY` ពេលកំពុងប្ដូរឈ្មោះ `@timmygod/pi-web-local` សូមលុបថតបម្រុងទុកដែលលាក់ដែលហួសសម័យរបស់ npm ហើយដំឡើង beta channel ឡើងវិញ:
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### ការដំឡើងរហ័ស (មិនត្រូវការឧបករណ៍ build)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 វាទាញយក pi-web binary ចុងក្រោយបំផុត ដំឡើងវាទៅ `/usr/local/bin` និងរៀបចំ auto-start ពេល login។ មិនត្រូវការ Go, Node ឬ pi ទេ។
 
 ### ទាញយក binary
 
-Binary ដែលបាន build រួចត្រូវបានភ្ជាប់ជាមួយ [GitHub Release](https://github.com/ygncode/pi-web/releases) នីមួយៗ។
+Binary ដែលបាន build រួចត្រូវបានភ្ជាប់ជាមួយ [GitHub Release](https://github.com/timmygod/pi-web/releases) នីមួយៗ។
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
@@ -116,7 +116,7 @@ sudo cp pi-web /usr/local/bin/
 ### Build ពី source
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # build Vite bundle បន្ទាប់មកបង្កប់វាទៅក្នុង Go binary
 
@@ -132,7 +132,7 @@ frontend bundle ត្រូវបានបង្កប់ដោយ `web/assets_
 ## ការលុបចេញ
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 វាដំណើរការ script `preuninstall` របស់ package (`bash uninstall.sh`) ដែលបញ្ឈប់

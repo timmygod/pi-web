@@ -2,9 +2,9 @@
 
 <div align="center">
 
-[![GitHub stars](https://img.shields.io/github/stars/ygncode/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/ygncode/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@ygncode/pi-web?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@ygncode/pi-web)
-[![license MIT](https://img.shields.io/npm/l/@ygncode/pi-web?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
+[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -78,7 +78,7 @@ pi-web gốc vẫn là nền tảng upstream cho các tính năng và bản sử
 ## Cài đặt
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 Chỉ vậy thôi — nó tải xuống tệp nhị phân phù hợp, thiết lập tự động khởi động và đăng ký các lệnh `/web`, `/pi-web`, `/remote` và `/refresh`.
@@ -91,7 +91,7 @@ Sau khi cài đặt, mở `http://127.0.0.1:31415` trong trình duyệt của b�
 
 ## Tích hợp Pi
 
-Sau khi `pi install npm:@ygncode/pi-web@beta`, bạn nhận được:
+Sau khi `pi install npm:@timmygod/pi-web-local@beta`, bạn nhận được:
 
 | Lệnh | Chức năng |
 |---------|--------------|
@@ -109,7 +109,7 @@ Gói cũng cài đặt tệp nhị phân pi-web vào `~/.pi/agent/bin/pi-web` v�
 
 ## Tự động khởi động khi đăng nhập
 
-Lệnh `pi install npm:@ygncode/pi-web@beta` tự động thiết lập điều này:
+Lệnh `pi install npm:@timmygod/pi-web-local@beta` tự động thiết lập điều này:
 
 | HĐH | Cơ chế |
 |----|-----------|

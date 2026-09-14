@@ -1,5 +1,5 @@
 {
-  "name": "@ygncode/pi-web",
+  "name": "@timmygod/pi-web-local",
   "description": "Remote control your pi coding agent from any browser on your network",
   "version": "0.0.1-beta.37",
   "keywords": [
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ygncode/pi-web"
+    "url": "https://github.com/timmygod/pi-web"
   },
   "license": "MIT",
   "devDependencies": {

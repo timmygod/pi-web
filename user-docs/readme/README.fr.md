@@ -2,9 +2,9 @@
 
 <div align="center">
 
-[![GitHub stars](https://img.shields.io/github/stars/ygncode/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/ygncode/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@ygncode/pi-web?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@ygncode/pi-web)
-[![license MIT](https://img.shields.io/npm/l/@ygncode/pi-web?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
+[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -79,7 +79,7 @@ Il ne s'agit pas d'une réécriture ni d'un remplacement pour upstream. C'est un
 ## Installation
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 C'est tout — cela télécharge le binaire correspondant, configure le démarrage automatique et enregistre les commandes `/web`, `/pi-web`, `/remote` et `/refresh`.
@@ -92,7 +92,7 @@ Pour les installations manuelles, les téléchargements binaires ou la compilati
 
 ## Intégration avec Pi
 
-Après `pi install npm:@ygncode/pi-web@beta`, vous obtenez :
+Après `pi install npm:@timmygod/pi-web-local@beta`, vous obtenez :
 
 | Commande | Ce qu'elle fait |
 |----------|-----------------|
@@ -110,7 +110,7 @@ Le paquet installe également le binaire pi-web dans `~/.pi/agent/bin/pi-web` et
 
 ## Démarrage automatique à la connexion
 
-La commande `pi install npm:@ygncode/pi-web@beta` configure cela automatiquement :
+La commande `pi install npm:@timmygod/pi-web-local@beta` configure cela automatiquement :
 
 | OS | Mécanisme |
 |----|-----------|

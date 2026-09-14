@@ -19,11 +19,11 @@ pi-webは2つのユーザー層に向けて作られています：
 
 | # | 機能 | 概要 |
 |---|---|---|
-| [#50](https://github.com/ygncode/pi-web/issues/50) | **Telegram & Discord ボット** | TelegramやDiscordを通じてpiとチャット — 外出先でのパーソナルアシスタントワークフローに最適。 |
-| [#49](https://github.com/ygncode/pi-web/issues/49) | **使用状況インサイト** | トークン追跡、コスト見積もり、セッション分析 — piの使い方を把握。 |
-| [#48](https://github.com/ygncode/pi-web/issues/48) | **デフォルト設定** | すべてのセッションで思考・ツール・ツール出力の表示設定を好みに合わせて設定。 |
-| [#46](https://github.com/ygncode/pi-web/issues/46) | **ステアリング / キュー** | piの実行中にフォローアップ指示を送信 — 実行中のタスクを途中でガイド。 |
-| [#41](https://github.com/ygncode/pi-web/issues/41) | **`/compact` コマンド** | Web UIから直接長い会話を圧縮、ターミナル不要。 |
+| [#50](https://github.com/timmygod/pi-web/issues/50) | **Telegram & Discord ボット** | TelegramやDiscordを通じてpiとチャット — 外出先でのパーソナルアシスタントワークフローに最適。 |
+| [#49](https://github.com/timmygod/pi-web/issues/49) | **使用状況インサイト** | トークン追跡、コスト見積もり、セッション分析 — piの使い方を把握。 |
+| [#48](https://github.com/timmygod/pi-web/issues/48) | **デフォルト設定** | すべてのセッションで思考・ツール・ツール出力の表示設定を好みに合わせて設定。 |
+| [#46](https://github.com/timmygod/pi-web/issues/46) | **ステアリング / キュー** | piの実行中にフォローアップ指示を送信 — 実行中のタスクを途中でガイド。 |
+| [#41](https://github.com/timmygod/pi-web/issues/41) | **`/compact` コマンド** | Web UIから直接長い会話を圧縮、ターミナル不要。 |
 
 ---
 
@@ -31,9 +31,9 @@ pi-webは2つのユーザー層に向けて作られています：
 
 | # | 機能 | 概要 |
 |---|---|---|
-| [#47](https://github.com/ygncode/pi-web/issues/47) | **ファイルエクスプローラー & Git Diff** | プロジェクトのファイルツリーを閲覧し、gitの変更をpi-web内で直接確認。オプトイン方式で、邪魔にならないように。 |
-| [#44](https://github.com/ygncode/pi-web/issues/44) | **スケジューラー** | プロンプトを自動実行 — 毎日のスタンドアップ、朝のサマリー、定期的なタスク。安全性のため管理者権限で制御。 |
-| [#43](https://github.com/ygncode/pi-web/issues/43) | **カスタマイズ可能なショートカット** | すべてのキーボードショートカットを自分の操作感に合わせて再マッピング。 |
+| [#47](https://github.com/timmygod/pi-web/issues/47) | **ファイルエクスプローラー & Git Diff** | プロジェクトのファイルツリーを閲覧し、gitの変更をpi-web内で直接確認。オプトイン方式で、邪魔にならないように。 |
+| [#44](https://github.com/timmygod/pi-web/issues/44) | **スケジューラー** | プロンプトを自動実行 — 毎日のスタンドアップ、朝のサマリー、定期的なタスク。安全性のため管理者権限で制御。 |
+| [#43](https://github.com/timmygod/pi-web/issues/43) | **カスタマイズ可能なショートカット** | すべてのキーボードショートカットを自分の操作感に合わせて再マッピング。 |
 
 ---
 
@@ -47,4 +47,4 @@ pi-webは2つのユーザー層に向けて作られています：
 
 ---
 
-> 💡 アイデアがありますか？ [Issueを作成する](https://github.com/ygncode/pi-web/issues/new)か、ディスカッションに参加してください。
+> 💡 アイデアがありますか？ [Issueを作成する](https://github.com/timmygod/pi-web/issues/new)か、ディスカッションに参加してください。

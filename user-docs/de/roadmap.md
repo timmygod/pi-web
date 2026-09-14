@@ -19,11 +19,11 @@ Alles, was in der [Feature-Tabelle](README.md#what-you-can-do-with-pi-web) aufge
 
 | # | Feature | Beschreibung |
 |---|---|---|
-| [#50](https://github.com/ygncode/pi-web/issues/50) | **Telegram- & Discord-Bots** | Chatte mit pi über Telegram oder Discord — perfekt für persönliche Assistenten-Workflows unterwegs. |
-| [#49](https://github.com/ygncode/pi-web/issues/49) | **Nutzungseinblicke** | Token-Tracking, Kostenschätzung, Sitzungsanalyse — erfahre, wie du pi nutzt. |
-| [#48](https://github.com/ygncode/pi-web/issues/48) | **Konfigurierbare Standards** | Lege deine bevorzugte Sichtbarkeit für Thinking, Tools und Tool-Ausgaben für alle Sitzungen fest. |
-| [#46](https://github.com/ygncode/pi-web/issues/46) | **Steering / Warteschlange** | Sende Folgeanweisungen, während pi noch läuft — lenke es mitten im Flug. |
-| [#41](https://github.com/ygncode/pi-web/issues/41) | **`/compact`-Befehl** | Komprimiere lange Konversationen direkt aus der Web-UI, kein Terminal nötig. |
+| [#50](https://github.com/timmygod/pi-web/issues/50) | **Telegram- & Discord-Bots** | Chatte mit pi über Telegram oder Discord — perfekt für persönliche Assistenten-Workflows unterwegs. |
+| [#49](https://github.com/timmygod/pi-web/issues/49) | **Nutzungseinblicke** | Token-Tracking, Kostenschätzung, Sitzungsanalyse — erfahre, wie du pi nutzt. |
+| [#48](https://github.com/timmygod/pi-web/issues/48) | **Konfigurierbare Standards** | Lege deine bevorzugte Sichtbarkeit für Thinking, Tools und Tool-Ausgaben für alle Sitzungen fest. |
+| [#46](https://github.com/timmygod/pi-web/issues/46) | **Steering / Warteschlange** | Sende Folgeanweisungen, während pi noch läuft — lenke es mitten im Flug. |
+| [#41](https://github.com/timmygod/pi-web/issues/41) | **`/compact`-Befehl** | Komprimiere lange Konversationen direkt aus der Web-UI, kein Terminal nötig. |
 
 ---
 
@@ -31,9 +31,9 @@ Alles, was in der [Feature-Tabelle](README.md#what-you-can-do-with-pi-web) aufge
 
 | # | Feature | Beschreibung |
 |---|---|---|
-| [#47](https://github.com/ygncode/pi-web/issues/47) | **Datei-Explorer & Git Diff** | Durchsuche den Projekt-Dateibaum und sieh Git-Änderungen direkt in pi-web. Opt-in, damit es dir nicht im Weg steht. |
-| [#44](https://github.com/ygncode/pi-web/issues/44) | **Scheduler** | Plane Prompts zur automatischen Ausführung — tägliche Standups, morgendliche Zusammenfassungen, wiederkehrende Aufgaben. Admin-geschützt zur Sicherheit. |
-| [#43](https://github.com/ygncode/pi-web/issues/43) | **Anpassbare Tastenkürzel** | Belege jedes Tastenkürzel neu, passend zu deinem Muskelgedächtnis. |
+| [#47](https://github.com/timmygod/pi-web/issues/47) | **Datei-Explorer & Git Diff** | Durchsuche den Projekt-Dateibaum und sieh Git-Änderungen direkt in pi-web. Opt-in, damit es dir nicht im Weg steht. |
+| [#44](https://github.com/timmygod/pi-web/issues/44) | **Scheduler** | Plane Prompts zur automatischen Ausführung — tägliche Standups, morgendliche Zusammenfassungen, wiederkehrende Aufgaben. Admin-geschützt zur Sicherheit. |
+| [#43](https://github.com/timmygod/pi-web/issues/43) | **Anpassbare Tastenkürzel** | Belege jedes Tastenkürzel neu, passend zu deinem Muskelgedächtnis. |
 
 ---
 
@@ -47,4 +47,4 @@ Das langfristige Ziel: pi-web soll **das Interface für pi** sein — für alle.
 
 ---
 
-> 💡 Hast du eine Idee? [Eröffne ein Issue](https://github.com/ygncode/pi-web/issues/new) oder beteilige dich an der Diskussion.
+> 💡 Hast du eine Idee? [Eröffne ein Issue](https://github.com/timmygod/pi-web/issues/new) oder beteilige dich an der Diskussion.

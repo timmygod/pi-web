@@ -19,11 +19,11 @@ Semua yang disenaraikan dalam [jadual ciri](README.md#what-you-can-do-with-pi-we
 
 | # | Ciri | Fungsinya |
 |---|---|---|
-| [#50](https://github.com/ygncode/pi-web/issues/50) | **Bot Telegram & Discord** | Berbual dengan pi melalui Telegram atau Discord — sesuai untuk aliran kerja pembantu peribadi semasa dalam perjalanan. |
-| [#49](https://github.com/ygncode/pi-web/issues/49) | **Cerapan penggunaan** | Penjejakan token, anggaran kos, analitik sesi — ketahui cara anda menggunakan pi. |
-| [#48](https://github.com/ygncode/pi-web/issues/48) | **Lalai boleh konfigurasi** | Tetapkan keterlihatan pilihan anda untuk pemikiran, alat, dan output alat merentas semua sesi. |
-| [#46](https://github.com/ygncode/pi-web/issues/46) | **Pemanduan / giliran** | Hantar arahan susulan semasa pi masih berjalan — pandu ia semasa operasi. |
-| [#41](https://github.com/ygncode/pi-web/issues/41) | **Arahan `/compact`** | Padatkan perbualan panjang terus dari UI web, tanpa perlu terminal. |
+| [#50](https://github.com/timmygod/pi-web/issues/50) | **Bot Telegram & Discord** | Berbual dengan pi melalui Telegram atau Discord — sesuai untuk aliran kerja pembantu peribadi semasa dalam perjalanan. |
+| [#49](https://github.com/timmygod/pi-web/issues/49) | **Cerapan penggunaan** | Penjejakan token, anggaran kos, analitik sesi — ketahui cara anda menggunakan pi. |
+| [#48](https://github.com/timmygod/pi-web/issues/48) | **Lalai boleh konfigurasi** | Tetapkan keterlihatan pilihan anda untuk pemikiran, alat, dan output alat merentas semua sesi. |
+| [#46](https://github.com/timmygod/pi-web/issues/46) | **Pemanduan / giliran** | Hantar arahan susulan semasa pi masih berjalan — pandu ia semasa operasi. |
+| [#41](https://github.com/timmygod/pi-web/issues/41) | **Arahan `/compact`** | Padatkan perbualan panjang terus dari UI web, tanpa perlu terminal. |
 
 ---
 
@@ -31,9 +31,9 @@ Semua yang disenaraikan dalam [jadual ciri](README.md#what-you-can-do-with-pi-we
 
 | # | Ciri | Fungsinya |
 |---|---|---|
-| [#47](https://github.com/ygncode/pi-web/issues/47) | **Penjelajah Fail & Git Diff** | Layari pepohon fail projek dan lihat perubahan git terus dalam pi-web. Pilihan, jadi ia tidak mengganggu anda. |
-| [#44](https://github.com/ygncode/pi-web/issues/44) | **Penjadual** | Jadualkan prom untuk dijalankan secara automatik — laporan harian, ringkasan pagi, tugas berulang. Dikawal admin untuk keselamatan. |
-| [#43](https://github.com/ygncode/pi-web/issues/43) | **Pintasan boleh suai** | Petakan semula setiap pintasan papan kekunci mengikut memori otot anda. |
+| [#47](https://github.com/timmygod/pi-web/issues/47) | **Penjelajah Fail & Git Diff** | Layari pepohon fail projek dan lihat perubahan git terus dalam pi-web. Pilihan, jadi ia tidak mengganggu anda. |
+| [#44](https://github.com/timmygod/pi-web/issues/44) | **Penjadual** | Jadualkan prom untuk dijalankan secara automatik — laporan harian, ringkasan pagi, tugas berulang. Dikawal admin untuk keselamatan. |
+| [#43](https://github.com/timmygod/pi-web/issues/43) | **Pintasan boleh suai** | Petakan semula setiap pintasan papan kekunci mengikut memori otot anda. |
 
 ---
 
@@ -47,4 +47,4 @@ Matlamat jangka panjang: pi-web harus menjadi **antara muka untuk pi** — untuk
 
 ---
 
-> 💡 Ada idea? [Buka isu](https://github.com/ygncode/pi-web/issues/new) atau sertai perbincangan.
+> 💡 Ada idea? [Buka isu](https://github.com/timmygod/pi-web/issues/new) atau sertai perbincangan.

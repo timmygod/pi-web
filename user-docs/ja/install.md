@@ -45,7 +45,7 @@ Local または Cloud の手動選択は自動検出より優先され、リロ�
 ### Piパッケージ（推奨）
 
 ```bash
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 この単一コマンドで以下を実行します:
@@ -63,45 +63,45 @@ Linuxでは、自動起動はユーザーsystemdサービスとして `~/.config
 特定のプロジェクトのみにインストールする場合（`.pi/settings.json` 経由でチームと共有）:
 
 ```bash
-pi install -l npm:@ygncode/pi-web@beta
+pi install -l npm:@timmygod/pi-web-local@beta
 ```
 
 その後piを再起動（または `/reload` を実行）し、`/web`、`/pi-web`、`/remote`、`/refresh` を使用します。アクセストークンは `/pi-web token` と `/pi-web set-token` で管理します。
 
-npmが `@ygncode/pi-web` のリネーム中に `ENOTEMPTY` で中断した場合は、npmの古い隠しバックアップディレクトリを削除してbetaチャンネルを再インストールしてください:
+npmが `@timmygod/pi-web-local` のリネーム中に `ENOTEMPTY` で中断した場合は、npmの古い隠しバックアップディレクトリを削除してbetaチャンネルを再インストールしてください:
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@ygncode/pi-web@beta
+pi install npm:@timmygod/pi-web-local@beta
 ```
 
 ### クイックインストール（ビルドツール不要）
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
 最新のpi-webバイナリをダウンロードし、`/usr/local/bin` にインストールして、ログイン時の自動起動を設定します。Go、Node、piは不要です。
 
 ### バイナリのダウンロード
 
-ビルド済みバイナリは各 [GitHub Release](https://github.com/ygncode/pi-web/releases) に添付されています。
+ビルド済みバイナリは各 [GitHub Release](https://github.com/timmygod/pi-web/releases) に添付されています。
 
 ```bash
 # macOS (Apple Silicon)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-arm64
 chmod +x pi-web
 
 # macOS (Intel)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-darwin-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-darwin-amd64
 chmod +x pi-web
 
 # Linux (amd64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-amd64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-amd64
 chmod +x pi-web
 
 # Linux (arm64)
-curl -L -o pi-web https://github.com/ygncode/pi-web/releases/latest/download/pi-web-linux-arm64
+curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi-web-linux-arm64
 chmod +x pi-web
 ```
 
@@ -116,7 +116,7 @@ sudo cp pi-web /usr/local/bin/
 ### ソースからビルド
 
 ```bash
-git clone https://github.com/ygncode/pi-web.git
+git clone https://github.com/timmygod/pi-web.git
 cd pi-web
 make build   # Viteバンドルをビルドし、Goバイナリに埋め込みます
 
@@ -132,7 +132,7 @@ cp pi-web ~/.pi/agent/bin/
 ## アンインストール
 
 ```bash
-pi remove npm:@ygncode/pi-web@beta
+pi remove npm:@timmygod/pi-web-local@beta
 ```
 
 これはパッケージの `preuninstall` スクリプト（`bash uninstall.sh`）を実行し、

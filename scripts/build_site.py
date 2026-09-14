@@ -32,7 +32,7 @@ USER_DOCS = ROOT / "user-docs"
 ASSETS = USER_DOCS / "assets"
 LOCALES_JSON = SITE / ".vitepress" / "locales.generated.json"
 
-PACKAGE_URL = "https://pi.dev/packages/@ygncode/pi-web?name=pi-web"
+PACKAGE_URL = "https://pi.dev/packages/@timmygod/pi-web-local?name=pi-web-local"
 
 # Browser/SEO <title> for the home page (titleTemplate:false keeps it verbatim).
 HOME_TITLE = "pi-web - Web UI for Pi (Access pi via Remote, Mobile)"

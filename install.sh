@@ -4,14 +4,14 @@ set -euo pipefail
 # pi-web installer — downloads the binary and sets up auto-start
 #
 # Standalone (no pi required):
-#   curl -fsSL https://raw.githubusercontent.com/ygncode/pi-web/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 #
 # Via pi package (also registers /remote, /refresh commands):
-#   pi install npm:@ygncode/pi-web@beta
+#   pi install npm:@timmygod/pi-web-local@beta
 #
 # Updates are handled by re-running the same command.
 
-REPO="ygncode/pi-web"
+REPO="timmygod/pi-web"
 if [[ -n "${PI_WEB_INSTALL_DIR:-}" ]]; then
   INSTALL_DIR="$PI_WEB_INSTALL_DIR"
 elif [[ -n "${npm_package_name:-}" ]]; then
@@ -62,9 +62,9 @@ detect_platform() {
 package_tag() {
   # When install.sh runs as an npm lifecycle script, install the binary that
   # matches the npm package version. This keeps pinned installs such as
-  # `pi install npm:@ygncode/pi-web@0.0.1-beta.25` pinned for both the extension
+  # `pi install npm:@timmygod/pi-web-local@0.0.1-beta.25` pins both the extension
   # package and the downloaded pi-web binary.
-  if [[ "${npm_package_name:-}" == "@ygncode/pi-web" && -n "${npm_package_version:-}" ]]; then
+  if [[ "${npm_package_name:-}" == "@timmygod/pi-web-local" && -n "${npm_package_version:-}" ]]; then
     echo "v${npm_package_version#v}"
   fi
 }
