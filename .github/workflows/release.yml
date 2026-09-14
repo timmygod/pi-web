@@ -147,3 +147,8 @@ jobs:
           else
             npm publish --access public --tag latest
           fi
+        # Used only for the first publication. Once npm Trusted Publishing is
+        # configured for this workflow, npm uses GitHub OIDC instead; remove
+        # the temporary repository secret after that first successful release.
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
