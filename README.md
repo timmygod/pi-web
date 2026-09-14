@@ -22,6 +22,15 @@ Make it yours: switch themes and fonts, and use it in your own language — pi-w
 
 </div>
 
+> **Local-model edition:** This repository is a maintained pi-web variant for
+> locally deployed and LAN-hosted language models. The original pi-web project
+> remains the upstream source for shared features and fixes. We periodically
+> sync upstream changes, review them against the local-model runtime, and publish
+> this line independently so local-model work can move in parallel.
+
+The maintenance and development rules for this edition are documented in
+[Local-model edition development](docs/dev/local-llm-development.md).
+
 > [!WARNING]
 > pi-web is currently in **beta**. Things will change and break!
 
@@ -118,3 +127,5 @@ make check   # frontend test/build + Go test/vet
 make build   # setup if needed, build frontend, then build ./pi-web
 ```
 
+For upstream synchronization, local-model testing, and the parallel release
+workflow, see [Local-model edition development](docs/dev/local-llm-development.md).

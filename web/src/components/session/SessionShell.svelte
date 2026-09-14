@@ -29,6 +29,7 @@
   import { createAnnotationApi } from '../../session/annotations/annotation-api.js';
   import { createStatusEvents } from '../../shared/status-events.js';
   import { sessionRuntime } from '../../session/session-runtime.js';
+  import { setSessionMode } from '../../session/chat/chat-api.js';
 
   let {
     sessionModel,
@@ -40,6 +41,8 @@
     cwd = '',
     chatAvailable = true,
     chatDisabledReason = '',
+    model = '',
+    modelProvider = '',
     modelLabel = '',
     dataEl = $bindable(null),
   } = $props();
@@ -47,6 +50,13 @@
   const runtime = getSessionRuntime();
   const runningSessionIds = new SvelteSet();
   const runningSessionProjects = new SvelteMap();
+
+  async function changeSessionMode(mode) {
+    const response = await setSessionMode(sessionId, mode);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Failed to update mode');
+    return data;
+  }
 
   // Annotation config, supplied as props to <AnnotationLayer> (via <RightSidebar>)
   // instead of the former imperative init() up-call. The DOM anchors are resolved
@@ -144,7 +154,7 @@
   });
 </script>
 
-<SessionHeader {title} {cwd} {sessionId} {sessionUUID} />
+<SessionHeader {title} {cwd} {sessionId} {sessionUUID} modelId={model} {modelProvider} />
 
 <CommandMenu {sessionId} {runningSessionIds} />
 
@@ -157,13 +167,31 @@
   <SessionTree {cwd} {sessionId} {runningSessionIds} {runningSessionProjects} />
   <div id="content-container" class="content-container">
     <main id="content">
-      <div id="header-container"><SessionInfoHeader model={sessionModel} /></div>
+      <div id="header-container">
+        <SessionInfoHeader
+          model={sessionModel}
+          modeEditable={chatAvailable}
+          onModeChange={changeSessionMode}
+        />
+      </div>
       <LoadEarlier model={sessionModel} {sessionId} navigateTo={runtime.navigateTo} />
       <div id="messages">
-        <SessionContent model={sessionModel} afterRender={contentRuntime.afterRender} live />
+        <SessionContent
+          model={sessionModel}
+          afterRender={contentRuntime.afterRender}
+          live
+          localMode={sessionModel.effectiveMode === 'local'}
+        />
       </div>
     </main>
-    <ChatComposer {sessionId} {chatAvailable} {chatDisabledReason} {cwd} {modelLabel} />
+    <ChatComposer
+      {sessionId}
+      {chatAvailable}
+      {chatDisabledReason}
+      {cwd}
+      {modelLabel}
+      localMode={sessionModel.effectiveMode === 'local'}
+    />
   </div>
   <RightSidebar {scratchpad} projectPath={cwd} {annotationConfig} />
   <ImageModal />

@@ -1,5 +1,9 @@
 # pi-web as Your Personal Assistant
 
+This workflow is supported by the local-model edition. For the edition's
+development, synchronization, and release policy, see
+[Local-model edition development](../../docs/dev/local-llm-development.md).
+
 pi-web isn't just for coding — you can turn it into a **personal AI assistant** that lives on your computer, like having your own OpenClaw or Hermes.
 
 ## How it works

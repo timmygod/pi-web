@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"pi-web/internal/chat"
@@ -24,6 +25,146 @@ type ChatSender interface {
 	GetCommands(ctx context.Context, sessionID string) ([]workers.SlashCommand, bool, error)
 	Status(sessionID string) workers.WorkerStatus
 	EnsureWorker(ctx context.Context, sessionID, sessionPath string) error
+}
+
+type compactSender interface {
+	Compact(ctx context.Context, sessionID, sessionPath string) error
+}
+
+type modePreparingSender interface {
+	PrepareMode(sessionID string, config workers.WorkerConfig) error
+}
+
+type settledWaitingSender interface {
+	WaitSettled(ctx context.Context, sessionID string) error
+}
+
+type sessionOperationState struct {
+	mu      sync.Mutex
+	entries map[string]*sessionOperation
+}
+
+type sessionOperation struct {
+	token chan struct{}
+	refs  int
+}
+
+func (s *Server) acquireSessionOperation(ctx context.Context, sessionID string) (func(), error) {
+	s.sessionOperations.mu.Lock()
+	if s.sessionOperations.entries == nil {
+		s.sessionOperations.entries = make(map[string]*sessionOperation)
+	}
+	operation := s.sessionOperations.entries[sessionID]
+	if operation == nil {
+		operation = &sessionOperation{token: make(chan struct{}, 1)}
+		s.sessionOperations.entries[sessionID] = operation
+	}
+	operation.refs++
+	s.sessionOperations.mu.Unlock()
+
+	select {
+	case operation.token <- struct{}{}:
+		return func() {
+			<-operation.token
+			s.releaseSessionOperation(sessionID, operation)
+		}, nil
+	case <-ctx.Done():
+		s.releaseSessionOperation(sessionID, operation)
+		return nil, ctx.Err()
+	}
+}
+
+func (s *Server) releaseSessionOperation(sessionID string, operation *sessionOperation) {
+	s.sessionOperations.mu.Lock()
+	operation.refs--
+	if operation.refs == 0 && s.sessionOperations.entries[sessionID] == operation {
+		delete(s.sessionOperations.entries, sessionID)
+	}
+	s.sessionOperations.mu.Unlock()
+}
+
+func (s *Server) forceCompact(ctx context.Context, sessionID string, mode *sessionModeState) error {
+	release, err := s.acquireSessionOperation(ctx, sessionID)
+	if err != nil {
+		return err
+	}
+	defer release()
+
+	return s.forceCompactSessionLocked(ctx, sessionID, mode)
+}
+
+func (s *Server) forceCompactSessionLocked(ctx context.Context, sessionID string, mode *sessionModeState) error {
+	resolved, err := sessions.ResolveByID(s.sessionsDir, sessionID)
+	if err != nil {
+		return err
+	}
+	if len(resolved.Session.Entries) > 0 && resolved.Session.Entries[len(resolved.Session.Entries)-1]["type"] == "compaction" {
+		return nil
+	}
+	return s.forceCompactLocked(ctx, sessionID, resolved.Path, mode)
+}
+
+func (s *Server) forceCompactLocked(ctx context.Context, sessionID, sessionPath string, mode *sessionModeState) error {
+	sender, ok := s.chatSender.(compactSender)
+	if !ok {
+		return errors.New("installed Pi worker does not support compaction")
+	}
+	if s.chatSender.Status(sessionID).State == workers.WorkerStateRunning {
+		if err := s.chatSender.Abort(ctx, sessionID); err != nil {
+			return fmt.Errorf("interrupt running session before compaction: %w", err)
+		}
+	}
+	if mode != nil {
+		if err := s.prepareWorkerMode(sessionID, *mode); err != nil {
+			return err
+		}
+	}
+	return sender.Compact(ctx, sessionID, sessionPath)
+}
+
+func (s *Server) prepareWorkerMode(sessionID string, mode sessionModeState) error {
+	sender, ok := s.chatSender.(modePreparingSender)
+	if !ok {
+		return nil
+	}
+	config := workers.WorkerConfig{}
+	if mode.EffectiveMode == sessionModeLocal {
+		if mode.ContextWindow <= 0 {
+			return errors.New("Local Mode requires a model with a known context window")
+		}
+		config.LocalContextWindow = mode.ContextWindow
+	}
+	return sender.PrepareMode(sessionID, config)
+}
+
+func (s *Server) sendSessionChat(ctx context.Context, resolved sessions.ResolvedSession, request chat.Request) error {
+	sessionID := resolved.Session.ID
+	release, err := s.acquireSessionOperation(ctx, sessionID)
+	if err != nil {
+		return err
+	}
+	defer release()
+
+	resolved, err = sessions.ResolveByID(s.sessionsDir, sessionID)
+	if err != nil {
+		return err
+	}
+	mode := s.refreshSessionModeModel(ctx, resolved.Session)
+	if mode.EffectiveMode == sessionModeLocal {
+		s.markLocalSessionActive(sessionID)
+	}
+	if err := s.prepareWorkerMode(sessionID, mode); err != nil {
+		return fmt.Errorf("prepare worker mode: %w", err)
+	}
+	if mode.EffectiveMode == sessionModeLocal &&
+		s.chatSender.Status(sessionID).State != workers.WorkerStateRunning &&
+		shouldCompactLocalSession(resolved.Session.Entries, mode.ContextWindow, request) {
+		if err := s.forceCompactLocked(ctx, sessionID, resolved.Path, nil); err != nil {
+			return fmt.Errorf("proactive Local Mode compaction: %w", err)
+		}
+		s.broadcast(sessionID, "reload")
+	}
+	return s.chatSender.Send(ctx, sessionID, resolved.Path, request)
 }
 
 func (s *Server) handleChat(w http.ResponseWriter, r *http.Request) {
@@ -60,9 +201,9 @@ func (s *Server) handleChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sessionID := resolved.Session.ID
-	sessionPath := resolved.Path
+	s.resetLocalRecoveryBudget(sessionID)
 	if !s.startTask(func(ctx context.Context) {
-		if err := s.chatSender.Send(ctx, sessionID, sessionPath, chatReq); err != nil && !errors.Is(err, context.Canceled) {
+		if err := s.sendSessionChat(ctx, resolved, chatReq); err != nil && !errors.Is(err, context.Canceled) {
 			fmt.Fprintf(os.Stderr, "chat send failed for %s: %v\n", sessionID, err)
 		}
 	}) {
@@ -70,6 +211,32 @@ func (s *Server) handleChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusAccepted, map[string]any{"ok": true, "status": "queued"})
+}
+
+func (s *Server) handleForceCompact(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		writeJSONError(w, http.StatusMethodNotAllowed, "method not allowed")
+		return
+	}
+	resolved, err := sessions.ResolveByID(s.sessionsDir, r.URL.Query().Get("id"))
+	if resolveOrWriteError(w, err) {
+		return
+	}
+	if s.chatSender == nil {
+		writeJSONError(w, http.StatusServiceUnavailable, "chat unavailable")
+		return
+	}
+	mode := s.refreshSessionModeModel(r.Context(), resolved.Session)
+	if mode.EffectiveMode != sessionModeLocal {
+		writeJSONError(w, http.StatusConflict, "force compact is available only in Local Mode")
+		return
+	}
+	if err := s.forceCompact(r.Context(), resolved.Session.ID, &mode); err != nil {
+		writeJSONError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	s.broadcast(resolved.Session.ID, "reload")
+	writeJSON(w, 0, map[string]any{"ok": true})
 }
 
 // recentSessionActivityWindow is the grace period after a JSONL write during
@@ -124,6 +291,7 @@ func (s *Server) handleCancelChat(w http.ResponseWriter, r *http.Request) {
 		writeJSONError(w, http.StatusServiceUnavailable, "chat unavailable")
 		return
 	}
+	s.stopLocalRecovery(resolved.Session.ID)
 	if err := s.chatSender.Abort(r.Context(), resolved.Session.ID); err != nil {
 		writeJSONError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -231,6 +399,7 @@ func (s *Server) handleSetModel(w http.ResponseWriter, r *http.Request) {
 		writeJSONError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+	s.updateAutoSessionMode(r.Context(), resolved.Session.ID, body.Provider, body.ModelID)
 	writeJSON(w, 0, map[string]any{"ok": true})
 }
 

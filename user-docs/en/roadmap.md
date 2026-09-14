@@ -1,11 +1,19 @@
 # Roadmap
 
+This roadmap belongs to the local-model edition of pi-web. Upstream features
+are synchronized periodically, while local deployment and reliability work is
+validated and released on this line; see [Local-model edition development](../../docs/dev/local-llm-development.md).
+
 pi-web is built for two audiences:
 
 - **For developers** — who live in the terminal but want to continue sessions from mobile, hand off to a remote server, or keep an eye on long-running tasks from anywhere.
 - **For non-developers** — who just want a beautiful AI app that works. Open it, type, vibe. No terminal, no SSH, no confusion. Like the most user-friendly AI tools, but with model choice and open-source freedom.
 
 Here's what's coming.
+
+This edition tracks upstream pi-web on a separate release line. Upstream
+features are imported periodically; local-model reliability work is prioritized
+and validated here without changing the upstream release history.
 
 ---
 

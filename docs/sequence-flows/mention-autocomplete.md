@@ -1,5 +1,8 @@
 # Sequence Flow: @mention Path Autocomplete
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 Typing `@` in the chat composer opens a popup of files and folders from the
 session's working directory (`cwd`). It mirrors the slash-command palette but is
 anchored to any `@` at a token boundary (not just position 0), and its entries

@@ -2,6 +2,11 @@
 
 This directory documents the key runtime sequences in pi-web.
 
+The flows apply to the local-model edition described in
+[Local-model edition development](../dev/local-llm-development.md). When a
+sequence differs between Cloud Mode and Local Mode, the Local Mode boundary is
+called out in the flow and must remain synchronized with the upstream baseline.
+
 | Document | Description |
 |----------|-------------|
 | [server-startup.md](./server-startup.md) | From `main()` to listening on the network |

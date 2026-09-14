@@ -5,6 +5,7 @@ import {
   finishChatPreviewState as finishChatPreview,
   renderChatPreviewState as renderChatPreview,
   renderPendingChatState as renderPendingChat,
+  shouldKeepChatPreview,
 } from './chat-preview.js';
 
 describe('chat preview', () => {
@@ -118,5 +119,55 @@ describe('chat preview', () => {
     clearChatPreview(state, { keepAssistant: false });
     expect(dom.window.document.getElementById('chat-preview-stream')).toBeNull();
     expect(state.chatPreviewEl).toBeNull();
+  });
+
+  it('recognizes a streamed preview once that text is persisted as a new assistant entry', () => {
+    const dom = new JSDOM('<body><div id="messages"></div></body>');
+    const state = { chatPreviewEl: null, pendingUserEl: null };
+
+    renderChatPreview({ content: 'checking files', done: false }, state, {
+      documentImpl: dom.window.document,
+      renderMarkdown: (text) => text,
+    });
+
+    const entries = [
+      {
+        id: 'old',
+        message: { role: 'assistant', content: [{ type: 'text', text: 'checking files' }] },
+      },
+      {
+        id: 'new',
+        message: {
+          role: 'assistant',
+          content: [
+            { type: 'thinking', thinking: 'private' },
+            { type: 'text', text: 'checking files\n' },
+            { type: 'toolCall', id: 'call-1', name: 'bash', arguments: {} },
+          ],
+        },
+      },
+    ];
+
+    expect(shouldKeepChatPreview(state, { isChatRunning: true, entries, newIds: [] })).toBe(true);
+    expect(
+      shouldKeepChatPreview(state, {
+        isChatRunning: true,
+        entries,
+        newIds: ['unrelated'],
+      }),
+    ).toBe(true);
+    expect(shouldKeepChatPreview(state, { isChatRunning: true, entries, newIds: ['new'] })).toBe(
+      false,
+    );
+
+    clearChatPreview(state, {
+      keepAssistant: shouldKeepChatPreview(state, {
+        isChatRunning: true,
+        entries,
+        newIds: ['new'],
+      }),
+    });
+    expect(dom.window.document.getElementById('chat-preview-stream')).toBeNull();
+    expect(state.chatPreviewContent).toBe('');
   });
 });

@@ -19,6 +19,7 @@
     finishChatPreviewState,
     renderChatPreviewState,
     renderPendingChatState,
+    shouldKeepChatPreview,
   } from '../../session/live/chat-preview.js';
   import { getSessionIdFromLocation, handleSessionReload } from '../../session/live/live-events.js';
   import { setupSessionLiveConnection } from '../../session/live/live-connection.js';
@@ -27,6 +28,8 @@
   import { sessionRuntime } from '../../session/session-runtime.js';
   import { getSessionRuntime } from '../../session/session-runtime-context.js';
   import { setSessionTitle } from '../../session/session-title.svelte.js';
+  import { showToast } from '../../shared/toast.js';
+  import { t } from '../../shared/i18n.js';
 
   onMount(() => {
     const documentImpl = document;
@@ -119,13 +122,14 @@
     // ── Streaming chat preview ─────────────────────────────────────────────────
     const CHAT_PREVIEW_STATE = { chatPreviewEl: null, pendingUserEl: null };
 
-    function clearChatPreview() {
+    function clearChatPreview(entries = [], newIds = []) {
       const statusEl = documentImpl.getElementById('pi-chat-status');
       const isChatRunning = statusEl && statusEl.classList.contains('running');
-      const hasDoneClass =
-        CHAT_PREVIEW_STATE.chatPreviewEl &&
-        CHAT_PREVIEW_STATE.chatPreviewEl.classList.contains('done');
-      const keepAssistant = !!(isChatRunning && !hasDoneClass);
+      const keepAssistant = shouldKeepChatPreview(CHAT_PREVIEW_STATE, {
+        isChatRunning,
+        entries,
+        newIds,
+      });
       return clearChatPreviewState(CHAT_PREVIEW_STATE, { keepAssistant });
     }
     function finishChatPreview() {
@@ -168,6 +172,8 @@
         incrementPending,
         showFollowButton,
         onReloaded: (data) => {
+          model.configuredMode = data.configuredMode || 'auto';
+          model.effectiveMode = data.effectiveMode || 'cloud';
           reconcileEntries(data.entries);
         },
         onNewEntries: highlightNewEntries,
@@ -190,6 +196,14 @@
       onReload: triggerReload,
       onChatPreview: renderChatPreview,
       onAnnotations: (list) => sessionRuntime.annotations?.setAnnotations(list),
+      onLocalRecovery: (event) => {
+        if (event?.reason !== 'thinking-only-stop') return;
+        showToast(t('session.recoveringThinkingStop'), {
+          id: 'local-recovery-toast',
+          duration: 4000,
+          documentImpl,
+        });
+      },
     });
     liveConnection.connect();
     cleanups.push(liveConnection.dispose);

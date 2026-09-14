@@ -1,5 +1,9 @@
 # pi-web E2E (Playwright)
 
+These tests run against the local-model edition. The Local Mode acceptance
+scenarios and upstream synchronization policy are documented in
+[Local-model edition development](../docs/dev/local-llm-development.md).
+
 End-to-end browser tests that run against the built `pi-web` binary across
 desktop, mobile, and iPad viewports.
 

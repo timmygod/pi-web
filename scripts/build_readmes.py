@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from translation_runtime import pi_translation_command
+
 ROOT = Path(__file__).resolve().parent.parent
 README = ROOT / "README.md"
 OUT_DIR = ROOT / "user-docs" / "readme"
@@ -108,7 +110,7 @@ Here is the Markdown to translate:
 def translate(body: str, code: str) -> str:
     prompt = PROMPT.format(target=TRANSLATE_TARGET[code], body=body)
     result = subprocess.run(
-        ["pi", "-p", "--model", "opencode-go/deepseek-v4-pro", "--no-session", prompt],
+        pi_translation_command(prompt),
         capture_output=True,
         text=True,
         timeout=600,

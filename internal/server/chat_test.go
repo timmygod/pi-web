@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -48,6 +49,96 @@ type fakeSender struct {
 	setThinkingSessionID    string
 	setThinkingLevel        string
 	getCommandsCalls        int
+}
+
+type compactFakeSender struct {
+	fakeSender
+	events           chan string
+	settled          chan struct{}
+	waitStarted      chan struct{}
+	modeConfig       workers.WorkerConfig
+	compactStarted   chan struct{}
+	compactRelease   <-chan struct{}
+	compactCalls     int
+	appendCompaction bool
+}
+
+func (f *compactFakeSender) Send(ctx context.Context, sessionID, sessionPath string, req chat.Request) error {
+	if f.events != nil {
+		f.events <- "send:" + req.Message
+	}
+	return f.fakeSender.Send(ctx, sessionID, sessionPath, req)
+}
+
+func (f *compactFakeSender) Abort(context.Context, string) error {
+	if f.events != nil {
+		f.events <- "abort"
+	}
+	return nil
+}
+
+func (f *compactFakeSender) Compact(ctx context.Context, _ string, sessionPath string) error {
+	f.mu.Lock()
+	f.compactCalls++
+	call := f.compactCalls
+	started := f.compactStarted
+	release := f.compactRelease
+	appendCompaction := f.appendCompaction
+	f.mu.Unlock()
+	if f.events != nil {
+		f.events <- "compact"
+	}
+	if call == 1 && started != nil {
+		close(started)
+	}
+	if release != nil {
+		select {
+		case <-release:
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	}
+	if appendCompaction {
+		file, err := os.OpenFile(sessionPath, os.O_APPEND|os.O_WRONLY, 0600)
+		if err != nil {
+			return err
+		}
+		_, err = file.WriteString(`{"type":"compaction","id":"compact","parentId":"a","timestamp":"2026-09-08T00:00:00.000Z","summary":"summary","firstKeptEntryId":"a","tokensBefore":65000}` + "\n")
+		closeErr := file.Close()
+		if err != nil {
+			return err
+		}
+		return closeErr
+	}
+	return nil
+}
+
+func (f *compactFakeSender) compactCallCount() int {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.compactCalls
+}
+
+func (f *compactFakeSender) PrepareMode(_ string, config workers.WorkerConfig) error {
+	f.mu.Lock()
+	f.modeConfig = config
+	f.mu.Unlock()
+	return nil
+}
+
+func (f *compactFakeSender) WaitSettled(ctx context.Context, _ string) error {
+	if f.waitStarted != nil {
+		close(f.waitStarted)
+	}
+	if f.settled == nil {
+		return nil
+	}
+	select {
+	case <-f.settled:
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 }
 
 func (f *fakeSender) Send(ctx context.Context, sessionID, sessionPath string, chat chat.Request) error {
@@ -155,6 +246,34 @@ func (f *fakeSender) thinkingSessionID() string {
 	return f.setThinkingSessionID
 }
 
+func writeHighUsageLocalSession(t *testing.T, s *Server) sessions.ResolvedSession {
+	t.Helper()
+	project := filepath.Join(s.sessionsDir, "cwd")
+	if err := os.MkdirAll(project, 0755); err != nil {
+		t.Fatal(err)
+	}
+	dir := filepath.Join(s.sessionsDir, "--project--")
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(dir, "session.jsonl")
+	content := `{"type":"session","version":3,"id":"sid","cwd":` + jsonString(project) + `}` + "\n" +
+		`{"type":"message","id":"a","message":{"role":"assistant","model":"qwen","provider":"custom","stopReason":"stop","content":[{"type":"text","text":"ready"}],"usage":{"totalTokens":65000}}}` + "\n"
+	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := s.saveSessionMode("session.jsonl", sessionModeLocal, modelModeMetadata{
+		Provider: "custom", ID: "qwen", ContextWindow: 100000,
+	}); err != nil {
+		t.Fatal(err)
+	}
+	resolved, err := sessions.ResolveByID(s.sessionsDir, "session.jsonl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return resolved
+}
+
 func TestHandleChatQueuesResolvedSession(t *testing.T) {
 	root := t.TempDir()
 	wantPath := writeSessionFile(t, root, "--tmp--project--", "session.jsonl")
@@ -186,6 +305,214 @@ func TestHandleChatQueuesResolvedSession(t *testing.T) {
 	sentID, sentPath, sentReq := fake.sentInfo()
 	if sentID != "session.jsonl" || sentPath != wantPath || sentReq.Message != "hello" {
 		t.Fatalf("sent id=%q path=%q msg=%q, want path %q", sentID, sentPath, sentReq.Message, wantPath)
+	}
+}
+
+func TestHandleChatCompactsLocalSessionBeforeSendingAtSixtyFivePercent(t *testing.T) {
+	s := newTestServer(t)
+	writeHighUsageLocalSession(t, s)
+	sender := &compactFakeSender{events: make(chan string, 2)}
+	s.chatSender = sender
+
+	var body bytes.Buffer
+	mw := multipart.NewWriter(&body)
+	_ = mw.WriteField("message", "next")
+	_ = mw.Close()
+	req := httptest.NewRequest(http.MethodPost, "/api/chat?id=session.jsonl", &body)
+	req.Header.Set("Content-Type", mw.FormDataContentType())
+	w := httptest.NewRecorder()
+	s.handleChat(w, req)
+	if w.Code != http.StatusAccepted {
+		t.Fatalf("status = %d: %s", w.Code, w.Body.String())
+	}
+	for i, want := range []string{"compact", "send:next"} {
+		select {
+		case got := <-sender.events:
+			if got != want {
+				t.Fatalf("event %d = %q, want %q", i, got, want)
+			}
+		case <-time.After(time.Second):
+			t.Fatalf("timed out waiting for event %q", want)
+		}
+	}
+}
+
+func TestHandleChatDoesNotAbortRunningLocalCompaction(t *testing.T) {
+	s := newTestServer(t)
+	writeHighUsageLocalSession(t, s)
+	sender := &compactFakeSender{
+		fakeSender: fakeSender{status: workers.WorkerStatus{State: workers.WorkerStateRunning}},
+		events:     make(chan string, 3),
+	}
+	s.chatSender = sender
+
+	var body bytes.Buffer
+	mw := multipart.NewWriter(&body)
+	_ = mw.WriteField("message", "steer while compacting")
+	_ = mw.Close()
+	req := httptest.NewRequest(http.MethodPost, "/api/chat?id=session.jsonl", &body)
+	req.Header.Set("Content-Type", mw.FormDataContentType())
+	w := httptest.NewRecorder()
+	s.handleChat(w, req)
+	if w.Code != http.StatusAccepted {
+		t.Fatalf("status = %d: %s", w.Code, w.Body.String())
+	}
+	select {
+	case got := <-sender.events:
+		if got != "send:steer while compacting" {
+			t.Fatalf("event = %q, want the prompt to be steered without aborting or compacting", got)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("timed out waiting for steered prompt")
+	}
+	if calls := sender.compactCallCount(); calls != 0 {
+		t.Fatalf("Compact calls = %d, want 0 while Pi is already running", calls)
+	}
+}
+
+func TestConcurrentLocalChatRequestsCompactOnceFromFreshSessionState(t *testing.T) {
+	s := newTestServer(t)
+	resolved := writeHighUsageLocalSession(t, s)
+	compactStarted := make(chan struct{})
+	compactRelease := make(chan struct{})
+	sender := &compactFakeSender{
+		events:           make(chan string, 3),
+		compactStarted:   compactStarted,
+		compactRelease:   compactRelease,
+		appendCompaction: true,
+	}
+	s.chatSender = sender
+
+	errs := make(chan error, 2)
+	go func() {
+		errs <- s.sendSessionChat(context.Background(), resolved, chat.Request{Message: "first"})
+	}()
+	select {
+	case <-compactStarted:
+	case <-time.After(time.Second):
+		t.Fatal("first request did not start compaction")
+	}
+	go func() {
+		errs <- s.sendSessionChat(context.Background(), resolved, chat.Request{Message: "second"})
+	}()
+
+	select {
+	case err := <-errs:
+		t.Fatalf("a request completed before the active compaction was released: %v", err)
+	case <-time.After(50 * time.Millisecond):
+	}
+	close(compactRelease)
+	for range 2 {
+		if err := <-errs; err != nil {
+			t.Fatal(err)
+		}
+	}
+	if calls := sender.compactCallCount(); calls != 1 {
+		t.Fatalf("Compact calls = %d, want one shared compaction", calls)
+	}
+	for i, want := range []string{"compact", "send:first", "send:second"} {
+		select {
+		case got := <-sender.events:
+			if got != want {
+				t.Fatalf("event %d = %q, want %q", i, got, want)
+			}
+		case <-time.After(time.Second):
+			t.Fatalf("timed out waiting for event %q", want)
+		}
+	}
+}
+
+func TestConcurrentForceCompactRequestsReuseCompletedCompaction(t *testing.T) {
+	s := newTestServer(t)
+	resolved := writeHighUsageLocalSession(t, s)
+	compactStarted := make(chan struct{})
+	compactRelease := make(chan struct{})
+	sender := &compactFakeSender{
+		compactStarted:   compactStarted,
+		compactRelease:   compactRelease,
+		appendCompaction: true,
+	}
+	s.chatSender = sender
+
+	errs := make(chan error, 2)
+	go func() {
+		errs <- s.forceCompact(context.Background(), resolved.Session.ID, nil)
+	}()
+	select {
+	case <-compactStarted:
+	case <-time.After(time.Second):
+		t.Fatal("first Force Compact request did not start")
+	}
+	secondStarted := make(chan struct{})
+	go func() {
+		close(secondStarted)
+		errs <- s.forceCompact(context.Background(), resolved.Session.ID, nil)
+	}()
+	<-secondStarted
+	select {
+	case err := <-errs:
+		t.Fatalf("a Force Compact request completed while the first was still active: %v", err)
+	case <-time.After(50 * time.Millisecond):
+	}
+	close(compactRelease)
+	for range 2 {
+		if err := <-errs; err != nil {
+			t.Fatal(err)
+		}
+	}
+	if calls := sender.compactCallCount(); calls != 1 {
+		t.Fatalf("Compact calls = %d, want one shared compaction", calls)
+	}
+}
+
+func TestSessionOperationWaitHonorsCancellationAndReleasesItsEntry(t *testing.T) {
+	s := &Server{}
+	release, err := s.acquireSessionOperation(context.Background(), "session.jsonl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if _, err := s.acquireSessionOperation(ctx, "session.jsonl"); !errors.Is(err, context.Canceled) {
+		t.Fatalf("waiting operation error = %v, want context.Canceled", err)
+	}
+	release()
+
+	release, err = s.acquireSessionOperation(context.Background(), "session.jsonl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	release()
+	s.sessionOperations.mu.Lock()
+	remaining := len(s.sessionOperations.entries)
+	s.sessionOperations.mu.Unlock()
+	if remaining != 0 {
+		t.Fatalf("session operation entries = %d, want 0 after all callers release", remaining)
+	}
+}
+
+func TestForceCompactInterruptsRunningLocalSession(t *testing.T) {
+	s := newTestServer(t)
+	path := writeSessionFile(t, s.sessionsDir, "--project--", "session.jsonl")
+	_ = path
+	if _, err := s.saveSessionMode("session.jsonl", sessionModeLocal, modelModeMetadata{
+		Provider: "custom", ID: "qwen", ContextWindow: 100000,
+	}); err != nil {
+		t.Fatal(err)
+	}
+	sender := &compactFakeSender{
+		fakeSender: fakeSender{status: workers.WorkerStatus{State: workers.WorkerStateRunning}},
+		events:     make(chan string, 2),
+	}
+	s.chatSender = sender
+	req := httptest.NewRequest(http.MethodPost, "/api/force-compact?id=session.jsonl", nil)
+	w := httptest.NewRecorder()
+	s.handleForceCompact(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("status = %d: %s", w.Code, w.Body.String())
+	}
+	if first, second := <-sender.events, <-sender.events; first != "abort" || second != "compact" {
+		t.Fatalf("events = %q, %q; want abort, compact", first, second)
 	}
 }
 

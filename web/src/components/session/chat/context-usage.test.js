@@ -4,6 +4,7 @@ import {
   collectContextUsage,
   createContextUsageController,
   getModelContextLimit,
+  invalidateContextUsage,
   updateContextUsage,
 } from './context-usage.js';
 
@@ -72,6 +73,21 @@ describe('context usage helpers', () => {
     expect(usage.cacheWriteTokens).toBe(1000);
     expect(usage.totalIOTokens).toBe(4300);
     expect(usage.contextTokens).toBe(1800);
+    expect(usage.contextKnown).toBe(true);
+  });
+
+  it('does not reuse assistant usage from before the latest compaction', () => {
+    const usage = collectContextUsage([
+      {
+        id: 'before',
+        type: 'message',
+        message: { role: 'assistant', usage: { totalTokens: 99000 } },
+      },
+      { id: 'compact', type: 'compaction', summary: 'summary' },
+    ]);
+
+    expect(usage.contextTokens).toBe(0);
+    expect(usage.contextKnown).toBe(false);
   });
 });
 
@@ -123,6 +139,49 @@ describe('updateContextUsage', () => {
     expect(positionPopover).toHaveBeenCalledTimes(1);
   });
 
+  it('shows unknown usage after compaction until post-compaction usage arrives', () => {
+    renderDom();
+    const entries = [
+      {
+        id: 'before',
+        type: 'message',
+        message: { role: 'assistant', usage: { totalTokens: 99000 } },
+      },
+      { id: 'compact', type: 'compaction', summary: 'summary' },
+    ];
+
+    updateContextUsage({ documentImpl: document, entries });
+    expect(document.querySelector('.pi-context-text').textContent).toBe('—');
+    expect(document.querySelector('.pi-popover-used').textContent).toBe('—');
+
+    entries.push({
+      id: 'after',
+      type: 'message',
+      message: { role: 'assistant', usage: { totalTokens: 12000 } },
+    });
+    updateContextUsage({ documentImpl: document, entries });
+    expect(document.querySelector('.pi-context-text').textContent).toBe('9%');
+  });
+
+  it('invalidates the displayed value immediately after Force Compact', () => {
+    renderDom();
+    updateContextUsage({
+      documentImpl: document,
+      entries: [
+        {
+          id: 'before',
+          type: 'message',
+          message: { role: 'assistant', usage: { totalTokens: 90000 } },
+        },
+      ],
+    });
+    invalidateContextUsage(document);
+    expect(document.querySelector('.pi-context-text').textContent).toBe('—');
+    expect(document.querySelector('.pi-context-fill').getAttribute('stroke-dasharray')).toBe(
+      '0, 100',
+    );
+  });
+
   it('loads dynamic limits in the controller', async () => {
     renderDom();
     const controller = createContextUsageController({
@@ -147,5 +206,35 @@ describe('updateContextUsage', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(document.querySelector('.pi-popover-limit').textContent).toBe('1.2M');
+  });
+
+  it('discards an asynchronous model result after the selected session changes', async () => {
+    renderDom();
+    let resolveModels;
+    let current = true;
+    const controller = createContextUsageController({
+      documentImpl: document,
+      entries: [{ type: 'message', message: { role: 'assistant', usage: { totalTokens: 64000 } } }],
+      getKnownModelLabel: () => 'local-model @ custom',
+      isCurrentSession: () => current,
+      chatApi: {
+        listModels: () =>
+          new Promise((resolve) => {
+            resolveModels = resolve;
+          }),
+      },
+    });
+    current = false;
+    resolveModels({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          models: [{ id: 'local-model', provider: 'custom', contextWindow: 100000 }],
+        }),
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    controller.update();
+    expect(document.querySelector('.pi-context-text').textContent).toBe('0%');
+    expect(controller.getContextWindows()).toEqual({});
   });
 });

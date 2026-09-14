@@ -1,5 +1,8 @@
 # Sequence Flow: btw scratch-chats
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 A **btw** ("by the way") is a throwaway, floating chat window attached to a
 session page. It lets you start a quick side conversation with a fresh `pi`
 worker without leaving — or disturbing — the session you're reading. Each btw is

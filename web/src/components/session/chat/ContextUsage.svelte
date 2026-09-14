@@ -1,8 +1,28 @@
 <script>
   import { t } from '../../../shared/i18n.js';
   import { icon, X } from '../../../shared/icons.js';
+  import { forceCompact } from '../../../session/chat/chat-api.js';
+  import { invalidateContextUsage } from './context-usage.js';
 
-  let { popover = false } = $props();
+  let { popover = false, localMode = false, sessionId = '' } = $props();
+  let compacting = $state(false);
+  let compactError = $state('');
+
+  async function compactNow() {
+    if (compacting || !sessionId) return;
+    compacting = true;
+    compactError = '';
+    try {
+      const response = await forceCompact(sessionId);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || t('composer.forceCompactFailed'));
+      invalidateContextUsage(document);
+    } catch (error) {
+      compactError = error?.message || t('composer.forceCompactFailed');
+    } finally {
+      compacting = false;
+    }
+  }
 </script>
 
 <!-- eslint-disable svelte/no-at-html-tags -- trusted: Lucide icon SVG and rendered session markdown -->
@@ -35,6 +55,15 @@
       <span class="pi-popover-close">{@html icon(X, { size: 13 })}</span>
     </div>
     <div class="pi-popover-body">
+      {#if localMode}<button
+          type="button"
+          class="pi-force-compact"
+          disabled={compacting}
+          onclick={compactNow}
+          >{compacting ? t('composer.compacting') : t('composer.forceCompact')}</button
+        >
+        {#if compactError}<div class="pi-force-compact-error">{compactError}</div>{/if}
+      {/if}
       <div class="pi-popover-hero">
         <span class="pi-popover-used">0</span>
         <span class="pi-popover-divider">/</span>

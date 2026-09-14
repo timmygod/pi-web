@@ -1,5 +1,10 @@
 # Data Flow & Session File Format
 
+This data-flow reference is maintained on the local-model edition release line.
+The append-only session format remains upstream-compatible, while Local Mode
+worker isolation, context protection, and recovery boundaries are documented in
+[Local-model edition development](../dev/local-llm-development.md).
+
 ## Session File Format
 
 Sessions are stored as **JSONL** files (one JSON object per line):
@@ -24,19 +29,19 @@ Sessions are stored as **JSONL** files (one JSON object per line):
 
 ### Entry Types
 
-| `type` | Description |
-|--------|-------------|
-| `session` | Header metadata (cwd, name, version, id) |
-| `message` | User or assistant message with optional `usage` and `cost` |
-| `session_info` | Session metadata update; latest `name` is used as display title |
-| `tool_call` | Agent invoked a tool |
-| `tool_result` | Tool execution result |
-| `bash` / `bash_output` | Shell command and its output |
-| `branch_summary` | Summary of work on a git branch |
-| `compaction` | Conversation history was compacted |
-| `model_change` | Model switched mid-session |
-| `thinking_level_change` | Thinking level changed mid-session |
-| `diff` | Code diff output from edit/tool operations |
+| `type`                  | Description                                                     |
+| ----------------------- | --------------------------------------------------------------- |
+| `session`               | Header metadata (cwd, name, version, id)                        |
+| `message`               | User or assistant message with optional `usage` and `cost`      |
+| `session_info`          | Session metadata update; latest `name` is used as display title |
+| `tool_call`             | Agent invoked a tool                                            |
+| `tool_result`           | Tool execution result                                           |
+| `bash` / `bash_output`  | Shell command and its output                                    |
+| `branch_summary`        | Summary of work on a git branch                                 |
+| `compaction`            | Conversation history was compacted                              |
+| `model_change`          | Model switched mid-session                                      |
+| `thinking_level_change` | Thinking level changed mid-session                              |
+| `diff`                  | Code diff output from edit/tool operations                      |
 
 ### Project Directory Encoding
 
@@ -126,6 +131,11 @@ Browser POST /api/chat?id=<id>
            │         ├──▶ Extract text + image files
            │         └──▶ Validate (not empty, image size, mime type)
            │
+           ├──▶ Resolve configured/effective mode from SQLite + model endpoint
+           ├──▶ Acquire the per-session compact/send gate
+           ├──▶ Reload the session JSONL after waiting for the gate
+           ├──▶ Local idle worker + projected context >= 65%: force compact first
+           ├──▶ Local running worker: steer/queue without aborting active compaction
            ├──▶ workers.Manager.Send(ctx, sessionID, sessionPath, chatReq)
            │         │
            │         ├──▶ Get or create ChatWorker for session
@@ -140,8 +150,35 @@ Browser POST /api/chat?id=<id>
            │               ├──▶ Await response on pending channel
            │               └──▶ Update status → running
            │
-           └──▶ Return {"ok": true, "status": "accepted"}
+           └──▶ Return {"ok": true, "status": "queued"}
 ```
+
+For effective Local sessions, the worker's isolated Pi settings enforce the same
+65% boundary between tool results and the next model call. Pi 0.85.1 installs
+this check through `prepareNextTurnWithContext`, so uninterrupted tool-use loops
+do not wait for `agent_end`. A Local-only extension aborts the run if automatic
+compaction fails or reduces the active message context by less than 5%/512
+tokens, preventing Pi from sending the unchanged context to the provider.
+Pi Web serializes server-initiated compact/send preflight per session and reloads
+the session after acquiring that gate. This prevents concurrent chat, queue,
+scheduler, watchdog, and Force Compact requests from running Pi's non-reentrant
+manual compaction against one session. A chat arriving while Pi is already
+running is submitted as steering input; it does not abort an automatic
+compaction. The cancel endpoint remains outside the gate so an explicit cancel
+can still interrupt a long operation.
+Pi's native context-overflow path removes the failed
+assistant response, compacts, and retries once. The pi-web watchdog is a second
+layer: a running→idle transition with both >=99% utilization and a context-limit
+error is compacted once per incident, then sent exactly `continue if possible`.
+The same transition also catches a Local assistant `stop` containing reasoning
+but no response text or tool call. That path skips compaction, emits a live
+recovery notice, and sends the same bounded continuation. Both paths share
+persisted per-incident deduplication and a progress-aware circuit breaker: an
+immediate repeat failure is blocked, while a new failure after a completed
+answer, multiple successful tool results, or sustained successful work can be
+rescued again. A user action also resets the breaker. The global watchdog
+recovery slot remains held until Pi emits `agent_settled`, not merely until it
+acknowledges the continuation prompt.
 
 ## Data Flow: Rename Session
 
@@ -217,7 +254,7 @@ Browser POST /api/new-session
            ▼
     server.handleNewSession
            │
-           ├──▶ Decode JSON body → extract path and optional sourceSessionId
+           ├──▶ Decode path, optional sourceSessionId, model, and Auto/Local/Cloud mode
            │
            ├──▶ If sourceSessionId is present, read current worker model/thinking state
            │
@@ -232,7 +269,8 @@ Browser POST /api/new-session
            │              and `parentId` fields so `pi --mode rpc switch_session` restores
            │              the same initial model/thinking state.
            │
-           ├──▶ Pre-initialize chat worker (EnsureWorker)
+           ├──▶ Persist configured/effective mode + resolved context window in SQLite
+           ├──▶ Pre-initialize mode-configured chat worker (EnsureWorker)
            │         └──▶ So the session page can read default model/thinking level immediately
            │
            └──▶ Return {"ok": true, "id": <filename>}
@@ -301,5 +339,4 @@ Browser POST /api/scratchpad
            ├──▶ UPSERT into SQLite scratchpads table (INSERT ... ON CONFLICT DO UPDATE)
            │
            └──▶ Return {"ok": true}
-```
 ```

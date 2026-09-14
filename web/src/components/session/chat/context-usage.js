@@ -74,8 +74,17 @@ export function collectContextUsage(entries = []) {
     }
   });
 
-  let contextTokens = 0;
+  let latestCompaction = -1;
   for (let i = entries.length - 1; i >= 0; i -= 1) {
+    if (entries[i]?.type === 'compaction') {
+      latestCompaction = i;
+      break;
+    }
+  }
+
+  let contextTokens = 0;
+  let contextKnown = false;
+  for (let i = entries.length - 1; i > latestCompaction; i -= 1) {
     const entry = entries[i];
     if (entry?.type !== 'message' || !entry.message) continue;
     const msg = entry.message;
@@ -86,6 +95,7 @@ export function collectContextUsage(entries = []) {
           (msg.usage.output || 0) +
           (msg.usage.cacheRead || 0) +
           (msg.usage.cacheWrite || 0);
+      contextKnown = contextTokens > 0;
       break;
     }
   }
@@ -97,7 +107,38 @@ export function collectContextUsage(entries = []) {
     cacheWriteTokens,
     totalIOTokens: inputTokens + outputTokens + cacheReadTokens + cacheWriteTokens,
     contextTokens,
+    contextKnown,
+    hasCompaction: latestCompaction >= 0,
   };
+}
+
+function entryKey(entry) {
+  if (!entry) return '';
+  return String(entry.id || `${entry.type || ''}:${entry.timestamp || ''}`);
+}
+
+export function invalidateContextUsage(documentImpl = document) {
+  const el = documentImpl.getElementById('pi-chat-context-usage');
+  if (!el) return;
+  el.dataset.contextInvalidated = el.dataset.lastEntryKey || 'pending';
+  renderUnknownContextUsage(documentImpl, el);
+}
+
+function renderUnknownContextUsage(documentImpl, el) {
+  const fillPath = el.querySelector('.pi-context-fill');
+  const textSpan = el.querySelector('.pi-context-text');
+  if (fillPath) fillPath.setAttribute('stroke-dasharray', '0, 100');
+  if (textSpan) textSpan.textContent = '—';
+  el.setAttribute('title', 'Context usage will refresh after the next model response');
+  el.classList.remove('warning', 'danger');
+
+  const popoverBox = documentImpl.getElementById('pi-chat-context-popover');
+  const usedSpan = popoverBox?.querySelector('.pi-popover-used');
+  const popoverBar = popoverBox?.querySelector('.pi-popover-progress-bar');
+  if (usedSpan) usedSpan.textContent = '—';
+  if (popoverBar) popoverBar.style.width = '0%';
+  popoverBox?.classList.remove('warning', 'danger');
+  el.style.display = 'inline-flex';
 }
 
 function splitModelLabel(label = '') {
@@ -129,10 +170,19 @@ export function updateContextUsage({
   if (!el) return;
 
   const usage = collectContextUsage(entries);
-  if (usage.contextTokens <= 0 && usage.totalIOTokens <= 0) {
+  if (!usage.hasCompaction && usage.contextTokens <= 0 && usage.totalIOTokens <= 0) {
     el.style.display = 'none';
     return;
   }
+
+  const lastEntryKey = entryKey(entries[entries.length - 1]);
+  const invalidatedAt = el.dataset.contextInvalidated || '';
+  el.dataset.lastEntryKey = lastEntryKey;
+  if (!usage.contextKnown || (invalidatedAt && invalidatedAt === lastEntryKey)) {
+    renderUnknownContextUsage(documentImpl, el);
+    return;
+  }
+  delete el.dataset.contextInvalidated;
 
   const { modelName, providerName } = splitModelLabel(knownModelLabel);
   const limit = getModelContextLimit(modelName, providerName, contextWindows);
@@ -194,10 +244,12 @@ export function createContextUsageController({
   chatApi,
   getKnownModelLabel = () => '',
   positionPopover = () => {},
+  isCurrentSession = () => true,
 } = {}) {
   let contextWindows = {};
 
-  const update = () =>
+  const update = () => {
+    if (!isCurrentSession()) return;
     updateContextUsage({
       documentImpl,
       entries,
@@ -205,6 +257,7 @@ export function createContextUsageController({
       contextWindows,
       positionPopover,
     });
+  };
 
   if (chatApi && typeof chatApi.listModels === 'function') {
     chatApi
@@ -214,6 +267,7 @@ export function createContextUsageController({
         throw new Error();
       })
       .then((data) => {
+        if (!isCurrentSession()) return;
         contextWindows = buildContextWindows(data.models || []);
         update();
       })

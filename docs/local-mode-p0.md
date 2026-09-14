@@ -4,6 +4,12 @@
 
 Pi Web was originally designed around cloud models. This fork also needs to support local models, which are generally slower, more sensitive to long context, more likely to stall or crash, and often constrained to one practical active session because of memory pressure.
 
+This document is the implementation contract for this repository's local-model
+edition. Upstream pi-web remains the source for shared behavior; changes to
+this contract must be reviewed against the upstream baseline and released on
+the local-model line. The synchronization and release workflow is documented in
+[Local-model edition development](dev/local-llm-development.md).
+
 The P0 goal is **not** to replace or break the original cloud workflow. Instead, add a session-level **Local Mode** and put local-model-specific behavior behind that mode. Cloud Mode should preserve upstream behavior unless a change is a clearly safe bug fix that does not alter cloud semantics.
 
 The core reliability principle is:
@@ -45,6 +51,11 @@ Mode is session-level state and must survive:
 
 Persist enough information to distinguish the configured mode (`Auto` / `Local` / `Cloud`) and the effective resolved mode when needed.
 
+Changing an existing session's configured mode while its worker is running is
+rejected with a conflict response. The selector restores the persisted value
+and shows the error; the user can retry after the current run settles. This
+avoids displaying a mode whose worker settings are not active yet.
+
 All requirements below apply only to effective **Local Mode** unless explicitly noted otherwise.
 
 ---
@@ -62,6 +73,16 @@ contextUsage = currentContextTokens / modelContextWindow
 ```
 
 When Local Mode reaches **65%**, compaction must be triggered before another model/provider request is allowed to proceed.
+
+Pi Web serializes the compact/send preflight for each session. A request that
+waited behind another request must reload the JSONL before deciding whether a
+compaction is still needed, so several submissions cannot compact the same
+snapshot concurrently. If Pi already reports the worker as running, a new chat
+message is sent as steering/queued input instead of aborting the active run to
+start another manual compaction. Pi's between-turn automatic check remains
+responsible for enforcing the 65% boundary before the next provider request.
+Explicit Force Compact retains its emergency interrupt behavior, while repeated
+Force Compact requests reuse a compaction that completed while they waited.
 
 ### Required check timing
 
@@ -97,6 +118,18 @@ After compacting:
 - continue normally if utilization was reduced,
 - do not repeatedly compact the same unchanged state forever,
 - bound automatic recovery attempts when compaction cannot make progress.
+
+Local workers install a Local-only compaction guard alongside the user's
+extensions. It writes a bounded rolling checkpoint instead of accumulating the
+old summary, with one tighter rewrite on capped or invalid output. It preserves
+Pi's recent-message boundary and never clears history. See
+[the checkpoint design](dev/local-compaction.md) for budgets and failure rules.
+If both requests fail, the guard aborts the current automatic run before another
+provider request, retaining the original context. It also compares the
+active message-context estimate before and after a successful automatic
+compaction and aborts when the reduction is less than 5% or 512 tokens. This
+makes each no-progress incident terminate after one compaction and leaves Force
+Compact available for manual recovery.
 
 ---
 
@@ -255,13 +288,66 @@ max concurrent / startup watchdog recovery sessions = 1
 
 ### Recovery loop protection
 
-Persist a per-incident recovery marker/state so this cannot happen forever:
+Persist per-incident recovery markers and a progress-aware circuit breaker so
+this cannot happen forever:
 
 ```text
 overflow -> compact -> continue -> overflow -> compact -> continue -> ...
 ```
 
-One failed recovery incident must eventually stop and remain available for manual intervention instead of endlessly consuming local compute/memory.
+The same incident is never recovered twice. A new incident immediately after an
+automatic continuation is also blocked unless the recovered run demonstrated
+healthy progress: a completed assistant answer, at least three successful tool
+results, or a successful tool result followed by at least five minutes of
+continued work. A real user action resets the breaker. This lets a session that
+worked productively for a meaningful period be rescued again while a session
+that repeatedly dies in its first reasoning pass remains stopped for manual
+intervention.
+
+### Thinking-only stop recovery
+
+The same Local Mode watchdog also treats a final assistant message as an
+interrupted run when all of the following are true:
+
+1. The assistant reports the normal `stop` reason.
+2. Its content contains non-empty reasoning.
+3. It contains no non-empty response text and no tool call.
+4. No newer user message has started another run.
+
+This case does not force compaction. It sends `continue if possible` once and
+shows a live recovery notice in an open session view. It shares the persisted
+progress-aware circuit breaker and per-incident deduplication used by the
+context-overflow watchdog, so an immediate second premature stop cannot create
+an automatic continuation loop. Error, abort, and output-length stops are not
+classified as thinking-only stops.
+
+### Transport interruption recovery
+
+The watchdog also recovers a final assistant `error` whose diagnostic is
+`This operation was aborted` (or the equivalent `The operation was aborted`,
+`Request aborted`, or `Request was aborted`). These transport failures are
+distinct from Pi's `aborted` stop reason for user cancellation. Other provider
+errors, such as authentication or quota failures, are not included.
+
+Recovery waits until the worker is no longer running. It rechecks the incident
+after acquiring the session operation lock so a newer user message or successful
+response supersedes it. At the 65% context threshold it compacts before sending
+`continue if possible`; if Pi has already compacted after the error, it continues
+without compacting the same context again. Original conversation entries remain
+unchanged.
+
+After the recovery run settles, the watchdog checks for a new incident. It can
+keep recovering across a long session when each new incident follows healthy
+progress, using the same persisted circuit breaker described above. Repeated
+failures without progress stop automatically. Clicking Stop cancels an active
+recovery and persists a stop latch (`automatic_attempts_since_user = -1`) until
+the next user submission resets it, including across server restarts. Cancelled
+RPC requests are checked again before writing to the worker so a continuation
+waiting to be sent cannot restart work after Stop.
+
+This recovers the session after this class of transport failure; it does not
+prevent the model server, network, or HTTP client from timing out. No Pi fork or
+changes to the globally installed Pi package are required.
 
 ---
 
@@ -346,9 +432,10 @@ P0 is complete only when the following are demonstrated with tests where feasibl
 7. Local reasoning blocks show only `Copy`, and Copy puts the full reasoning text (not a permalink) on the clipboard.
 8. A Local Mode session that unexpectedly becomes idle at >=99% after a context-overflow incident can be recovered by compact + `continue if possible`.
 9. Runtime recovery only touches the session that just failed; startup recovery inspects at most one most-recently-active Local Mode candidate.
-10. Recovery cannot loop forever or revive a backlog of historical sessions.
-11. Cloud Mode retains existing upstream behavior.
-12. Reasoning-language forcing is implemented **only** if the Chinese-specific failure is reproduced, root-caused, fixed, and stress-tested; otherwise it is intentionally omitted.
+10. A Local Mode `stop` with reasoning but no answer/tool is continued once without compaction and produces a live recovery notice.
+11. Recovery cannot loop forever or revive a backlog of historical sessions.
+12. Cloud Mode retains existing upstream behavior.
+13. Reasoning-language forcing is implemented **only** if the Chinese-specific failure is reproduced, root-caused, fixed, and stress-tested; otherwise it is intentionally omitted.
 
 ---
 

@@ -41,4 +41,34 @@ describe('wireSessionContentRuntime', () => {
     expect(remove).toHaveBeenCalledWith('click', add.mock.calls[0][1]);
     expect(window.downloadSessionJson).toBe(previousDownload);
   });
+
+  it('copies the complete reasoning block instead of a permalink', async () => {
+    document.body.innerHTML =
+      '<div id="messages"><button class="copy-thinking-btn" data-entry-id="e1" data-thinking-index="0"></button></div>';
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    const entry = {
+      id: 'e1',
+      message: {
+        content: [{ type: 'thinking', thinking: 'all reasoning, including collapsed text' }],
+      },
+    };
+    wireSessionContentRuntime({
+      windowImpl: { ...window, navigator: { clipboard: { writeText } } },
+      documentImpl: document,
+      model: {
+        entries: [entry],
+        header: {},
+        byId: new Map([['e1', entry]]),
+        toolCallMap: new Map(),
+        labelMap: new Map(),
+      },
+      sessionId: 'session',
+      contentRuntime: { afterRender: null },
+      applyLazyHighlighting: vi.fn(),
+    });
+    document.querySelector('.copy-thinking-btn').click();
+    await vi.waitFor(() =>
+      expect(writeText).toHaveBeenCalledWith('all reasoning, including collapsed text'),
+    );
+  });
 });

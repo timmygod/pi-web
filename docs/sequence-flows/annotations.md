@@ -1,5 +1,8 @@
 # Sequence Flow: Annotations
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 Annotations are reviewer-authored notes anchored to a span of a rendered session
 entry **or** an artifact's source. They are persisted server-side (SQLite),
 synced across open tabs over SSE, and can be packaged into a message back to the

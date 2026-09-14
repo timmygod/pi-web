@@ -29,6 +29,7 @@
     chatDisabledReason = '',
     cwd = '',
     modelLabel = '',
+    localMode = false,
   } = $props();
 
   // Reactive toolbar state owned here so the live runtime can mutate it while
@@ -80,6 +81,7 @@
       toolbar,
       queueStore,
       queueApi,
+      sessionId,
     });
 
     // Initial hydration from the server-side queue + subscribe to SSE 'queue'
@@ -127,7 +129,7 @@
     <div id="pi-chat-attachments" class="pi-chat-attachments"></div>
     <ChatSelectorPopups />
     <ChatToolbar {chatAvailable} {toolbar} {modelLabel} />
-    <ContextUsage popover />
+    <ContextUsage popover {localMode} {sessionId} />
   </div>
   <TextAttachmentModal />
   <GitFooter {sessionId} />

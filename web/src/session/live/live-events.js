@@ -71,7 +71,7 @@ export async function handleSessionReload({
   // entries have been appended/upserted (imperative) or merged into the model
   // (reactive). Clearing earlier creates a visible blank/flicker when a cold
   // worker finally writes the real message.
-  clearChatPreview();
+  clearChatPreview(entries, newIds);
 
   if (newCount > 0) {
     updateStats(entries);
@@ -100,6 +100,7 @@ export function wireSessionEvents({
   onReload,
   onChatPreview,
   onAnnotations = null,
+  onLocalRecovery = null,
   onError = () => {},
   windowImpl = typeof window !== 'undefined' ? window : null,
   CustomEventImpl = typeof CustomEvent !== 'undefined' ? CustomEvent : null,
@@ -166,6 +167,15 @@ export function wireSessionEvents({
       } catch (_) {}
     }
   });
+  if (onLocalRecovery) {
+    eventSource.addEventListener('local-recovery', (event) => {
+      try {
+        onLocalRecovery(JSON.parse(event.data));
+      } catch (error) {
+        onError(error);
+      }
+    });
+  }
   eventSource.onerror = onError;
   return eventSource;
 }

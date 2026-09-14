@@ -50,6 +50,7 @@ export function runChatComposer({
   queueStore = new QueueStore(),
   queueApi = null,
   getLiveEntries = null,
+  sessionId: pageSessionId = '',
 } = {}) {
   const document = documentImpl;
   const window = windowImpl;
@@ -74,6 +75,9 @@ export function runChatComposer({
     chatApi,
     getKnownModelLabel: () => toolbar.knownModelLabel,
     positionPopover: () => positionPopover(),
+    isCurrentSession: () =>
+      !pageSessionId ||
+      document.getElementById('pi-chat-composer')?.dataset.sessionId === pageSessionId,
   });
   const updateContextUsage = () => contextUsage.update();
   toolbar.updateContextUsage = updateContextUsage;

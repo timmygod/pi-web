@@ -8,6 +8,7 @@ import {
   listModels,
   sendChat,
   setModel,
+  setSessionMode,
   setThinkingLevel,
 } from './chat-api.js';
 
@@ -26,6 +27,7 @@ describe('chat api helpers', () => {
     await listModels({ fetchImpl });
     await setModel('s.jsonl', { provider: 'p', modelId: 'm' }, { fetchImpl });
     await setThinkingLevel('s.jsonl', 'medium', { fetchImpl });
+    await setSessionMode('s.jsonl', 'local', { fetchImpl });
 
     expect(fetchImpl).toHaveBeenNthCalledWith(1, '/api/chat?id=s.jsonl', { method: 'POST', body });
     expect(fetchImpl).toHaveBeenNthCalledWith(2, '/api/chat/cancel?id=s.jsonl', { method: 'POST' });
@@ -40,6 +42,11 @@ describe('chat api helpers', () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ level: 'medium' }),
+    });
+    expect(fetchImpl).toHaveBeenNthCalledWith(7, '/api/session-mode?id=s.jsonl', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'local' }),
     });
   });
 

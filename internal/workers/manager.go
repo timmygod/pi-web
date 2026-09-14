@@ -66,13 +66,29 @@ type ChatWorker interface {
 	Close() error
 }
 
+type compactable interface {
+	Compact(ctx context.Context) error
+}
+
+type settledWaitable interface {
+	WaitSettled(ctx context.Context) error
+}
+
 type Factory func(sessionID, sessionPath string) (ChatWorker, error)
 
+type WorkerConfig struct {
+	LocalContextWindow int
+}
+
+type ConfiguredFactory func(sessionID, sessionPath string, config WorkerConfig) (ChatWorker, error)
+
 type Manager struct {
-	mu       sync.Mutex
-	workers  map[string]ChatWorker
-	creating map[string]*createCall
-	factory  Factory
+	mu                sync.Mutex
+	workers           map[string]ChatWorker
+	creating          map[string]*createCall
+	factory           Factory
+	configuredFactory ConfiguredFactory
+	configs           map[string]WorkerConfig
 
 	// pendingSends counts Send calls that have been accepted but whose prompt
 	// has not been acked yet. Spawning a worker (process start + switch_session
@@ -108,6 +124,7 @@ func NewManagerWithTTL(factory Factory, ttl time.Duration) *Manager {
 		workers:      make(map[string]ChatWorker),
 		creating:     make(map[string]*createCall),
 		factory:      factory,
+		configs:      make(map[string]WorkerConfig),
 		pendingSends: make(map[string]int),
 		idleTTL:      ttl,
 		reaperStop:   make(chan struct{}),
@@ -118,6 +135,12 @@ func NewManagerWithTTL(factory Factory, ttl time.Duration) *Manager {
 	} else {
 		close(m.reaperDone)
 	}
+	return m
+}
+
+func NewConfiguredManager(factory ConfiguredFactory) *Manager {
+	m := NewManagerWithTTL(nil, DefaultIdleTTL)
+	m.configuredFactory = factory
 	return m
 }
 
@@ -279,9 +302,66 @@ func (m *Manager) Abort(ctx context.Context, sessionID string) error {
 	return worker.Abort(ctx)
 }
 
+func (m *Manager) Compact(ctx context.Context, sessionID, sessionPath string) error {
+	worker, err := m.workerFor(sessionID, sessionPath)
+	if err != nil {
+		return err
+	}
+	compactWorker, ok := worker.(compactable)
+	if !ok {
+		return errors.New("worker does not support compaction")
+	}
+	return compactWorker.Compact(ctx)
+}
+
+// WaitSettled waits for the active Pi run to finish. It never creates a worker.
+func (m *Manager) WaitSettled(ctx context.Context, sessionID string) error {
+	m.mu.Lock()
+	worker := m.workers[sessionID]
+	m.mu.Unlock()
+	if worker == nil {
+		return nil
+	}
+	waiter, ok := worker.(settledWaitable)
+	if !ok {
+		return errors.New("worker does not support settled waits")
+	}
+	return waiter.WaitSettled(ctx)
+}
+
 func (m *Manager) EnsureWorker(ctx context.Context, sessionID, sessionPath string) error {
 	_, err := m.workerFor(sessionID, sessionPath)
 	return err
+}
+
+func (m *Manager) PrepareMode(sessionID string, config WorkerConfig) error {
+	for {
+		m.mu.Lock()
+		previous := m.configs[sessionID]
+		if previous == config {
+			m.mu.Unlock()
+			return nil
+		}
+		if call := m.creating[sessionID]; call != nil {
+			m.mu.Unlock()
+			<-call.done
+			continue
+		}
+		worker := m.workers[sessionID]
+		if worker != nil && worker.Status().State == WorkerStateRunning {
+			m.mu.Unlock()
+			return errors.New("cannot change worker mode while the session is running")
+		}
+		m.configs[sessionID] = config
+		if worker != nil {
+			delete(m.workers, sessionID)
+		}
+		m.mu.Unlock()
+		if worker != nil {
+			return worker.Close()
+		}
+		return nil
+	}
 }
 
 func (m *Manager) Close() error {
@@ -330,9 +410,20 @@ func (m *Manager) workerFor(sessionID, sessionPath string) (ChatWorker, error) {
 		}
 		call := &createCall{done: make(chan struct{})}
 		m.creating[sessionID] = call
+		config := m.configs[sessionID]
+		configuredFactory := m.configuredFactory
+		factory := m.factory
 		m.mu.Unlock()
 
-		worker, err := m.factory(sessionID, sessionPath)
+		var worker ChatWorker
+		var err error
+		if configuredFactory != nil {
+			worker, err = configuredFactory(sessionID, sessionPath, config)
+		} else if factory != nil {
+			worker, err = factory(sessionID, sessionPath)
+		} else {
+			err = errors.New("worker factory unavailable")
+		}
 
 		m.mu.Lock()
 		if err == nil {

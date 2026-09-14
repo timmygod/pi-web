@@ -2739,6 +2739,37 @@
       flex: 1;
     }
 
+    .info-mode-control {
+      min-width: 0;
+    }
+
+    .session-mode-select {
+      max-width: 100%;
+      padding: 1px 22px 1px 5px;
+      color: var(--borderAccent);
+      background: color-mix(in srgb, var(--container-bg) 82%, var(--bg));
+      border: 1px solid var(--dim);
+      border-radius: 3px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .session-mode-select:hover,
+    .session-mode-select:focus {
+      border-color: var(--borderAccent);
+      outline: none;
+    }
+
+    .session-mode-select.error {
+      color: var(--error);
+      border-color: var(--error);
+    }
+
+    .session-mode-select:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
+
     /* Messages */
     #messages {
       display: flex;
@@ -3014,6 +3045,30 @@
       font-style: italic;
       white-space: pre-wrap;
     }
+
+    .thinking-block { position: relative; }
+    .copy-thinking-btn {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 6px;
+      border: 1px solid var(--dim);
+      border-radius: 4px;
+      background: var(--container-bg);
+      color: var(--muted);
+      cursor: pointer;
+      opacity: 0;
+      z-index: 2;
+    }
+    .thinking-block:hover .copy-thinking-btn,
+    .copy-thinking-btn:focus-visible { opacity: 1; }
+    .copy-thinking-btn:hover { background: var(--accent); color: var(--body-bg); }
+    .copy-thinking-btn.copied { background: var(--success, #22c55e); color: white; }
 
     .message-timestamp + .thinking-block .thinking-text,
     .message-timestamp + .thinking-block .thinking-collapsed {
@@ -6348,6 +6403,22 @@
       justify-content: space-between;
       margin-bottom: 8px;
     }
+
+    .pi-force-compact {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 7px 9px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .pi-force-compact:disabled { opacity: 0.6; cursor: wait; }
+    .pi-force-compact-error { margin: -5px 0 8px; color: var(--error); font-size: 10px; }
 
     .pi-chat-context-popover .pi-popover-title {
       font-size: 10px;

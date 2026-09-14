@@ -1,5 +1,11 @@
 # Contributing to pi-web
 
+This checkout is the local-model edition of pi-web. Shared improvements are
+periodically synchronized from upstream, while local deployment and reliability
+work is reviewed and released on this line. Before changing behavior, read
+[Local-model edition development](docs/dev/local-llm-development.md) and keep
+the Local Mode boundaries documented there intact.
+
 Thanks for your interest in contributing! pi-web is currently in an **early stage** of development, and we are not actively accepting pull requests right now.
 
 ## How to contribute

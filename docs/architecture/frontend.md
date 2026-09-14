@@ -2,6 +2,12 @@
 
 pi-web uses a single Vite-built Svelte SPA embedded into the Go binary, plus a separate self-contained static export path.
 
+This checkout is the local-model edition. Shared UI behavior should stay close
+to upstream, while Local Mode controls, context-protection feedback, and
+recovery notices are maintained here and released in parallel. See the
+[local-model development notes](../dev/local-llm-development.md) before
+changing those boundaries.
+
 ## Vite App Frontend
 
 Built with **Vite + Svelte + JavaScript modules**, embedded into the Go binary.
@@ -39,7 +45,7 @@ API, SSE, PWA, sound, and static asset routes remain server-handled and are not 
 
 `SessionsPage.svelte` owns the page shell and orchestrates Svelte components for the sessions list, session cards, command palette, home menu, new-session modal, and project management modal. `web/src/index/` now contains pure data/API helpers (`sessions.js`) for normalization, grouping, filtering, and API calls.
 
-Data comes from existing APIs such as `/api/sessions`, `/api/new-session`, `/api/projects`, `/api/recent-locations`, and `/events?id=__all__`. Running-session status is pushed through the shared SSE helpers and reflected reactively in the cards/counts.
+Data comes from APIs such as `/api/sessions`, `/api/new-session`, `/api/models`, `/api/projects`, `/api/recent-locations`, and `/events?id=__all__`. The New Session modal places Model above a session-level Auto/Local/Cloud selector; Auto previews endpoint/provider-based resolution, while the server persists the authoritative configured and effective modes. Running-session status is pushed through the shared SSE helpers and reflected reactively in the cards/counts.
 
 ## Session Viewer (`/session?id=…`)
 
@@ -57,6 +63,26 @@ The message pane is rendered by Svelte components (no string-building renderer):
 - `cat-gatekeeper/` — pure timer/storage logic behind `CatGatekeeper.svelte`
 
 The index + settings Phase 4 migration is complete: those routes are Svelte-orchestrated too, with only pure/API helpers left outside components.
+
+The session payload carries `configuredMode`, `effectiveMode`, and the resolved
+context window. The live session information card displays the configured mode
+and its effective Auto resolution, and can switch between Auto, Local, and Cloud;
+while a run is active, a rejected mode change restores the persisted selection
+and exposes the server error on the selector.
+static exports show the same mode as read-only metadata. Effective Local Mode adds **Force Compact** to the context
+popover. If a worker is running, the server interrupts it before issuing the
+same compact RPC used by automatic recovery. Local assistant reasoning blocks
+hide the upstream Fork/Label/permalink actions and expose a per-block Copy action
+that reads the complete block from the reactive model, including collapsed text.
+Cloud rendering retains the original actions. Context-usage controllers bind
+async model results to the mounted session ID, so an old request cannot update
+the next session's percentage after SPA navigation.
+After a compaction boundary, the context indicator shows `—` until an assistant
+response supplies post-compaction usage, rather than reusing the previous
+assistant's pre-compaction percentage.
+When the Local Mode watchdog resumes a response that stopped with reasoning but
+no answer or tool call, the session SSE stream shows a transient automatic
+recovery notice; this UI signal is live-only and is never included in exports.
 
 ## Static / Share Export
 

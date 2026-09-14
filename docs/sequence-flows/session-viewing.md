@@ -1,5 +1,8 @@
 # Sequence Flow: Viewing a Session
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 This flow covers a user clicking a session card on the index page (or visiting `/session?id=…` directly).
 
 ## Sequence Diagram
@@ -77,7 +80,10 @@ Security: `filepath.Base(id) != id` prevents path traversal.
   "chatAvailable": true,
   "chatDisabledReason": "",
   "model": "...",
-  "modelProvider": "..."
+  "modelProvider": "...",
+  "configuredMode": "auto",
+  "effectiveMode": "local",
+  "contextWindow": 131072
 }
 ```
 

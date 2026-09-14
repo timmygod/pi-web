@@ -1,5 +1,10 @@
 # pi-web user docs
 
+These guides describe the local-model edition of pi-web. The English files are
+the source of truth; translated copies are regenerated after source changes.
+For edition-specific maintenance and release rules, see
+[Local-model edition development](../docs/dev/local-llm-development.md).
+
 Read the pi-web user guide in your language:
 
 | Language | Guide |

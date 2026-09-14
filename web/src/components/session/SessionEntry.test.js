@@ -30,6 +30,27 @@ describe('SessionEntry', () => {
     expect(node.textContent).toContain('hi');
   });
 
+  it('keeps only per-block reasoning copy in Local Mode', () => {
+    const entry = {
+      id: 'a',
+      type: 'message',
+      message: {
+        role: 'assistant',
+        content: [
+          { type: 'thinking', thinking: 'complete private reasoning' },
+          { type: 'text', text: 'answer' },
+        ],
+      },
+    };
+    const { container } = render(SessionEntry, {
+      props: { entry, model: model([entry]), live: true, localMode: true },
+    });
+    expect(container.querySelector('.fork-btn')).toBeNull();
+    expect(container.querySelector('.label-btn')).toBeNull();
+    expect(container.querySelector('.copy-link-btn')).toBeNull();
+    expect(container.querySelector('.copy-thinking-btn')).toBeTruthy();
+  });
+
   it('renders nothing for tool-result entries', () => {
     const entry = {
       id: 'r',

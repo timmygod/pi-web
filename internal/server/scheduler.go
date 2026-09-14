@@ -166,13 +166,23 @@ func (s *Server) fireScheduleContext(ctx context.Context, sc schedules.Schedule)
 		_ = s.schedules.FailRun(runID, "chat unavailable")
 		return sessionID, errors.New("chat unavailable")
 	}
+	mode, err := s.saveSessionMode(sessionID, sessionModeAuto,
+		s.resolveModelMetadata(ctx, settings.ModelProvider, settings.ModelID))
+	if err != nil {
+		_ = s.schedules.FailRun(runID, err.Error())
+		return sessionID, fmt.Errorf("save session mode: %w", err)
+	}
+	if err := s.prepareWorkerMode(sessionID, mode); err != nil {
+		_ = s.schedules.FailRun(runID, err.Error())
+		return sessionID, fmt.Errorf("prepare worker mode: %w", err)
+	}
 	workerCtx, cancel := context.WithTimeout(ctx, scheduleWorkerTimeout)
 	defer cancel()
 	if err := s.chatSender.EnsureWorker(workerCtx, sessionID, resolved.Path); err != nil {
 		_ = s.schedules.FailRun(runID, err.Error())
 		return sessionID, fmt.Errorf("ensure worker: %w", err)
 	}
-	if err := s.chatSender.Send(ctx, sessionID, resolved.Path, chat.Request{Message: sc.Instructions}); err != nil {
+	if err := s.sendSessionChat(ctx, resolved, chat.Request{Message: sc.Instructions}); err != nil {
 		_ = s.schedules.FailRun(runID, err.Error())
 		return sessionID, fmt.Errorf("send: %w", err)
 	}

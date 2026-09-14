@@ -119,6 +119,10 @@ sudo cp pi-web /usr/local/bin/
 
 ### Build from source
 
+This checkout is the local-model edition of pi-web. The normal build produces
+the web application and backend together; local-model safeguards are enabled
+at runtime by the session's effective Local Mode, not by a separate binary.
+
 ```bash
 git clone https://github.com/ygncode/pi-web.git
 cd pi-web
@@ -132,6 +136,9 @@ The frontend bundle is embedded by `web/assets_embed.go`, so `go build` needs
 `web/dist` to exist first. `make build` does both steps in order; if you build
 by hand, run `npm --prefix web install && npm --prefix web run build` before
 `go build ./cmd/pi-web`.
+
+For the maintained fork workflow, upstream synchronization, and Local Mode
+verification checklist, see [the local-model development notes](../../docs/dev/local-llm-development.md).
 
 ### Develop alongside an installed instance
 

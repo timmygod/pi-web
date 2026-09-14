@@ -1,5 +1,9 @@
 # `pi-web` Design System Specification
 
+This design system is shared by the local-model edition of pi-web. Visual
+changes should remain compatible with the upstream baseline and be validated
+against the local-model release line; see [Local-model edition development](../dev/local-llm-development.md).
+
 This document details the core design system for `pi-web`. The design system is styled purely using standard **CSS Custom Properties** (Variables). This design system is responsive, highly performant, handles instant client-side transitions, and permits deep user customizability.
 
 ---

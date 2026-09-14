@@ -74,12 +74,12 @@ func Main(version string) {
 	versionChecker := updater.New(version)
 
 	var srv *server.Server
-	manager := workers.NewManager(func(sessionID, sessionPath string) (workers.ChatWorker, error) {
-		return rpc.NewPiWorkerWithStream(sessionPath, func(preview rpc.StreamPreview) {
+	manager := workers.NewConfiguredManager(func(sessionID, sessionPath string, config workers.WorkerConfig) (workers.ChatWorker, error) {
+		return rpc.NewPiWorkerWithOptions(sessionPath, func(preview rpc.StreamPreview) {
 			if srv != nil {
 				srv.BroadcastChatPreview(sessionID, preview)
 			}
-		})
+		}, rpc.WorkerOptions{AgentDir: agentDir, LocalContextWindow: config.LocalContextWindow})
 	})
 	var srvErr error
 	srv, srvErr = server.New(server.Deps{

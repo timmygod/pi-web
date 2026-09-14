@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -38,6 +39,7 @@ type piRPCWorker struct {
 	streamSink           StreamEventSink
 	streamPreview        *streamPreviewAccumulator
 	uiTimers             map[string]*time.Timer
+	settled              chan struct{}
 }
 
 // Remote workers have no interactive TUI to answer Pi extension UI requests.
@@ -72,10 +74,21 @@ func (w *piRPCWorker) StartedAt() time.Time {
 }
 
 func NewPiWorkerWithStream(sessionPath string, streamSink StreamEventSink) (workers.ChatWorker, error) {
+	return NewPiWorkerWithOptions(sessionPath, streamSink, WorkerOptions{})
+}
+
+func NewPiWorkerWithOptions(sessionPath string, streamSink StreamEventSink, options WorkerOptions) (workers.ChatWorker, error) {
 	if _, err := exec.LookPath("pi"); err != nil {
 		return nil, fmt.Errorf("pi executable not found: %w", err)
 	}
 	cmd := exec.Command("pi", "--mode", "rpc")
+	if options.LocalContextWindow > 0 {
+		localAgentDir, err := prepareLocalWorkerAgentDir(options.AgentDir, sessionPath, options.LocalContextWindow)
+		if err != nil {
+			return nil, fmt.Errorf("prepare Local Mode worker: %w", err)
+		}
+		cmd.Env = append(os.Environ(), "PI_CODING_AGENT_DIR="+localAgentDir)
+	}
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err
@@ -122,6 +135,9 @@ func (w *piRPCWorker) Prompt(ctx context.Context, chat chat.Request) error {
 	w.touch()
 	w.mu.Lock()
 	streaming := w.status.State == workers.WorkerStateRunning
+	if !streaming {
+		w.settled = make(chan struct{})
+	}
 	w.status = workers.WorkerStatus{State: workers.WorkerStateRunning}
 	w.mu.Unlock()
 	id := w.nextID()
@@ -132,6 +148,43 @@ func (w *piRPCWorker) Prompt(ctx context.Context, chat chat.Request) error {
 		return err
 	}
 	return nil
+}
+
+// WaitSettled waits for Pi's agent_settled event, which is later than the
+// prompt RPC acknowledgement and covers retries, compaction, and queued turns.
+func (w *piRPCWorker) WaitSettled(ctx context.Context) error {
+	w.mu.Lock()
+	settled := w.settled
+	state := w.status.State
+	statusError := w.status.Error
+	w.mu.Unlock()
+	if settled == nil {
+		if state == workers.WorkerStateError {
+			if statusError != "" {
+				return errors.New(statusError)
+			}
+			return errors.New("pi worker failed before settling")
+		}
+		return nil
+	}
+	if state == workers.WorkerStateIdle {
+		return nil
+	}
+	select {
+	case <-settled:
+		w.mu.Lock()
+		status := w.status
+		w.mu.Unlock()
+		if status.State == workers.WorkerStateError {
+			if status.Error != "" {
+				return errors.New(status.Error)
+			}
+			return errors.New("pi worker failed before settling")
+		}
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 }
 
 func (w *piRPCWorker) SetModel(ctx context.Context, provider, modelID string) error {
@@ -202,6 +255,28 @@ func (w *piRPCWorker) SetThinkingLevel(ctx context.Context, level string) error 
 func (w *piRPCWorker) Abort(ctx context.Context) error {
 	w.touch()
 	if err := w.sendAndAwait(ctx, BuildAbortCommand(w.nextID())); err != nil {
+		return err
+	}
+	w.mu.Lock()
+	w.status.State = workers.WorkerStateIdle
+	w.status.Error = ""
+	w.mu.Unlock()
+	return nil
+}
+
+func (w *piRPCWorker) Compact(ctx context.Context) error {
+	w.touch()
+	w.mu.Lock()
+	w.status = workers.WorkerStatus{
+		State:         workers.WorkerStateRunning,
+		Model:         w.currentModel,
+		ModelProvider: w.currentProvider,
+	}
+	w.mu.Unlock()
+	if err := w.sendAndAwait(ctx, BuildCompactCommand(w.nextID())); err != nil {
+		w.mu.Lock()
+		w.status = workers.WorkerStatus{State: workers.WorkerStateError, Error: err.Error()}
+		w.mu.Unlock()
 		return err
 	}
 	w.mu.Lock()
@@ -367,7 +442,10 @@ func (w *piRPCWorker) sendAndAwait(ctx context.Context, cmd map[string]any) erro
 	w.mu.Unlock()
 
 	w.writeMu.Lock()
-	err := WriteCommand(w.stdin, cmd)
+	err := ctx.Err()
+	if err == nil {
+		err = WriteCommand(w.stdin, cmd)
+	}
 	w.writeMu.Unlock()
 	if err != nil {
 		w.removePending(id)
@@ -458,6 +536,7 @@ func (w *piRPCWorker) handleRPCLine(line string) {
 		w.completeStreamPreview()
 		w.mu.Lock()
 		w.status = workers.WorkerStatus{State: workers.WorkerStateIdle}
+		w.closeSettledLocked()
 		w.mu.Unlock()
 		w.clearExtensionUITimers()
 		w.lastStreamActivity.Store(0)
@@ -515,6 +594,7 @@ func (w *piRPCWorker) setError(err error) {
 	if w.status.State != workers.WorkerStateError {
 		w.status = workers.WorkerStatus{State: workers.WorkerStateError, Error: err.Error()}
 	}
+	w.closeSettledLocked()
 	for id, ch := range w.pending {
 		delete(w.pending, id)
 		ch <- response{ID: id, Type: "response", Success: false, Error: err.Error()}
@@ -523,6 +603,14 @@ func (w *piRPCWorker) setError(err error) {
 		timer.Stop()
 		delete(w.uiTimers, id)
 	}
+}
+
+func (w *piRPCWorker) closeSettledLocked() {
+	if w.settled == nil {
+		return
+	}
+	close(w.settled)
+	w.settled = nil
 }
 
 func (w *piRPCWorker) clearExtensionUITimers() {

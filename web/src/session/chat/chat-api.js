@@ -43,3 +43,15 @@ export function setThinkingLevel(sessionId, level, { fetchImpl = fetch } = {}) {
     body: JSON.stringify({ level }),
   });
 }
+
+export function setSessionMode(sessionId, mode, { fetchImpl = fetch } = {}) {
+  return fetchImpl(chatUrl('/api/session-mode', sessionId), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode }),
+  });
+}
+
+export function forceCompact(sessionId, { fetchImpl = fetch } = {}) {
+  return fetchImpl(chatUrl('/api/force-compact', sessionId), { method: 'POST' });
+}

@@ -1,5 +1,6 @@
 <script>
   import { t } from '../../shared/i18n.js';
+  import { effectiveModeForModel, modelKey as keyForModel } from '../../index/sessions.js';
 
   let {
     open = false,
@@ -7,9 +8,15 @@
     path = $bindable(''),
     creating = false,
     error = '',
+    models = [],
+    modelKey = $bindable(''),
+    mode = $bindable('auto'),
     onClose = () => {},
     onCreate = () => {},
   } = $props();
+
+  const selectedModel = $derived(models.find((model) => keyForModel(model) === modelKey) || null);
+  const effectiveMode = $derived(effectiveModeForModel(mode, selectedModel));
 
   function chooseRecent(loc) {
     path = loc;
@@ -60,6 +67,29 @@
       bind:value={path}
       onkeydown={handleKeydown}
     />
+    <label class="new-session-field">
+      <span>{t('index.model')}</span>
+      <select bind:value={modelKey}>
+        <option value="">{t('index.modelDefault')}</option>
+        {#each models as model (keyForModel(model))}
+          <option value={keyForModel(model)}>
+            {model.name || model.id || model.modelId} @ {model.provider}
+          </option>
+        {/each}
+      </select>
+    </label>
+    <label class="new-session-field">
+      <span>{t('index.mode')}</span>
+      <select bind:value={mode}>
+        <option value="auto"
+          >{t('index.modeAuto')}{selectedModel
+            ? ` (${effectiveMode === 'local' ? t('index.modeLocal') : t('index.modeCloud')})`
+            : ''}</option
+        >
+        <option value="local">{t('index.modeLocal')}</option>
+        <option value="cloud">{t('index.modeCloud')}</option>
+      </select>
+    </label>
     <div class="modal-actions">
       <button class="btn-secondary" id="cancelBtn" type="button" onclick={onClose}
         >{t('common.cancel')}</button

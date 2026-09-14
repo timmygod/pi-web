@@ -10,9 +10,14 @@
     summarizeSessionStats,
   } from '../../session/render/session-stats.js';
   import { icon, Download } from '../../shared/icons.js';
+  import { t } from '../../shared/i18n.js';
   import { SvelteSet } from 'svelte/reactivity';
 
-  let { model = getSessionModel() } = $props();
+  let {
+    model = getSessionModel(),
+    modeEditable = false,
+    onModeChange = async () => ({}),
+  } = $props();
 
   const SYSTEM_PROMPT_PREVIEW_LINES = 10;
 
@@ -26,9 +31,45 @@
   const promptIsLong = $derived(promptLines.length > SYSTEM_PROMPT_PREVIEW_LINES);
   const promptPreview = $derived(promptLines.slice(0, SYSTEM_PROMPT_PREVIEW_LINES).join('\n'));
   const tools = $derived(Array.isArray(model.tools) ? model.tools : []);
+  const configuredMode = $derived(model.configuredMode || 'auto');
+  const effectiveMode = $derived(model.effectiveMode || 'cloud');
+  const autoModeText = $derived(
+    `${t('index.modeAuto')} (${effectiveMode === 'local' ? t('index.modeLocal') : t('index.modeCloud')})`,
+  );
+  const modeText = $derived(
+    configuredMode === 'auto'
+      ? autoModeText
+      : configuredMode === 'local'
+        ? t('index.modeLocal')
+        : t('index.modeCloud'),
+  );
 
   let promptExpanded = $state(false);
   let expandedTools = new SvelteSet();
+  let selectedMode = $state('auto');
+  let modePending = $state(false);
+  let modeError = $state('');
+
+  $effect(() => {
+    if (!modePending) selectedMode = configuredMode;
+  });
+
+  async function changeMode() {
+    const previousMode = configuredMode;
+    modePending = true;
+    modeError = '';
+    try {
+      const state = await onModeChange(selectedMode);
+      model.configuredMode = state.configuredMode || selectedMode;
+      model.effectiveMode = state.effectiveMode || model.effectiveMode;
+      selectedMode = model.configuredMode;
+    } catch (err) {
+      selectedMode = previousMode;
+      modeError = err?.message || t('composer.modeUpdateFailed');
+    } finally {
+      modePending = false;
+    }
+  }
 
   function hasSelection() {
     return typeof window !== 'undefined' && !!window.getSelection?.().toString();
@@ -104,6 +145,29 @@
     </div>
     <div class="info-item">
       <span class="info-label">Models:</span><span class="info-value">{stats.modelsText}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">{t('index.mode')}:</span>
+      {#if modeEditable}
+        <span class="info-value info-mode-control">
+          <select
+            class="session-mode-select"
+            class:error={modeError}
+            aria-label={t('composer.switchMode')}
+            aria-invalid={modeError ? 'true' : undefined}
+            title={modeError || t('composer.switchMode')}
+            bind:value={selectedMode}
+            disabled={modePending}
+            onchange={changeMode}
+          >
+            <option value="auto">{autoModeText}</option>
+            <option value="local">{t('index.modeLocal')}</option>
+            <option value="cloud">{t('index.modeCloud')}</option>
+          </select>
+        </span>
+      {:else}
+        <span class="info-value">{modeText}</span>
+      {/if}
     </div>
     <div class="info-item">
       <span class="info-label">Messages:</span><span class="info-value">{stats.messagesText}</span>

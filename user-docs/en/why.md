@@ -13,3 +13,7 @@ Then I found pi.dev and explored a bit but hadn't really dived in. I read about 
 Since it's open source I feel like it's worth building for. I get different provider choices as well. I also feel like relying on one provider/model like Anthropic/Claude is not sustainable.
 
 So I am building it here.
+
+This checkout is maintained as a local-model edition of pi-web. It follows the
+upstream project for shared improvements, while keeping local deployment,
+context stability, and local-model testing on a separately released track.

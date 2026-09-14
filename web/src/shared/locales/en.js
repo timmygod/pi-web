@@ -40,6 +40,12 @@ export default {
   'index.manageProjects': 'Manage Projects',
   'index.startNewSession': 'Start a new session',
   'index.sessionPathPlaceholder': '/path/to/project or ~/project',
+  'index.model': 'Model',
+  'index.modelDefault': 'Default (pi chooses)',
+  'index.mode': 'Mode',
+  'index.modeAuto': 'Auto',
+  'index.modeLocal': 'Local',
+  'index.modeCloud': 'Cloud',
   'index.manageProjectsTitle': 'Manage projects',
   'index.filterProjects': 'Filter projects',
   'index.filterProjectsAllShown': 'All projects are shown.',
@@ -207,6 +213,9 @@ export default {
   'session.loadingEarlier': 'Loading…',
   'session.loadEarlierFailed': 'Failed to load: {error}',
   'session.labelSaveFailed': 'Failed to save label',
+  'session.copyReasoning': 'Copy reasoning',
+  'session.recoveringThinkingStop':
+    'The response stopped during reasoning. Continuing automatically…',
 
   // ── Session command menu ──
   'menu.searchSessions': 'Search Sessions',
@@ -295,6 +304,8 @@ export default {
   'composer.searchModels': 'Search models…',
   'composer.switchModel': 'Switch model',
   'composer.switchEffort': 'Switch effort',
+  'composer.switchMode': 'Switch session mode',
+  'composer.modeUpdateFailed': 'Failed to update mode',
   'composer.modelPlaceholder': 'Model',
   'composer.disabledNotice':
     'This session can be viewed, but chat is disabled because its working directory no longer exists.',
@@ -302,6 +313,9 @@ export default {
   'composer.focusShortcut': 'Shift + i to focus',
   'composer.cancelRunning': 'Cancel running response',
   'composer.contextDetails': 'Click for details',
+  'composer.forceCompact': 'Force Compact',
+  'composer.compacting': 'Compacting…',
+  'composer.forceCompactFailed': 'Compaction failed',
   'composer.pathCopied': 'Path copied',
 
   // ── Share / export ──

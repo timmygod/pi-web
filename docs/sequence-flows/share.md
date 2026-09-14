@@ -1,5 +1,8 @@
 # Sequence Flow: Share to GitHub Gist
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 This flow covers a user clicking the **Share** button on a session page, which creates a private GitHub Gist containing a standalone HTML export of the session.
 
 ## Sequence Diagram

@@ -152,10 +152,11 @@ func (d *queueDrainer) drainSession(sessionID string) {
 		return
 	}
 	req := chat.Request{Message: item.Message}
+	d.server.resetLocalRecoveryBudget(sessionID)
 	d.server.startTask(func(taskCtx context.Context) {
 		ctx, cancel := context.WithTimeout(taskCtx, d.dispatchTimeout)
 		defer cancel()
-		if err := d.server.chatSender.Send(ctx, sessionID, resolved.Path, req); err != nil && !errors.Is(err, context.Canceled) {
+		if err := d.server.sendSessionChat(ctx, resolved, req); err != nil && !errors.Is(err, context.Canceled) {
 			fmt.Fprintf(os.Stderr,
 				"queue drainer: Send %s position %d failed: %v\n",
 				sessionID, item.Position, err)

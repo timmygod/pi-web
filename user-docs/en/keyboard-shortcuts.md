@@ -1,5 +1,8 @@
 # Keyboard Shortcuts
 
+These shortcuts apply to the local-model edition of pi-web. Edition-specific
+runtime behavior is documented in [Local-model edition development](../../docs/dev/local-llm-development.md).
+
 ## Index page (`/`)
 
 ### Page scrolling (vim-style)

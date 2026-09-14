@@ -54,6 +54,8 @@ export class SessionDataModel {
   total = $state(0);
   from = $state(0);
   truncated = $state(false);
+  configuredMode = $state('auto');
+  effectiveMode = $state('cloud');
 
   // Stable, in-place-mutated reactive lookup Maps (see header comment).
   // SvelteMap makes .set/.clear reactive while keeping a stable object identity.
@@ -109,6 +111,8 @@ export class SessionDataModel {
       total: payload?.total,
       from: payload?.from,
       truncated: payload?.truncated,
+      configuredMode: payload?.configuredMode,
+      effectiveMode: payload?.effectiveMode,
     });
   }
 
@@ -133,6 +137,8 @@ export class SessionDataModel {
     this.total = Number.isInteger(data.total) ? data.total : this.entries.length;
     this.from = Number.isInteger(data.from) ? data.from : 0;
     this.truncated = Boolean(data.truncated) || this.from > 0 || this.entries.length < this.total;
+    this.configuredMode = data.configuredMode || 'auto';
+    this.effectiveMode = data.effectiveMode || 'cloud';
     this.urlLeafId = data.urlLeafId ?? null;
     this.urlTargetId = data.urlTargetId ?? null;
 

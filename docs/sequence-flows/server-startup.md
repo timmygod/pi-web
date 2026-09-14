@@ -1,5 +1,8 @@
 # Sequence Flow: Server Startup
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 This document traces the execution from `go run ./cmd/pi-web` to the first HTTP request.
 
 ## Sequence Diagram
@@ -84,6 +87,7 @@ if _, err := os.Stat(sessionsDir); os.IsNotExist(err) {
 ### 3. Host Selection
 
 Priority:
+
 1. `--host` flag (explicit override)
 2. `127.0.0.1` (default)
 
@@ -113,12 +117,12 @@ srv, err := server.New(server.Deps{
     AgentDir:      agentDir,
     SessionsDir:   sessionsDir,
     Auth:          authMiddleware,
-    ChatSender:    workers.NewManager(func(sessionID, sessionPath string) (workers.ChatWorker, error) {
-        return rpc.NewPiWorkerWithStream(sessionPath, func(preview rpc.StreamPreview) {
+    ChatSender:    workers.NewConfiguredManager(func(sessionID, sessionPath string, config workers.WorkerConfig) (workers.ChatWorker, error) {
+        return rpc.NewPiWorkerWithOptions(sessionPath, func(preview rpc.StreamPreview) {
             if srv != nil {
                 srv.BroadcastChatPreview(sessionID, preview)
             }
-        })
+        }, rpc.WorkerOptions{AgentDir: agentDir, LocalContextWindow: config.LocalContextWindow})
     }),
     Cache:               sessions.NewCache(),
     RenderAppShell:      ui.RenderAppShell,
@@ -133,11 +137,20 @@ if err != nil { os.Exit(1) } // agent-dir / SQLite schema init failed
 SQLite schema (`initDB`) can't be initialized, rather than running with a
 half-initialized database that fails opaquely on first use.
 
-On success, server creation immediately spawns three background goroutines:
+On success, server creation immediately spawns the file/status background
+workers and, outside development mode, the scheduler/queue drainer. It also
+starts one bounded Local Mode startup-recovery check:
 
 1. **`watchFiles()`** — watches `sessionsDir` for changes (fsnotify + polling fallback)
 2. **`startSessionStatusWatcher()`** — watches `session-status/` for terminal activity
 3. **`runStatusSweeper()`** — revalidates running status every second
+4. **startup Local recovery** — selects only the persisted most-recently-active
+   effective-Local session, then requires either the same >=99% + context-error
+   evidence as runtime recovery or a final thinking-only normal stop. Context
+   failures compact before continuing; thinking-only stops continue without
+   compaction. Recovery prepares the Local worker settings before either path,
+   and holds the single global recovery slot until the continuation emits
+   `agent_settled`. Both use the same persisted progress-aware circuit breaker.
 
 ### 6. Route Registration
 

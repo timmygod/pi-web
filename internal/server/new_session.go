@@ -36,5 +36,22 @@ func (s *Server) initializeNewSessionWorker(ctx context.Context, sessionID, sess
 	// initial settings.
 	workerCtx, cancel := context.WithTimeout(ctx, 35*time.Second)
 	defer cancel()
+	mode := s.sessionMode(sessionID, settings.ModelProvider, settings.ModelID)
+	if mode.ContextWindow <= 0 {
+		if err := s.chatSender.EnsureWorker(workerCtx, sessionID, sessionPath); err != nil {
+			return
+		}
+		state, err := s.chatSender.GetState(workerCtx, sessionID)
+		if err != nil || state.Model == "" {
+			return
+		}
+		metadata := s.resolveModelMetadata(workerCtx, state.ModelProvider, state.Model)
+		if updated, err := s.saveSessionMode(sessionID, mode.ConfiguredMode, metadata); err == nil {
+			mode = updated
+		}
+	}
+	if err := s.prepareWorkerMode(sessionID, mode); err != nil {
+		return
+	}
 	_ = s.chatSender.EnsureWorker(workerCtx, sessionID, sessionPath)
 }

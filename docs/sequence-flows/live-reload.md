@@ -1,5 +1,8 @@
 # Sequence Flow: Live Reload
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 pi-web pushes real-time updates to the browser via **Server-Sent Events (SSE)**. This document covers both the file-watching → SSE path and the status-tracking → SSE path.
 
 ## Overview
@@ -8,6 +11,10 @@ There are two independent live-update mechanisms:
 
 1. **File Change Reload** — when a session JSONL file is modified, the session page fetches `/api/session`, reconciles canonical entries, and refreshes the visible/browser session title from the returned `name`
 2. **Running Status Updates** — when a session starts/stops running, the index page updates card badges in real-time
+
+The browser treats reconciled session entries as authoritative over the best-effort
+`chat-preview` stream. When newly reconciled assistant text matches the active preview,
+the preview is removed even if its `done` event was dropped and the worker is still running.
 
 ## 1. File Change Reload
 

@@ -26,6 +26,7 @@ func newScheduleTestServer(t *testing.T) (*Server, *fakeSender) {
 		schedules.RunsTableDDL,
 		schedules.RunsScheduleIndexDDL,
 		schedules.RunsSessionIndexDDL,
+		sessionModesSchema,
 	} {
 		if _, err := db.Exec(ddl); err != nil {
 			t.Fatalf("schema: %v", err)

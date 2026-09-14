@@ -1,5 +1,10 @@
 # End-to-End Testing (Playwright)
 
+These checks cover the local-model edition of pi-web. Keep the edition's Local
+Mode worker and context-stability scenarios in the acceptance matrix when
+upstream flows are synchronized; the maintenance workflow is in
+[Local-model edition development](local-llm-development.md).
+
 The `e2e/` project drives a real browser against the **built** `pi-web` binary.
 It complements the Vitest unit tests (`web/`) and Go tests (`internal/`) by
 exercising whole flows — page rendering, SSE live-reload, settings persistence,

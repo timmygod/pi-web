@@ -133,8 +133,76 @@ export function defaultFetchSessions({ limit, offset, query, project } = {}) {
 export function defaultFetchRecent() {
   return getJSON('/api/recent-locations');
 }
-export function defaultCreateSession(path) {
-  return postJSON('/api/new-session', { path });
+export function defaultFetchModels() {
+  return getJSON('/api/models');
+}
+
+export function modelKey(model = {}) {
+  const provider = model.provider || '';
+  const id = model.id || model.modelId || '';
+  return provider && id ? `${provider}\u0000${id}` : '';
+}
+
+export function endpointIsLocal(raw = '') {
+  if (!raw) return false;
+  try {
+    const hostname = new URL(raw).hostname
+      .replace(/^\[|\]$/g, '')
+      .replace(/\.$/, '')
+      .toLowerCase();
+    if (
+      hostname === 'localhost' ||
+      hostname.endsWith('.localhost') ||
+      hostname.endsWith('.local')
+    ) {
+      return true;
+    }
+    if (
+      hostname.includes(':') &&
+      (hostname === '::1' ||
+        hostname.startsWith('fe80:') ||
+        hostname.startsWith('fc') ||
+        hostname.startsWith('fd'))
+    ) {
+      return true;
+    }
+    const octets = hostname.split('.').map(Number);
+    if (octets.length !== 4 || octets.some((part) => !Number.isInteger(part))) return false;
+    return (
+      octets[0] === 10 ||
+      octets[0] === 127 ||
+      (octets[0] === 169 && octets[1] === 254) ||
+      (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) ||
+      (octets[0] === 192 && octets[1] === 168)
+    );
+  } catch {
+    return false;
+  }
+}
+
+export function effectiveModeForModel(configuredMode = 'auto', model = null) {
+  if (configuredMode === 'local' || configuredMode === 'cloud') return configuredMode;
+  const provider = (model?.provider || '').toLowerCase();
+  if (
+    endpointIsLocal(model?.baseUrl || '') ||
+    ['llama', 'ollama', 'lmstudio', 'lm-studio', 'local'].includes(provider)
+  ) {
+    return 'local';
+  }
+  return 'cloud';
+}
+
+export function defaultCreateSession(
+  path,
+  { mode = 'auto', model = null, sourceSessionId = '' } = {},
+) {
+  return postJSON('/api/new-session', {
+    path,
+    mode,
+    modelProvider: model?.provider || '',
+    modelId: model?.id || model?.modelId || '',
+    sourceSessionId,
+  });
 }
 export function defaultFetchProjects({
   limit,

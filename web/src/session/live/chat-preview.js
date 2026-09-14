@@ -37,8 +37,34 @@ export function clearChatPreviewState(state, { keepAssistant = false } = {}) {
       state.chatPreviewEl.parentNode.removeChild(state.chatPreviewEl);
     }
     state.chatPreviewEl = null;
+    state.chatPreviewContent = '';
     stopWorkingAnimation(state);
   }
+}
+
+function chatPreviewWasPersisted(state, entries = [], newIds = []) {
+  const previewContent = String(state?.chatPreviewContent || '').trim();
+  if (!previewContent || !newIds.length) return false;
+  const candidateIds = new Set(newIds);
+
+  return entries.some((entry) => {
+    if (!candidateIds.has(entry?.id) || entry.message?.role !== 'assistant') return false;
+    const content = entry.message.content;
+    if (typeof content === 'string') return content.trim() === previewContent;
+    if (!Array.isArray(content)) return false;
+    return content.some(
+      (block) => block?.type === 'text' && String(block.text || '').trim() === previewContent,
+    );
+  });
+}
+
+export function shouldKeepChatPreview(
+  state,
+  { isChatRunning = false, entries = [], newIds = [] } = {},
+) {
+  if (!state?.chatPreviewEl || !isChatRunning) return false;
+  if (state.chatPreviewEl.classList.contains('done')) return false;
+  return !chatPreviewWasPersisted(state, entries, newIds);
 }
 
 export function finishChatPreviewState(state) {
@@ -262,6 +288,7 @@ export function renderChatPreviewState(
   }
 
   state.chatPreviewEl.classList.remove('chat-preview-waiting');
+  state.chatPreviewContent = payload.content;
   const content = state.chatPreviewEl.querySelector('.message-content');
   setMarkdownContent(content, renderMarkdown(payload.content));
   if (payload.done) finishChatPreviewState(state);

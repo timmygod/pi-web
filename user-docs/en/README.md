@@ -10,6 +10,11 @@
 
 pi-web is a beautiful web UI and PWA for [pi](https://pi.dev) — the open-source AI coding agent. It lets you browse, read, and continue your pi sessions from any browser, on any device, with thoughtful features at every turn.
 
+This repository is the **local-model edition of pi-web**. It keeps the upstream
+pi-web experience while adding a separately maintained path for locally
+deployed and LAN-hosted models. Upstream changes are synchronized periodically;
+local-model changes are tested and released in parallel on this line.
+
 **pi-web is built for two kinds of people:**
 
 - 🧑‍💻 **For developers** — who live in the terminal but want to continue sessions from mobile, hand off to a remote server, or monitor long-running tasks from anywhere.
@@ -81,6 +86,7 @@ Want more than coding? Turn it into a dedicated [personal assistant](personal-as
 | Why pi-web exists | [why.md](why.md) |
 | What's coming next | [roadmap.md](roadmap.md) |
 | Having install trouble? Let your LLM fix it — paste the llm-debug.md link to them | [llm-debug.md](llm-debug.md) |
+| Maintaining this local-model edition | [development notes](../../docs/dev/local-llm-development.md) |
 
 ---
 

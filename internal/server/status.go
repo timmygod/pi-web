@@ -116,6 +116,8 @@ func (s *Server) recomputeAndBroadcastStatus(sessionID string) {
 	// drainer: if items are waiting, dispatch the next one now instead of
 	// waiting for the 5-second tick.
 	if was && !now && s.queueDrainer != nil {
-		s.queueDrainer.kick(sessionID)
+		if !s.maybeStartLocalRecovery(sessionID) {
+			s.queueDrainer.kick(sessionID)
+		}
 	}
 }

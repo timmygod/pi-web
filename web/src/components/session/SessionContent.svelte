@@ -8,7 +8,7 @@
   import { getSessionModel } from '../../session/session-context.js';
   import SessionEntry from './SessionEntry.svelte';
 
-  let { model = getSessionModel(), afterRender = null, live = false } = $props();
+  let { model = getSessionModel(), afterRender = null, live = false, localMode = false } = $props();
 
   let containerEl = $state(null);
 
@@ -23,6 +23,6 @@
 
 <div id="messages-list" class="messages-list" bind:this={containerEl}>
   {#each model.activePath as entry (entry.id)}
-    <SessionEntry {entry} {model} {live} />
+    <SessionEntry {entry} {model} {live} {localMode} />
   {/each}
 </div>

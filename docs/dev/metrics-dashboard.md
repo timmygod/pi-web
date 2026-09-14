@@ -1,5 +1,9 @@
 # Worker Metrics Dashboard
 
+This dashboard documents the worker behavior of the local-model edition. When
+upstream worker metrics change, preserve the Local Mode fields and recovery
+signals described in [Local-model edition development](local-llm-development.md).
+
 A lightweight, self-contained dashboard for inspecting running `pi --mode rpc`
 workers and overall process health — useful when the app feels slow or you
 suspect a worker is leaking or stuck.

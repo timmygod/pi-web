@@ -268,7 +268,7 @@ func (s *Server) handleApiSession(w http.ResponseWriter, r *http.Request) {
 		entries, total, from = paginatedEntries(resolved.Session.Entries)
 	}
 
-	writeJSON(w, 0, sessionResponseMap(resolved.Session, entries, total, from))
+	writeJSON(w, 0, s.sessionResponseMap(resolved.Session, entries, total, from))
 }
 
 // paginatedEntries returns the tail window embedded on the initial session load
@@ -289,8 +289,8 @@ func paginatedEntries(entries []map[string]any) (out []map[string]any, total, fr
 
 // sessionResponseMap is the JSON shape the SPA consumes for a session, shared by
 // the /api/session endpoint and the bootstrap embedded in the page shell.
-func sessionResponseMap(session sessions.Session, entries []map[string]any, total, from int) map[string]any {
-	return map[string]any{
+func (s *Server) sessionResponseMap(session sessions.Session, entries []map[string]any, total, from int) map[string]any {
+	result := map[string]any{
 		"header":             session.Header,
 		"entries":            entries,
 		"name":               session.Name,
@@ -301,6 +301,11 @@ func sessionResponseMap(session sessions.Session, entries []map[string]any, tota
 		"model":              session.Model,
 		"modelProvider":      session.ModelProvider,
 	}
+	mode := s.refreshSessionModeModel(context.Background(), session)
+	result["configuredMode"] = mode.ConfiguredMode
+	result["effectiveMode"] = mode.EffectiveMode
+	result["contextWindow"] = mode.ContextWindow
+	return result
 }
 
 // sessionBootstrap builds the base64 payload embedded in the session page shell
@@ -316,7 +321,7 @@ func (s *Server) sessionBootstrap(id string) string {
 		return ""
 	}
 	entries, total, from := paginatedEntries(resolved.Session.Entries)
-	data := sessionResponseMap(resolved.Session, entries, total, from)
+	data := s.sessionResponseMap(resolved.Session, entries, total, from)
 
 	scratchpad := ""
 	if cwd, _ := resolved.Session.Header["cwd"].(string); cwd != "" {
@@ -340,6 +345,9 @@ func (s *Server) handleNewSession(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		Path            string `json:"path"`
 		SourceSessionID string `json:"sourceSessionId"`
+		Mode            string `json:"mode"`
+		ModelProvider   string `json:"modelProvider"`
+		ModelID         string `json:"modelId"`
 	}
 	if !decodeJSONBody(w, r, &body) {
 		return
@@ -349,8 +357,27 @@ func (s *Server) handleNewSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	configuredMode, err := normalizeSessionMode(body.Mode)
+	if err != nil {
+		writeJSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
 	settings := s.initialSettingsFromSource(r.Context(), body.SourceSessionID)
+	if body.ModelProvider != "" || body.ModelID != "" {
+		if body.ModelProvider == "" || body.ModelID == "" {
+			writeJSONError(w, http.StatusBadRequest, "modelProvider and modelId must be provided together")
+			return
+		}
+		settings.ModelProvider = body.ModelProvider
+		settings.ModelID = body.ModelID
+	}
 	id, err := sessions.CreateSessionFileWithSettings(s.sessionsDir, body.Path, settings)
+	if err != nil {
+		writeJSONError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	model := s.resolveModelMetadata(r.Context(), settings.ModelProvider, settings.ModelID)
+	mode, err := s.saveSessionMode(id, configuredMode, model)
 	if err != nil {
 		writeJSONError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -368,7 +395,11 @@ func (s *Server) handleNewSession(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	writeJSON(w, 0, map[string]any{"ok": true, "id": id})
+	writeJSON(w, 0, map[string]any{
+		"ok": true, "id": id,
+		"configuredMode": mode.ConfiguredMode,
+		"effectiveMode":  mode.EffectiveMode,
+	})
 }
 
 func (s *Server) handleRenameSession(w http.ResponseWriter, r *http.Request) {

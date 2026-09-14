@@ -1,3 +1,7 @@
+> This troubleshooting guide is maintained for the local-model edition. Keep
+> local deployment details and upstream synchronization notes aligned with
+> [Local-model edition development](../../docs/dev/local-llm-development.md).
+
 User is installing pi-web via 
 
 - pi install npm:@ygncode/pi-web@beta

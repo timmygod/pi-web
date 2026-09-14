@@ -88,6 +88,8 @@ export function buildSessionPageState({
   }
   const model = data?.model || data?.Model || '';
   const provider = data?.modelProvider || data?.ModelProvider || '';
+  const configuredMode = data?.configuredMode || 'auto';
+  const effectiveMode = data?.effectiveMode || 'cloud';
   return {
     sessionId,
     sessionUUID,
@@ -97,7 +99,11 @@ export function buildSessionPageState({
     scratchpad,
     chatAvailable,
     chatDisabledReason,
+    model,
+    modelProvider: provider,
     modelLabel: model && provider ? `${model} @ ${provider}` : model,
+    configuredMode,
+    effectiveMode,
     payloadBase64: encodePayload(
       {
         header,
@@ -110,6 +116,8 @@ export function buildSessionPageState({
         total,
         from,
         truncated: entries.length < total,
+        configuredMode,
+        effectiveMode,
       },
       { btoaImpl, TextEncoderImpl },
     ),

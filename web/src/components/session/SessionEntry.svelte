@@ -5,7 +5,7 @@
   // keeps its `entry-<id>` anchor so annotation offsets + scroll/toggle survive.
   // Shared by the live app and the static export (model passed as a prop).
   import { marked } from 'marked';
-  import { icon, GitFork, Link2, Tag } from '../../shared/icons.js';
+  import { icon, Copy, GitFork, Link2, Tag } from '../../shared/icons.js';
   import { t } from '../../shared/i18n.js';
   import { safeMarkedParse } from '../../session/render/markdown.js';
   import { formatTimestamp } from '../../session/render/entry-format.js';
@@ -16,7 +16,7 @@
   // need the chat composer; copy-link is always shown. The static export passes
   // false. (Replaces the former renderForkButton/renderLabelButton isLive check —
   // a prop, not a DOM probe, since entries mount before the composer.)
-  let { entry, model = null, live = false } = $props();
+  let { entry, model = null, live = false, localMode = false } = $props();
 
   const ts = $derived(formatTimestamp(entry?.timestamp));
   const md = (text) => safeMarkedParse(text, { marked });
@@ -34,6 +34,11 @@
   });
   const userImages = $derived(
     Array.isArray(msg?.content) ? msg.content.filter((b) => b.type === 'image') : [],
+  );
+  const hasThinking = $derived(
+    msg?.role === 'assistant' &&
+      Array.isArray(msg.content) &&
+      msg.content.some((block) => block.type === 'thinking'),
   );
 </script>
 
@@ -69,13 +74,21 @@
   </div>
 {:else if msg && msg.role === 'assistant'}
   <div class="assistant-message" id={`entry-${entry.id}`}>
-    {@render actions(entry.id)}{@render timestamp()}
+    {#if !(localMode && hasThinking)}{@render actions(entry.id)}{/if}{@render timestamp()}
     {#each msg.content as block, blockIndex (blockIndex)}
       {#if block.type === 'text' && block.text.trim()}<div class="assistant-text markdown-content">
           {@html md(block.text)}
         </div>{:else if block.type === 'thinking' && block.thinking.trim()}<div
           class="thinking-block"
         >
+          {#if localMode}<button
+              type="button"
+              class="copy-thinking-btn"
+              data-entry-id={entry.id}
+              data-thinking-index={blockIndex}
+              title={t('session.copyReasoning')}
+              aria-label={t('session.copyReasoning')}>{@html icon(Copy, { size: 13 })}</button
+            >{/if}
           <div class="thinking-text">{block.thinking}</div>
           <div class="thinking-collapsed">Thinking ...</div>
         </div>{/if}

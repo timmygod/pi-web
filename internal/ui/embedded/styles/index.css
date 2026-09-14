@@ -565,7 +565,8 @@ body.modal-sheet-open { overflow: hidden; }
     font-weight: 600;
     margin-bottom: 14px;
 }
-.modal input {
+.modal input,
+.modal select {
     width: 100%;
     background: var(--body-bg);
     border: 1px solid var(--dim);
@@ -576,10 +577,19 @@ body.modal-sheet-open { overflow: hidden; }
     border-radius: 6px;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.modal input:focus {
+.modal input:focus,
+.modal select:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 1px var(--accent);
 }
+.new-session-field {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 12px;
+}
+.new-session-field > span { display: block; margin-bottom: 5px; }
+.new-session-field select { margin-bottom: 0; }
 .recent-locations { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .recent-chip {
     border: 1px solid var(--dim);

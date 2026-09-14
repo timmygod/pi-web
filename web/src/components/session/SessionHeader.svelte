@@ -5,8 +5,29 @@
   import { navigate, handleNavClick } from '../../shared/navigation.js';
   import { showToast } from '../../shared/toast.js';
   import { copyToClipboard } from '../../shared/clipboard.js';
+  import NewSessionModal from '../index/NewSessionModal.svelte';
+  import {
+    defaultCreateSession,
+    defaultFetchModels,
+    modelKey as keyForModel,
+  } from '../../index/sessions.js';
   import { sessionTitle, setSessionTitle } from '../../session/session-title.svelte.js';
-  let { title = 'Session', cwd = '', sessionId = '', sessionUUID = '' } = $props();
+  let {
+    title = 'Session',
+    cwd = '',
+    sessionId = '',
+    sessionUUID = '',
+    modelId = '',
+    modelProvider = '',
+  } = $props();
+
+  let newSessionOpen = $state(false);
+  let newSessionPath = $state('');
+  let newSessionModels = $state([]);
+  let newSessionModelKey = $state('');
+  let newSessionMode = $state('auto');
+  let creatingSession = $state(false);
+  let newSessionError = $state('');
 
   // The title prop seeds the shared store (and re-seeds it on session switch);
   // renames/auto-titling update the store, which this component renders and
@@ -32,6 +53,65 @@
 
   const newSessionToast = (text) => showToast(text, { id: 'new-session-toast', duration: 2500 });
 
+  async function openNewSessionModal() {
+    if (!cwd) {
+      newSessionToast('No working directory available for this session');
+      return;
+    }
+    newSessionPath = cwd;
+    newSessionMode = 'auto';
+    newSessionError = '';
+    newSessionOpen = true;
+    document.body?.classList.add('modal-sheet-open');
+    try {
+      const response = await defaultFetchModels();
+      newSessionModels = Array.isArray(response.models) ? response.models : [];
+      const current = newSessionModels.find(
+        (candidate) =>
+          candidate.provider === modelProvider && (candidate.id || candidate.modelId) === modelId,
+      );
+      newSessionModelKey = current ? keyForModel(current) : '';
+    } catch {
+      newSessionModels = [];
+      newSessionModelKey = '';
+    }
+  }
+
+  function closeNewSessionModal() {
+    newSessionOpen = false;
+    document.body?.classList.remove('modal-sheet-open');
+  }
+
+  async function createSession() {
+    const path = newSessionPath.trim();
+    if (!path) {
+      newSessionError = t('index.enterPath');
+      return;
+    }
+    creatingSession = true;
+    newSessionError = '';
+    try {
+      const selectedModel = newSessionModels.find(
+        (candidate) => keyForModel(candidate) === newSessionModelKey,
+      );
+      const response = await defaultCreateSession(path, {
+        mode: newSessionMode,
+        model: selectedModel || null,
+        sourceSessionId: sessionId,
+      });
+      if (response.ok && response.id) {
+        closeNewSessionModal();
+        navigate('/session?id=' + encodeURIComponent(response.id));
+        return;
+      }
+      newSessionError = response.error || t('index.failedCreateSession');
+    } catch (error) {
+      newSessionError = error?.message || t('index.networkError');
+    } finally {
+      creatingSession = false;
+    }
+  }
+
   onMount(() => {
     const resumeBtn = document.getElementById('resume-btn');
     const newBtn = document.getElementById('new-btn');
@@ -43,35 +123,7 @@
       copyText(command, () => showResumeCopiedNotice(command));
     };
 
-    const onNew = async () => {
-      if (!cwd) {
-        newSessionToast('No working directory available for this session');
-        return;
-      }
-      const originalHTML = newBtn.innerHTML;
-      newBtn.innerHTML = '<span class="working-dots"></span>';
-      newBtn.disabled = true;
-      try {
-        const response = await fetch('/api/new-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ path: cwd, sourceSessionId: sessionId }),
-        });
-        const data = await response.json();
-        if (data.error) {
-          newSessionToast(data.error || 'Failed to create session');
-        } else if (data.id) {
-          navigate('/session?id=' + encodeURIComponent(data.id));
-          return;
-        } else {
-          newSessionToast('Failed to create session');
-        }
-      } catch (err) {
-        newSessionToast(err.message || 'Network error');
-      }
-      newBtn.innerHTML = originalHTML;
-      newBtn.disabled = false;
-    };
+    const onNew = () => openNewSessionModal();
 
     resumeBtn?.addEventListener('click', onResume);
     newBtn?.addEventListener('click', onNew);
@@ -93,6 +145,18 @@
   <button id="new-btn" title="New Session">Session</button>
   <button id="share-btn" title="Share session as GitHub Gist">Share</button>
 </div>
+
+<NewSessionModal
+  open={newSessionOpen}
+  bind:path={newSessionPath}
+  models={newSessionModels}
+  bind:modelKey={newSessionModelKey}
+  bind:mode={newSessionMode}
+  creating={creatingSession}
+  error={newSessionError}
+  onClose={closeNewSessionModal}
+  onCreate={createSession}
+/>
 
 <div class="session-header-bar">
   <div class="session-header-left">

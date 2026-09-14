@@ -1,5 +1,8 @@
 # Sequence Flow: Schedules
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 Schedules run pi automatically on a cadence (or on demand). When a schedule
 fires it creates a **fresh pi session**, sends the schedule's instructions as the
 first message, and lets pi run autonomously. Each firing is recorded so the

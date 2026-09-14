@@ -16,6 +16,7 @@ export function setupSessionLiveConnection({
   onReload = () => {},
   onChatPreview = () => {},
   onAnnotations = () => {},
+  onLocalRecovery = () => {},
   onError = () => {},
   setTimeoutImpl = windowImpl.setTimeout.bind(windowImpl),
   clearTimeoutImpl = windowImpl.clearTimeout.bind(windowImpl),
@@ -46,6 +47,7 @@ export function setupSessionLiveConnection({
       onReload,
       onChatPreview,
       onAnnotations,
+      onLocalRecovery,
       onError: (error) => {
         onError(error);
         if (!eventSource || eventSource.readyState !== EVENT_SOURCE_CLOSED) return;

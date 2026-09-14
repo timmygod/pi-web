@@ -1,5 +1,10 @@
 # UI Rendering & Frontend Architecture (`internal/ui/` and `web/`)
 
+This rendering split is shared with upstream pi-web and maintained on the
+local-model release line. Keep Local Mode behavior out of the static export
+path; synchronization and release rules are in
+[Local-model edition development](local-llm-development.md).
+
 This document explains how the live Svelte SPA, Go-embedded shell, shared styles, and static export path fit together.
 
 ## Short Version

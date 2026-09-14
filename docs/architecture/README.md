@@ -1,6 +1,11 @@
 # Architecture Documentation
 
-This directory contains the architecture documentation for **pi-web**, a local web viewer for pi coding-agent sessions.
+This directory contains the architecture documentation for **pi-web**, a local
+web viewer for pi coding-agent sessions. This checkout is the local-model
+edition: shared architecture follows upstream pi-web, while Local Mode,
+context-stability safeguards, and their acceptance criteria are maintained and
+released on this line. See [Local-model edition development](../dev/local-llm-development.md)
+for the branch, synchronization, and release rules.
 
 ## Documents
 
@@ -10,6 +15,7 @@ This directory contains the architecture documentation for **pi-web**, a local w
 | [backend.md](./backend.md) | Go backend: packages, responsibilities, and key types |
 | [frontend.md](./frontend.md) | Frontend architecture: embedded templates, Vite build, and vanilla JS |
 | [data-flow.md](./data-flow.md) | Session file format, data model, and storage layout |
+| [../local-mode-p0.md](../local-mode-p0.md) | Local Mode context-stability contract and acceptance criteria |
 
 ## Architecture at a Glance
 

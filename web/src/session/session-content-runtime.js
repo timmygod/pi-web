@@ -138,6 +138,19 @@ export function wireSessionContentRuntime({
   // reactive re-renders of #messages.
   const messagesEl = documentImpl.getElementById('messages');
   const onMessagesClick = (e) => {
+    const thinkingBtn = e.target.closest?.('.copy-thinking-btn');
+    if (thinkingBtn) {
+      e.stopPropagation();
+      const entry = model.byId.get(thinkingBtn.dataset.entryId);
+      const block = entry?.message?.content?.[Number(thinkingBtn.dataset.thinkingIndex)];
+      if (block?.type === 'thinking') {
+        copyToClipboard(block.thinking || '', thinkingBtn, {
+          documentImpl,
+          navigatorImpl: target.navigator,
+        });
+      }
+      return;
+    }
     const copyBtn = e.target.closest?.('.copy-link-btn');
     if (copyBtn) {
       e.stopPropagation();

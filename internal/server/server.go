@@ -97,6 +97,7 @@ type Server struct {
 	runRestart            func() error
 	updateMu              sync.Mutex // serializes install/restart operations
 	disableBackgroundJobs bool
+	sessionOperations     sessionOperationState
 
 	// fileWalk caches bounded directory listings per cwd for the @mention
 	// autocomplete so rapid keystrokes reuse a single filesystem walk.
@@ -107,6 +108,11 @@ type Server struct {
 	// auto_title.go), grouped so each subsystem owns its own fields + lock.
 	metrics   metricsState
 	autoTitle autoTitleState
+
+	localRecoveryMu      sync.Mutex
+	localRecoveryRunning bool
+	localRecoverySession string
+	localRecoveryCancel  context.CancelFunc
 }
 
 // metricsState backs the metrics dashboard. startedAt drives process uptime;
@@ -209,6 +215,9 @@ func New(deps Deps) (*Server, error) {
 		// when nobody has the session open in a browser. Stop in Shutdown.
 		s.queueDrainer = newQueueDrainer(s)
 		s.queueDrainer.start()
+		s.startTask(func(context.Context) {
+			s.startLocalStartupRecovery()
+		})
 	}
 	return s, nil
 }
@@ -268,6 +277,9 @@ func initDB(agentDir string) (*sql.DB, error) {
 		{"chat_queue_items table", chatqueue.ItemsTableDDL},
 		{"chat_queue_items index", chatqueue.ItemsSessionIndexDDL},
 		{"chat_queue_state table", chatqueue.StateTableDDL},
+		{"session_modes table", sessionModesSchema},
+		{"local recovery incidents table", localRecoveryIncidentsSchema},
+		{"local recovery state table", localRecoveryStateSchema},
 	}
 	for _, s := range schema {
 		if _, err := db.Exec(s.stmt); err != nil {
@@ -335,8 +347,10 @@ func (s *Server) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/api/sessions", s.auth.Wrap(s.handleApiSessions))
 	mux.HandleFunc("/api/chat", s.auth.Wrap(s.handleChat))
 	mux.HandleFunc("/api/chat/cancel", s.auth.Wrap(s.handleCancelChat))
+	mux.HandleFunc("/api/force-compact", s.auth.Wrap(s.handleForceCompact))
 	mux.HandleFunc("/api/set-model", s.auth.Wrap(s.handleSetModel))
 	mux.HandleFunc("/api/set-thinking-level", s.auth.Wrap(s.handleSetThinkingLevel))
+	mux.HandleFunc("/api/session-mode", s.auth.Wrap(s.handleSessionMode))
 	mux.HandleFunc("/api/models", s.auth.Wrap(s.handleAvailableModels))
 	mux.HandleFunc("/api/worker-status", s.auth.Wrap(s.handleWorkerStatus))
 	mux.HandleFunc("/api/commands", s.auth.Wrap(s.handleCommands))

@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   dateBucketFor,
+  effectiveModeForModel,
+  endpointIsLocal,
   formatRelativeTime,
   groupSessionsByDate,
   groupSessionsByProject,
   normalizeSession,
+  modelKey,
   sessionModelLabel,
   sessionSearchText,
 } from './sessions.js';
@@ -86,5 +89,25 @@ describe('index sessions helpers', () => {
     );
     expect(groups.map((g) => g.bucket)).toEqual(['today', 'yesterday', 'older']);
     expect(groups[0].sessions.map((s) => s.id)).toEqual(['today-a', 'today-b']);
+  });
+
+  it('recognizes loopback and LAN model endpoints', () => {
+    expect(endpointIsLocal('http://localhost:11434/v1')).toBe(true);
+    expect(endpointIsLocal('http://192.168.1.9:8000/v1')).toBe(true);
+    expect(endpointIsLocal('https://api.openai.com/v1')).toBe(false);
+    expect(endpointIsLocal('http://[::1]:8080/v1')).toBe(true);
+    expect(endpointIsLocal('http://[fd00::42]:8080/v1')).toBe(true);
+  });
+
+  it('keeps explicit mode overrides and resolves auto conservatively', () => {
+    const localModel = { provider: 'custom', baseUrl: 'http://10.0.0.8:8080/v1' };
+    expect(effectiveModeForModel('auto', localModel)).toBe('local');
+    expect(effectiveModeForModel('cloud', localModel)).toBe('cloud');
+    expect(effectiveModeForModel('local', { provider: 'openai' })).toBe('local');
+    expect(effectiveModeForModel('auto', { provider: 'openai' })).toBe('cloud');
+  });
+
+  it('builds stable provider/model keys', () => {
+    expect(modelKey({ provider: 'llama', id: 'qwen' })).toBe('llama\u0000qwen');
   });
 });

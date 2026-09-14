@@ -84,7 +84,7 @@ describe('live events', () => {
     expect(result.newCount).toBe(1);
     expect(entryState.seen.has('b')).toBe(true);
     expect(onNewEntries).toHaveBeenCalledWith(['b']);
-    expect(clearChatPreview).toHaveBeenCalled();
+    expect(clearChatPreview).toHaveBeenCalledWith(entries, ['b']);
     expect(scrollAfterLayout).toHaveBeenCalledWith(true);
   });
 
@@ -204,5 +204,26 @@ describe('live events', () => {
     expect(dispatched[0].type).toBe('pi-session-reload');
     eventSource.onmessage({ data: 'noop' });
     expect(dispatched.length).toBe(1);
+  });
+
+  it('reports local watchdog recovery events', () => {
+    const eventSource = { addEventListener: vi.fn() };
+    const onLocalRecovery = vi.fn();
+    const onError = vi.fn();
+    wireSessionEvents({
+      eventSource,
+      onReload: vi.fn(),
+      onChatPreview: vi.fn(),
+      onLocalRecovery,
+      onError,
+    });
+    const recoveryHandler = eventSource.addEventListener.mock.calls.find(
+      ([name]) => name === 'local-recovery',
+    )[1];
+
+    recoveryHandler({ data: JSON.stringify({ reason: 'thinking-only-stop' }) });
+    expect(onLocalRecovery).toHaveBeenCalledWith({ reason: 'thinking-only-stop' });
+    recoveryHandler({ data: '{bad' });
+    expect(onError).toHaveBeenCalledTimes(1);
   });
 });

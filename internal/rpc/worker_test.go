@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"pi-web/internal/chat"
 	"pi-web/internal/workers"
 )
 
@@ -16,6 +17,10 @@ type nopWriteCloser struct{ w io.Writer }
 
 func (n nopWriteCloser) Write(p []byte) (int, error) { return n.w.Write(p) }
 func (n nopWriteCloser) Close() error                { return nil }
+
+type writeFunc func([]byte) (int, error)
+
+func (f writeFunc) Write(p []byte) (int, error) { return f(p) }
 
 func waitForPending(t *testing.T, w *piRPCWorker, id string) {
 	t.Helper()
@@ -64,26 +69,80 @@ func TestStatusStaysRunningAfterAgentEndUntilSettled(t *testing.T) {
 	}
 }
 
+func TestWaitSettledDoesNotReturnAtAgentEnd(t *testing.T) {
+	w := &piRPCWorker{
+		status:  workers.WorkerStatus{State: workers.WorkerStateRunning},
+		pending: make(map[string]chan response),
+		settled: make(chan struct{}),
+	}
+	done := make(chan error, 1)
+	go func() { done <- w.WaitSettled(context.Background()) }()
+	w.handleRPCLine(`{"type":"agent_end"}`)
+	select {
+	case <-done:
+		t.Fatal("WaitSettled returned at agent_end")
+	case <-time.After(20 * time.Millisecond):
+	}
+	w.handleRPCLine(`{"type":"agent_settled"}`)
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("WaitSettled did not return after agent_settled")
+	}
+}
+
+func TestWaitSettledReportsWorkerFailure(t *testing.T) {
+	settled := make(chan struct{})
+	w := &piRPCWorker{
+		status:  workers.WorkerStatus{State: workers.WorkerStateRunning},
+		pending: make(map[string]chan response),
+		settled: settled,
+	}
+	done := make(chan error, 1)
+	go func() { done <- w.WaitSettled(context.Background()) }()
+	w.mu.Lock()
+	w.status = workers.WorkerStatus{State: workers.WorkerStateError, Error: "worker exited"}
+	close(settled)
+	w.settled = nil
+	w.mu.Unlock()
+	select {
+	case err := <-done:
+		if err == nil || err.Error() != "worker exited" {
+			t.Fatalf("WaitSettled error = %v, want worker exited", err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("WaitSettled did not return after worker failure")
+	}
+}
+
 func TestInteractiveExtensionUIRequestIsCancelledAfterTimeout(t *testing.T) {
 	originalTimeout := extensionUIRequestTimeout
 	extensionUIRequestTimeout = 10 * time.Millisecond
 	defer func() { extensionUIRequestTimeout = originalTimeout }()
 
-	var buf bytes.Buffer
+	writes := make(chan []byte, 1)
 	w := &piRPCWorker{
-		stdin:    nopWriteCloser{&buf},
+		stdin: nopWriteCloser{writeFunc(func(p []byte) (int, error) {
+			writes <- append([]byte(nil), p...)
+			return len(p), nil
+		})},
 		pending:  make(map[string]chan response),
 		uiTimers: make(map[string]*time.Timer),
 		status:   workers.WorkerStatus{State: workers.WorkerStateRunning},
 	}
 	w.handleRPCLine(`{"type":"extension_ui_request","id":"ui-1","method":"confirm","title":"Permission","message":"Allow?"}`)
 
-	deadline := time.Now().Add(500 * time.Millisecond)
-	for time.Now().Before(deadline) && buf.Len() == 0 {
-		time.Sleep(time.Millisecond)
+	var data []byte
+	select {
+	case data = <-writes:
+	case <-time.After(500 * time.Millisecond):
+		t.Fatal("timed out waiting for timeout response")
 	}
 	var response map[string]any
-	if err := json.Unmarshal(bytes.TrimSpace(buf.Bytes()), &response); err != nil {
+	if err := json.Unmarshal(bytes.TrimSpace(data), &response); err != nil {
 		t.Fatalf("timeout response is invalid JSON: %v", err)
 	}
 	if response["type"] != "extension_ui_response" || response["id"] != "ui-1" || response["cancelled"] != true {
@@ -277,5 +336,36 @@ func TestHandleRPCLineTracksThinkingAndTextStreamEvents(t *testing.T) {
 		if got := w.Status(); got.State != workers.WorkerStateRunning {
 			t.Fatalf("line %s => status = %q, want running", strings.TrimSpace(line), got.State)
 		}
+	}
+}
+
+func TestCancelledRPCDoesNotWriteAfterWaitingForWriter(t *testing.T) {
+	var buf bytes.Buffer
+	w := &piRPCWorker{stdin: nopWriteCloser{&buf}, pending: make(map[string]chan response)}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	w.writeMu.Lock()
+	done := make(chan error, 1)
+	go func() {
+		done <- w.sendAndAwait(ctx, BuildPromptCommand("cancelled", chat.Request{Message: "continue if possible"}, false))
+	}()
+	waitForPending(t, w, "cancelled")
+	cancel()
+	w.writeMu.Unlock()
+	select {
+	case err := <-done:
+		if err != context.Canceled {
+			t.Fatalf("error = %v", err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("cancelled RPC did not finish")
+	}
+	if buf.Len() != 0 {
+		t.Fatalf("cancelled continuation was sent: %s", buf.String())
+	}
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	if len(w.pending) != 0 {
+		t.Fatal("cancelled RPC leaked pending response")
 	}
 }

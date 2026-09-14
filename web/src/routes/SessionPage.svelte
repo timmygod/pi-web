@@ -42,6 +42,8 @@
   let cwd = $state('');
   let chatAvailable = $state(true);
   let chatDisabledReason = $state('');
+  let model = $state('');
+  let modelProvider = $state('');
   let modelLabel = $state('');
   let dataEl = $state(null);
 
@@ -78,6 +80,8 @@
         payloadBase64 = state.payloadBase64;
         chatAvailable = state.chatAvailable;
         chatDisabledReason = state.chatDisabledReason;
+        model = state.model;
+        modelProvider = state.modelProvider;
         modelLabel = state.modelLabel;
         hydrateSessionModel({
           sessionModel,
@@ -144,6 +148,8 @@
     {cwd}
     {chatAvailable}
     {chatDisabledReason}
+    {model}
+    {modelProvider}
     {modelLabel}
     bind:dataEl
   />

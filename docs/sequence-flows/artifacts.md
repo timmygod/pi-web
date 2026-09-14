@@ -1,5 +1,8 @@
 # Sequence Flow: Artifacts
 
+This flow applies to the local-model edition; preserve the Local Mode boundary
+when synchronizing shared runtime changes. See [Local-model edition development](../dev/local-llm-development.md).
+
 Artifacts are substantial, self-contained outputs surfaced from a session into
 the right-sidebar **Artifacts** tab: files the agent wrote/edited, plus sizeable
 fenced code blocks. They are **derived from the transcript at render time** — not

@@ -1,5 +1,12 @@
 # Backend Architecture
 
+This backend is maintained on the local-model edition of pi-web. The package
+layout remains compatible with upstream where possible; Local Mode worker
+isolation, context protection, and recovery are edition-specific boundaries.
+When upstream changes cross those boundaries, follow the
+[local-model synchronization and release workflow](../dev/local-llm-development.md)
+and update the affected architecture notes.
+
 ## Package Layout
 
 ```
@@ -47,6 +54,7 @@ pi-web/
 │   ├── rpc/
 │   │   ├── client.go           # JSONL RPC command builders
 │   │   ├── worker.go           # pi --mode rpc subprocess worker
+│   │   ├── local_worker_settings.go # Isolated 65%-threshold settings for Local workers
 │   │   ├── stream.go           # SSE chat-preview stream accumulator
 │   │   ├── prompt.go           # OneShotPrompt: spawn pi for a single prompt (auto-title)
 │   │   └── oneshot.go          # One-shot RPC for model enumeration
@@ -54,6 +62,7 @@ pi-web/
 │   │   ├── server.go           # Server type, deps, SSE registry, route registration, SQLite open
 │   │   ├── handlers.go         # index, session, api/session(s), new, fork/clone, rename, locations, models, custom-themes
 │   │   ├── chat.go             # Chat, set-model, set-thinking, worker-status, commands handlers
+│   │   ├── local_mode.go       # Session mode persistence, compaction policy, watchdog
 │   │   ├── new_session.go      # New-session creation logic
 │   │   ├── git.go              # /api/git/info, /api/git/rename-branch handlers
 │   │   ├── diff.go             # /api/git/diff, /api/diff/reviews handlers
@@ -124,6 +133,7 @@ type Server struct {
     runInstall    func(ctx context.Context) error // optional self-update install
     runRestart    func() error                    // optional self-update restart
     updateMu      sync.Mutex      // serializes install/restart
+    sessionOperations sessionOperationState // per-session compact/send gates
     stopCh        chan struct{}
     stopOnce      sync.Once
     wg            sync.WaitGroup
@@ -154,7 +164,12 @@ and serves the shared data, but does not run scheduling, queue draining,
 auto-titling, or push-delivery side effects.
 
 On `New`, the server opens (and migrates) a SQLite database at
-`~/.pi/agent/pi-web.sqlite` with six tables: `scratchpads` (per project path),
+`~/.pi/agent/pi-web.sqlite`. In addition to the existing application tables,
+Local Mode owns `session_modes` (configured/effective mode, resolved model
+metadata, and last-active time), `local_recovery_incidents` (durable per-failure
+deduplication), and `local_recovery_state` (the progress-aware circuit-breaker
+state shared by context-overflow and thinking-only-stop recovery). The other
+principal tables include `scratchpads` (per project path),
 `settings` (server-backed user settings key/value), `project_prefs` (which
 projects are enabled), `app_settings` (the project-filter master switch, default
 off), `btw_sessions` (the btw scratch-chat registry), and `annotations`
@@ -204,6 +219,8 @@ type Manager struct {
     workers    map[string]ChatWorker  // sessionID → worker
     creating   map[string]*createCall // single-flight: coalesce concurrent creates per session
     factory    Factory                // (sessionID, sessionPath) → ChatWorker
+    configuredFactory ConfiguredFactory // factory receiving per-session WorkerConfig
+    configs    map[string]WorkerConfig  // Local context window; zero means Cloud/default
     idleTTL    time.Duration          // default 10m
     reaperStop chan struct{}
     reaperDone chan struct{}
@@ -214,6 +231,20 @@ type Manager struct {
 state, model, plus PID/uptime/idle for workers implementing the optional
 `inspector` interface). The metrics dashboard consumes it — see
 `docs/dev/metrics-dashboard.md`.
+
+`PrepareMode` replaces an idle worker when its configuration changes and refuses
+to replace a running worker. The session-mode API likewise rejects configured
+mode changes while that session's worker is running. Creation is single-flight;
+a concurrent mode change
+waits for creation to finish before closing a stale-config worker. Local workers
+receive an isolated `PI_CODING_AGENT_DIR` whose compaction reserve makes Pi's
+strict `>` comparison fire at exactly 65%. User resources are linked into the
+isolated directory, while the user's global settings file remains untouched.
+The isolated extension directory also links the user's extensions and adds a
+Local-only guard that aborts a run after failed or non-progressing automatic
+compaction.
+Project `.pi/settings.json` compaction overrides are accepted only when they are
+at least as strict; incompatible overrides fail Local worker preparation.
 
 ### `rpc.piRPCWorker`
 
@@ -245,64 +276,64 @@ type piRPCWorker struct {
 
 ## HTTP Handler Map
 
-| Route | Method | Handler | Description |
-|-------|--------|---------|-------------|
-| `/` | GET | `handleIndex` | Render SPA shell for the sessions route |
-| `/session` | GET | `handleSession` | Render SPA shell for the session route |
-| `/settings` | GET | `handleSettingsPage` | Render SPA shell for the settings route |
-| `/login` | GET | `handleAppShell` | Render SPA shell for the login route |
-| `/api/session` | GET | `handleApiSession` | JSON session data |
-| `/api/sessions` | GET | `handleApiSessions` | JSON list of session summaries |
-| `/api/chat` | POST | `handleChat` | Send chat message (multipart) |
-| `/api/chat/cancel` | POST | `handleCancelChat` | Abort running chat worker |
-| `/api/set-model` | POST | `handleSetModel` | Change model for session |
-| `/api/set-thinking-level` | POST | `handleSetThinkingLevel` | Change thinking level |
-| `/api/models` | GET | `handleAvailableModels` | List available AI models |
-| `/api/worker-status` | GET | `handleWorkerStatus` | Get worker state for session |
-| `/api/commands` | GET | `handleCommands` | List slash commands exposed by the session worker |
-| `/metrics` | GET | `handleMetricsPage` | Worker metrics dashboard (self-contained HTML) |
-| `/api/metrics` | GET | `handleMetrics` | JSON snapshot: process + per-worker CPU/RSS (gopsutil); see `docs/dev/metrics-dashboard.md` |
-| `/api/debug/pprof/` | GET | `pprof.Index` (+ cmdline/profile/symbol/trace) | Go runtime profiler, auth-gated (`/api`-stripped before Index) |
-| `/share` | POST | `handleShare` | Create private GitHub Gist |
-| `/events` | GET | `handleEvents` | SSE stream |
-| `/api/new-session` | POST | `handleNewSession` | Create new session file |
-| `/api/fork-session` | POST | `handleApiForkSession` | Fork a session into a new file |
-| `/api/clone-session` | POST | `handleApiCloneSession` | Clone a session into a new file |
-| `/api/rename-session` | POST | `handleRenameSession` | Append `session_info` rename metadata |
-| `/api/label-session` | POST | `handleLabelSessionEntry` | Append a label to a session entry |
-| `/api/recent-locations` | GET | `handleRecentLocations` | List known project paths |
-| `/api/files` | GET | `handleApiFiles` | Bounded file listing for @mention autocomplete |
-| `/api/git/info` | GET | `handleGitInfo` | Branch / dirty / PR-URL info for a project |
-| `/api/git/rename-branch` | POST | `handleGitRenameBranch` | Rename the current git branch |
-| `/api/git/diff` | GET | `handleGitDiff` | Uncommitted working-tree diff (tracked + untracked) for the session cwd |
-| `/api/diff/reviews` | GET/POST/DELETE | `handleReviewComments` | Per-session diff review comments for the diff modal (SQLite) |
-| `/api/scratchpad` | GET/POST | `handleGetScratchpad` / `handleSaveScratchpad` | Per-project scratchpad (SQLite) |
-| `/api/annotations` | GET/POST/DELETE | `handleAnnotations` | Per-session review annotations; mutations broadcast an `annotations` SSE snapshot (SQLite) |
-| `/api/settings` | GET/POST | `handleGetSettings` / `handleSaveSettings` | Server-backed user settings (SQLite) |
-| `/api/btw` | GET | `handleGetBtw` | Resolve the btw scratch-chat session for a parent (SQLite) |
-| `/api/btw/new` | POST | `handleNewBtw` | Create a new btw scratch-chat session (SQLite) |
-| `/api/projects` | GET/POST | `handleApiProjects` / `handleUpdateProject` | List projects + filter state (`limit`/`offset`, optional `current` priority + `sessionLimit` bundled summaries, active session IDs per project, `filtered=1` to apply the enabled-projects allowlist with the current project always kept); enable/disable/register/remove, bulk enable-all/disable-all, enable-filter/disable-filter (SQLite) |
-| `/api/sounds` | GET | `handleApiSounds` | List available notification sounds |
-| `/sounds/` | GET | `handleSounds` | Serve a sound asset (no auth) |
-| `/custom-themes.css` | GET | `handleCustomThemes` | User custom theme CSS |
-| `/api/push/vapid` | GET | `handleVapid` | VAPID public key (when push enabled) |
-| `/api/push/subscribe` | POST | `handleSubscribe` | Register a web-push subscription |
-| `/api/push/unsubscribe` | POST | `handleUnsubscribe` | Remove a web-push subscription |
-| `/api/schedules` | GET/POST | `handleApiSchedules` | List schedules (with `nextRunAt`) / create (SQLite) |
-| `/api/schedule` | GET/POST/PUT/DELETE | `handleApiSchedule` | Read/update/delete one schedule (`?id=`) |
-| `/api/schedule/run` | POST | `handleApiScheduleRun` | Fire a schedule now (`?id=`); returns created `sessionId` |
-| `/api/schedule/runs` | GET | `handleApiScheduleRuns` | Run log for a schedule (`?id=`) |
-| `/api/version` | GET | `handleVersion` | Current/latest version (when updater set) |
-| `/api/check-update` | POST | `handleCheckUpdate` | Force a version check |
-| `/api/update` | POST | `handleUpdate` | Install the latest pi-web |
-| `/api/restart` | POST | `handleRestart` | Restart the service onto the new binary |
+| Route                     | Method              | Handler                                        | Description                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------- | ------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                       | GET                 | `handleIndex`                                  | Render SPA shell for the sessions route                                                                                                                                                                                                                                                                                                        |
+| `/session`                | GET                 | `handleSession`                                | Render SPA shell for the session route                                                                                                                                                                                                                                                                                                         |
+| `/settings`               | GET                 | `handleSettingsPage`                           | Render SPA shell for the settings route                                                                                                                                                                                                                                                                                                        |
+| `/login`                  | GET                 | `handleAppShell`                               | Render SPA shell for the login route                                                                                                                                                                                                                                                                                                           |
+| `/api/session`            | GET                 | `handleApiSession`                             | JSON session data                                                                                                                                                                                                                                                                                                                              |
+| `/api/sessions`           | GET                 | `handleApiSessions`                            | JSON list of session summaries                                                                                                                                                                                                                                                                                                                 |
+| `/api/chat`               | POST                | `handleChat`                                   | Send chat message (multipart)                                                                                                                                                                                                                                                                                                                  |
+| `/api/chat/cancel`        | POST                | `handleCancelChat`                             | Abort running chat worker                                                                                                                                                                                                                                                                                                                      |
+| `/api/set-model`          | POST                | `handleSetModel`                               | Change model for session                                                                                                                                                                                                                                                                                                                       |
+| `/api/set-thinking-level` | POST                | `handleSetThinkingLevel`                       | Change thinking level                                                                                                                                                                                                                                                                                                                          |
+| `/api/models`             | GET                 | `handleAvailableModels`                        | List available AI models                                                                                                                                                                                                                                                                                                                       |
+| `/api/worker-status`      | GET                 | `handleWorkerStatus`                           | Get worker state for session                                                                                                                                                                                                                                                                                                                   |
+| `/api/commands`           | GET                 | `handleCommands`                               | List slash commands exposed by the session worker                                                                                                                                                                                                                                                                                              |
+| `/metrics`                | GET                 | `handleMetricsPage`                            | Worker metrics dashboard (self-contained HTML)                                                                                                                                                                                                                                                                                                 |
+| `/api/metrics`            | GET                 | `handleMetrics`                                | JSON snapshot: process + per-worker CPU/RSS (gopsutil); see `docs/dev/metrics-dashboard.md`                                                                                                                                                                                                                                                    |
+| `/api/debug/pprof/`       | GET                 | `pprof.Index` (+ cmdline/profile/symbol/trace) | Go runtime profiler, auth-gated (`/api`-stripped before Index)                                                                                                                                                                                                                                                                                 |
+| `/share`                  | POST                | `handleShare`                                  | Create private GitHub Gist                                                                                                                                                                                                                                                                                                                     |
+| `/events`                 | GET                 | `handleEvents`                                 | SSE stream                                                                                                                                                                                                                                                                                                                                     |
+| `/api/new-session`        | POST                | `handleNewSession`                             | Create new session file                                                                                                                                                                                                                                                                                                                        |
+| `/api/fork-session`       | POST                | `handleApiForkSession`                         | Fork a session into a new file                                                                                                                                                                                                                                                                                                                 |
+| `/api/clone-session`      | POST                | `handleApiCloneSession`                        | Clone a session into a new file                                                                                                                                                                                                                                                                                                                |
+| `/api/rename-session`     | POST                | `handleRenameSession`                          | Append `session_info` rename metadata                                                                                                                                                                                                                                                                                                          |
+| `/api/label-session`      | POST                | `handleLabelSessionEntry`                      | Append a label to a session entry                                                                                                                                                                                                                                                                                                              |
+| `/api/recent-locations`   | GET                 | `handleRecentLocations`                        | List known project paths                                                                                                                                                                                                                                                                                                                       |
+| `/api/files`              | GET                 | `handleApiFiles`                               | Bounded file listing for @mention autocomplete                                                                                                                                                                                                                                                                                                 |
+| `/api/git/info`           | GET                 | `handleGitInfo`                                | Branch / dirty / PR-URL info for a project                                                                                                                                                                                                                                                                                                     |
+| `/api/git/rename-branch`  | POST                | `handleGitRenameBranch`                        | Rename the current git branch                                                                                                                                                                                                                                                                                                                  |
+| `/api/git/diff`           | GET                 | `handleGitDiff`                                | Uncommitted working-tree diff (tracked + untracked) for the session cwd                                                                                                                                                                                                                                                                        |
+| `/api/diff/reviews`       | GET/POST/DELETE     | `handleReviewComments`                         | Per-session diff review comments for the diff modal (SQLite)                                                                                                                                                                                                                                                                                   |
+| `/api/scratchpad`         | GET/POST            | `handleGetScratchpad` / `handleSaveScratchpad` | Per-project scratchpad (SQLite)                                                                                                                                                                                                                                                                                                                |
+| `/api/annotations`        | GET/POST/DELETE     | `handleAnnotations`                            | Per-session review annotations; mutations broadcast an `annotations` SSE snapshot (SQLite)                                                                                                                                                                                                                                                     |
+| `/api/settings`           | GET/POST            | `handleGetSettings` / `handleSaveSettings`     | Server-backed user settings (SQLite)                                                                                                                                                                                                                                                                                                           |
+| `/api/btw`                | GET                 | `handleGetBtw`                                 | Resolve the btw scratch-chat session for a parent (SQLite)                                                                                                                                                                                                                                                                                     |
+| `/api/btw/new`            | POST                | `handleNewBtw`                                 | Create a new btw scratch-chat session (SQLite)                                                                                                                                                                                                                                                                                                 |
+| `/api/projects`           | GET/POST            | `handleApiProjects` / `handleUpdateProject`    | List projects + filter state (`limit`/`offset`, optional `current` priority + `sessionLimit` bundled summaries, active session IDs per project, `filtered=1` to apply the enabled-projects allowlist with the current project always kept); enable/disable/register/remove, bulk enable-all/disable-all, enable-filter/disable-filter (SQLite) |
+| `/api/sounds`             | GET                 | `handleApiSounds`                              | List available notification sounds                                                                                                                                                                                                                                                                                                             |
+| `/sounds/`                | GET                 | `handleSounds`                                 | Serve a sound asset (no auth)                                                                                                                                                                                                                                                                                                                  |
+| `/custom-themes.css`      | GET                 | `handleCustomThemes`                           | User custom theme CSS                                                                                                                                                                                                                                                                                                                          |
+| `/api/push/vapid`         | GET                 | `handleVapid`                                  | VAPID public key (when push enabled)                                                                                                                                                                                                                                                                                                           |
+| `/api/push/subscribe`     | POST                | `handleSubscribe`                              | Register a web-push subscription                                                                                                                                                                                                                                                                                                               |
+| `/api/push/unsubscribe`   | POST                | `handleUnsubscribe`                            | Remove a web-push subscription                                                                                                                                                                                                                                                                                                                 |
+| `/api/schedules`          | GET/POST            | `handleApiSchedules`                           | List schedules (with `nextRunAt`) / create (SQLite)                                                                                                                                                                                                                                                                                            |
+| `/api/schedule`           | GET/POST/PUT/DELETE | `handleApiSchedule`                            | Read/update/delete one schedule (`?id=`)                                                                                                                                                                                                                                                                                                       |
+| `/api/schedule/run`       | POST                | `handleApiScheduleRun`                         | Fire a schedule now (`?id=`); returns created `sessionId`                                                                                                                                                                                                                                                                                      |
+| `/api/schedule/runs`      | GET                 | `handleApiScheduleRuns`                        | Run log for a schedule (`?id=`)                                                                                                                                                                                                                                                                                                                |
+| `/api/version`            | GET                 | `handleVersion`                                | Current/latest version (when updater set)                                                                                                                                                                                                                                                                                                      |
+| `/api/check-update`       | POST                | `handleCheckUpdate`                            | Force a version check                                                                                                                                                                                                                                                                                                                          |
+| `/api/update`             | POST                | `handleUpdate`                                 | Install the latest pi-web                                                                                                                                                                                                                                                                                                                      |
+| `/api/restart`            | POST                | `handleRestart`                                | Restart the service onto the new binary                                                                                                                                                                                                                                                                                                        |
 
 PWA / static asset routes (registered outside `Server.Register`):
 
-| Route | Source |
-|-------|--------|
-| `/manifest.webmanifest`, `/sw.js`, `/icon.svg`, `/icon-maskable.svg`, `/pi-logo.svg`, `/cat.webm`, `/theme.css`, `/index.css`, `/menu.css`, `/palette.css` | `internal/ui/pwa.go` (embedded assets) |
-| `/static/assets/app-*.js`, `/static/assets/...` | Embedded Vite SPA bundle and chunks (`internal/app/app.go` + `internal/frontend`) |
+| Route                                                                                                                                                      | Source                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `/manifest.webmanifest`, `/sw.js`, `/icon.svg`, `/icon-maskable.svg`, `/pi-logo.svg`, `/cat.webm`, `/theme.css`, `/index.css`, `/menu.css`, `/palette.css` | `internal/ui/pwa.go` (embedded assets)                                            |
+| `/static/assets/app-*.js`, `/static/assets/...`                                                                                                            | Embedded Vite SPA bundle and chunks (`internal/app/app.go` + `internal/frontend`) |
 
 ## Auth Flow
 
@@ -370,6 +401,14 @@ server-owned context. Shutdown prevents new tasks, cancels that context, stops
 the long-running watchers/drainers, waits for all accepted work, and only then
 closes SQLite. The service restart trigger is intentionally detached because
 it must outlive the response that initiates shutdown.
+
+Chat dispatch and explicit compaction additionally share a context-aware,
+per-session operation gate. The gate covers session refresh, Local Mode
+compaction preflight, and prompt submission; unrelated sessions remain
+independent. Waiting operations reread the JSONL before acting, which coalesces
+duplicate compactions and prevents concurrent calls into Pi's manual compaction
+state. An already-running worker receives new chat as steering input instead of
+being aborted by proactive compaction. Explicit cancel bypasses the gate.
 
 ## SSE Broadcasting
 

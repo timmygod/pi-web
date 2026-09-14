@@ -198,6 +198,60 @@ func TestManagerEvictsErroredWorker(t *testing.T) {
 	}
 }
 
+type closeTrackingWorker struct {
+	fakeChatWorker
+	closed bool
+}
+
+func (w *closeTrackingWorker) Close() error {
+	w.closed = true
+	return nil
+}
+
+func TestPrepareModeWaitsForCreationAndReplacesStaleWorker(t *testing.T) {
+	spawnStarted := make(chan struct{})
+	releaseSpawn := make(chan struct{})
+	var configs []WorkerConfig
+	var created []*closeTrackingWorker
+	manager := NewConfiguredManager(func(_ string, _ string, config WorkerConfig) (ChatWorker, error) {
+		configs = append(configs, config)
+		worker := &closeTrackingWorker{}
+		created = append(created, worker)
+		if len(configs) == 1 {
+			close(spawnStarted)
+			<-releaseSpawn
+		}
+		return worker, nil
+	})
+	defer manager.Close()
+
+	ensureDone := make(chan error, 1)
+	go func() {
+		ensureDone <- manager.EnsureWorker(context.Background(), "session", "/tmp/session.jsonl")
+	}()
+	<-spawnStarted
+	prepareDone := make(chan error, 1)
+	go func() {
+		prepareDone <- manager.PrepareMode("session", WorkerConfig{LocalContextWindow: 100000})
+	}()
+	close(releaseSpawn)
+	if err := <-ensureDone; err != nil {
+		t.Fatal(err)
+	}
+	if err := <-prepareDone; err != nil {
+		t.Fatal(err)
+	}
+	if !created[0].closed {
+		t.Fatal("worker created with stale config was not closed")
+	}
+	if err := manager.EnsureWorker(context.Background(), "session", "/tmp/session.jsonl"); err != nil {
+		t.Fatal(err)
+	}
+	if len(configs) != 2 || configs[1].LocalContextWindow != 100000 {
+		t.Fatalf("factory configs = %#v", configs)
+	}
+}
+
 // reapableWorker implements idleReportable so the reaper will evict it once
 // it has been idle longer than the manager's TTL.
 type reapableWorker struct {

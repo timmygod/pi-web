@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """One-off translator for newly-added composer.* locale keys.
 
-Calls `pi --provider opencode-go --model deepseek-v4-pro` once per non-English
-locale, asking deepseek to translate the keys we just added to en.js. The
-script feeds a few of the locale's existing composer.* entries as style
-reference so the new translations match register, then patches the file by
-inserting the translated entries right after the existing `composer.removeQueued`
-line.
+Calls the configured local pi model once per non-English locale, asking it to
+translate the keys we just added to en.js. The script feeds a few of the
+locale's existing composer.* entries as style reference so the new translations
+match register, then patches the file by inserting the translated entries right
+after the existing `composer.removeQueued` line.
 
 Idempotent: re-running on a locale that already has the keys is a no-op.
 """
@@ -17,6 +16,8 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+
+from translation_runtime import pi_translation_command
 
 REPO = Path(__file__).resolve().parents[1]
 LOCALES_DIR = REPO / "web" / "src" / "shared" / "locales"
@@ -50,7 +51,7 @@ NEW_KEYS = [
 ]
 
 # Style-reference keys: existing composer.* entries the locale already has
-# translated. Sending these grounds deepseek in the locale's register.
+# translated. Sending these grounds the local model in the locale's register.
 REFERENCE_KEYS = [
     "composer.steer",
     "composer.queue",
@@ -82,8 +83,8 @@ def js_escape(value: str) -> str:
 
 
 def build_prompt(code: str, native: str, references: dict[str, str]) -> str:
-    # Send reference EN -> LOCAL pairs as JSON so deepseek can pattern-match
-    # the locale's existing register against the new English source.
+    # Send reference EN -> LOCAL pairs as JSON so the local model can
+    # pattern-match the locale's existing register against the new English source.
     pairs = [
         {"key": key, "local": references[key]} for key in REFERENCE_KEYS if key in references
     ]
@@ -114,14 +115,7 @@ def build_prompt(code: str, native: str, references: dict[str, str]) -> str:
 
 def call_pi(prompt: str) -> str:
     result = subprocess.run(
-        [
-            "pi",
-            "--provider", "opencode-go",
-            "--model", "deepseek-v4-pro",
-            "--print",
-            "--no-session",
-            prompt,
-        ],
+        pi_translation_command(prompt),
         capture_output=True,
         text=True,
         timeout=600,

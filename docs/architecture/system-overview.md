@@ -1,5 +1,10 @@
 # System Overview
 
+This is the system overview for the local-model edition of pi-web. It shares
+the upstream architecture but documents the additional Local Mode worker
+isolation, context-stability, and bounded recovery paths maintained on this
+release line.
+
 ## What pi-web Does
 
 pi-web is a local HTTP server that lets you browse and interact with your pi coding-agent sessions in a web browser. It scans `~/.pi/agent/sessions/`, renders a dark-themed UI, and supports live-reloading, chat continuation, and session sharing.
@@ -15,7 +20,7 @@ pi-web is a local HTTP server that lets you browse and interact with your pi cod
 | Live Updates | Server-Sent Events (SSE) |
 | Chat RPC | JSONL over stdin/stdout via `pi --mode rpc` |
 | Session Storage | JSONL files on disk; pi-web creates new session files and appends `session_info` for browser rename |
-| Local DB | SQLite (`~/.pi/agent/pi-web.sqlite`) for per-project scratchpads, per-session review annotations, project visibility prefs, server-backed user settings, and the btw scratch-chat registry |
+| Local DB | SQLite (`~/.pi/agent/pi-web.sqlite`) for application state plus per-session Local Mode and bounded recovery state |
 | Auth | Token cookie/query/header (optional on localhost) |
 
 ## Component Diagram
@@ -49,6 +54,8 @@ pi-web is a local HTTP server that lets you browse and interact with your pi cod
 │   GET  /api/sessions  →  handleApiSessions (JSON list)                   │
 │   POST /api/chat      →  handleChat        (multipart or JSON)           │
 │   POST /api/chat/cancel → handleCancelChat                               │
+│   POST /api/force-compact → handleForceCompact (Local Mode)              │
+│   GET/POST /api/session-mode → configured/effective mode                 │
 │   POST /api/set-model →  handleSetModel                                  │
 │   POST /api/set-thinking-level → handleSetThinkingLevel                  │
 │   POST /api/new-session / fork-session / clone-session                   │
@@ -142,6 +149,7 @@ name, while pi-web itself continues listening only on localhost.
 └── pi-web/
     ├── pi-web-state.json       ← regular server state + lock
     ├── pi-web-state-dev.json   ← development state + lock (while running)
+    ├── local-workers/          ← isolated generated settings for Local RPC workers
     ├── custom-themes.css       ← optional user custom theme
     ├── vapid.json          ← web-push VAPID keys (when push enabled)
     └── push-subs.json      ← web-push subscriptions (when push enabled)
@@ -180,7 +188,7 @@ across devices. See `internal/server/projects.go`.
 3. Determine bind host (flag → localhost)
 4. Enforce auth for explicit non-loopback binds
 5. Build `server.Deps` (renderers, cache, workers, auth)
-6. Create `Server` → starts file watcher + status watcher + sweeper
+6. Create `Server` → starts file/status watchers, sweeper, queue drainer, and an at-most-one startup Local recovery check
 7. Register routes on `http.ServeMux`
 8. Load Vite manifest and register static assets
 9. Optionally configure Tailscale Serve HTTPS for localhost

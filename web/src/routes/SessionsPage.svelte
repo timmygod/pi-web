@@ -21,12 +21,14 @@
   import { SvelteSet, SvelteMap } from 'svelte/reactivity';
   import {
     defaultCreateSession,
+    defaultFetchModels,
     defaultFetchProjects,
     defaultFetchRecent,
     defaultFetchSessions,
     defaultUpdateProject,
     layoutStorageKey,
     normalizeSession,
+    modelKey,
   } from '../index/sessions.js';
 
   const PAGE_SIZE = 100;
@@ -44,6 +46,9 @@
   let recentLocations = $state([]);
   let creating = $state(false);
   let newSessionError = $state('');
+  let newSessionModels = $state([]);
+  let newSessionModelKey = $state('');
+  let newSessionMode = $state('auto');
   let menuOpen = $state(false);
   let projectsOpen = $state(false);
   let projects = $state([]);
@@ -134,10 +139,16 @@
     newSessionOpen = true;
     newSessionPath = '';
     newSessionError = '';
+    newSessionModelKey = '';
+    newSessionMode = 'auto';
     document.body?.classList.add('modal-sheet-open');
     try {
-      const response = await defaultFetchRecent();
-      recentLocations = (response.locations || []).slice(0, 10);
+      const [recentResponse, modelsResponse] = await Promise.all([
+        defaultFetchRecent().catch(() => ({ locations: [] })),
+        defaultFetchModels().catch(() => ({ models: [] })),
+      ]);
+      recentLocations = (recentResponse.locations || []).slice(0, 10);
+      newSessionModels = Array.isArray(modelsResponse.models) ? modelsResponse.models : [];
     } catch {
       recentLocations = [];
     }
@@ -159,7 +170,13 @@
     creating = true;
     newSessionError = '';
     try {
-      const response = await defaultCreateSession(path);
+      const selectedModel = newSessionModels.find(
+        (model) => modelKey(model) === newSessionModelKey,
+      );
+      const response = await defaultCreateSession(path, {
+        mode: newSessionMode,
+        model: selectedModel || null,
+      });
       if (response.ok && response.id) {
         navigate('/session?id=' + encodeURIComponent(response.id));
         return;
@@ -339,6 +356,9 @@
   open={newSessionOpen}
   recent={recentLocations}
   bind:path={newSessionPath}
+  models={newSessionModels}
+  bind:modelKey={newSessionModelKey}
+  bind:mode={newSessionMode}
   {creating}
   error={newSessionError}
   onClose={closeNewSessionModal}
