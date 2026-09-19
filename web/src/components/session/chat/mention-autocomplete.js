@@ -77,7 +77,22 @@ export function setupMentionAutocomplete({
     setActive(0);
   }
 
+  function positionPopup(anchor) {
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    const width = Math.min(rect.width, Math.max(240, (windowImpl?.innerWidth || 600) - 32));
+    let left = rect.left;
+    const maxLeft = Math.max(8, (windowImpl?.innerWidth || 600) - width - 8);
+    if (left + width > maxLeft + 8) left = maxLeft;
+    if (left < 8) left = 8;
+    const bottom = Math.max(8, (windowImpl?.innerHeight || 800) - rect.top + 4);
+    popup.style.setProperty('--slash-popup-left', `${left}px`);
+    popup.style.setProperty('--slash-popup-width', `${width}px`);
+    popup.style.setProperty('--slash-popup-bottom', `${bottom}px`);
+  }
+
   function open() {
+    positionPopup(textarea);
     popup.style.display = 'block';
   }
 

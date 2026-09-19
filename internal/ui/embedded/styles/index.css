@@ -590,6 +590,89 @@ body.modal-sheet-open { overflow: hidden; }
 }
 .new-session-field > span { display: block; margin-bottom: 5px; }
 .new-session-field select { margin-bottom: 0; }
+
+/* Model picker inside the new-session modal: the same search + sectioned
+   list the chat composer uses (web/src/components/session/chat/
+   model-selector.js). Mirrors .pi-chat-model-* rules in session.css. */
+.model-picker {
+    background: var(--input-bg);
+    border: 1px solid var(--dim);
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.model-picker:focus-within { border-color: var(--accent); }
+.model-picker-search {
+    background: var(--body-bg);
+    border: 1px solid var(--dim);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    padding: 8px 10px;
+    outline: none;
+}
+.model-picker-search:focus { border-color: var(--accent); }
+.model-picker-search::placeholder { color: var(--muted, #666); }
+.model-picker-list {
+    max-height: min(320px, 45vh);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.model-picker-list .model-section-label {
+    position: sticky;
+    top: 0;
+    padding: 8px 8px 3px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    background: var(--input-bg);
+    z-index: 1;
+}
+.model-picker-list .model-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 8px 8px;
+    font-size: 12px;
+    font-family: inherit;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    border-radius: 6px;
+    user-select: none;
+}
+.model-picker-list .model-item:hover,
+.model-picker-list .model-item.active { background: rgba(127, 127, 127, 0.14); }
+.model-picker-list .model-item.selected { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.model-picker-list .model-name-wrap {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.model-picker-list .model-star {
+    all: unset;
+    cursor: pointer;
+    padding: 6px 8px;
+    color: var(--muted, #666);
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.model-picker-list .model-star.starred { color: var(--accent); }
+.model-picker-list .model-star .star-icon { width: 14px; height: 14px; }
+@media (pointer: coarse) {
+    .model-picker-list .model-star { padding: 10px 12px; }
+}
 .recent-locations { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .recent-chip {
     border: 1px solid var(--dim);

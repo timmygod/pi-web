@@ -88,6 +88,7 @@ export function renderCommandList(
 
 export function setupSlashCommands({
   documentImpl = document,
+  windowImpl = documentImpl.defaultView,
   sessionId,
   chatApi,
   escapeHtml = String,
@@ -96,6 +97,23 @@ export function setupSlashCommands({
   const popup = documentImpl.getElementById('pi-chat-slash-popup');
   const list = documentImpl.getElementById('pi-chat-slash-list');
   if (!textarea || !popup || !list) return { handleKeydown: () => false };
+
+  // The popup is position:fixed; pin it to the composer textarea so it sits
+  // just above the input regardless of where the composer ends up in the
+  // viewport (mobile keyboards, resize, split layout).
+  function positionPopup(anchor) {
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    const width = Math.min(rect.width, Math.max(240, (windowImpl?.innerWidth || 600) - 32));
+    let left = rect.left;
+    const maxLeft = Math.max(8, (windowImpl?.innerWidth || 600) - width - 8);
+    if (left + width > maxLeft + 8) left = maxLeft;
+    if (left < 8) left = 8;
+    const bottom = Math.max(8, (windowImpl?.innerHeight || 800) - rect.top + 4);
+    popup.style.setProperty('--slash-popup-left', `${left}px`);
+    popup.style.setProperty('--slash-popup-width', `${width}px`);
+    popup.style.setProperty('--slash-popup-bottom', `${bottom}px`);
+  }
 
   let allCommands = [];
   let loaded = false;
@@ -128,6 +146,7 @@ export function setupSlashCommands({
   }
 
   function open() {
+    positionPopup(textarea);
     popup.style.display = 'block';
     render();
     if (!loaded && !loading) {

@@ -12,7 +12,7 @@ describe('ChatSelectorPopups', () => {
     render(ChatSelectorPopups);
 
     expect(document.getElementById('pi-chat-model-popup').className).toBe('pi-chat-model-popup');
-    expect(document.getElementById('pi-chat-model-popup').style.display).toBe('none');
+    expect(document.getElementById('pi-chat-model-close')).toBeTruthy();
     expect(document.getElementById('pi-chat-model-search').getAttribute('autocomplete')).toBe(
       'off',
     );

@@ -46,7 +46,9 @@ describe('SessionHeader', () => {
     await fireEvent.click(container.querySelector('#new-btn'));
     await waitFor(() => expect(container.querySelector('.modal-overlay.visible')).toBeTruthy());
     const fields = container.querySelectorAll('.new-session-field');
-    await waitFor(() => expect(fields[0].querySelector('select').value).toBe('custom\u0000qwen'));
+    await waitFor(() =>
+      expect(fields[0].querySelector('.model-item[data-provider="custom"]')).toBeTruthy(),
+    );
     expect(fields[1].querySelector('option[value="auto"]').textContent).toContain('Local');
 
     await fireEvent.click(container.querySelector('#createBtn'));

@@ -21,6 +21,7 @@ import { createComposerSendState } from './composer-send-state.js';
 import { getComposerStorage } from './composer-storage.js';
 import { navigateInitialChatLeaf } from './initial-navigation.js';
 import { ChatToolbarState } from './chat-toolbar-state.svelte.js';
+import { t } from '../../../shared/i18n.js';
 import { setupChatSubmission } from './chat-submit.js';
 import { setupSteerQueue } from './steer-queue.js';
 import { QueueStore } from './queue-store.svelte.js';
@@ -99,6 +100,7 @@ export function runChatComposer({
     entries,
     chatApi: __piChatApi,
     escapeHtml,
+    t,
     modelSelector: __piModelSelector,
     thinkingSelector: __piThinkingSelector,
     slashSelector: __piSlashSelector,

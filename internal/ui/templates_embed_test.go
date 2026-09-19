@@ -44,6 +44,9 @@ func assertCSSCustomPropertiesDefined(t *testing.T, name, html string) {
 	allowedRuntime := map[string]bool{
 		"pi-chat-composer-height": true,
 		"viewport-height":         true,
+		"slash-popup-left":        true,
+		"slash-popup-width":       true,
+		"slash-popup-bottom":      true,
 	}
 	for _, match := range usedRE.FindAllStringSubmatch(html, -1) {
 		if !defined[match[1]] && !allowedRuntime[match[1]] {

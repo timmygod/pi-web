@@ -2329,12 +2329,22 @@
       box-shadow: 0 0 22px rgba(0, 0, 0, 0.13);
     }
 
+    /* The model picker is fixed to the viewport, but this element normally
+       forms a z-index:1 stacking context below the fixed session header. Lift
+       that context while the picker is open so its search/header row is not
+       hidden behind the session header. */
+    .content-container.model-picker-open {
+      z-index: 1600;
+    }
+
     /* Main content — scrolls independently within #app's fixed height */
     #content {
       flex: 1;
       min-width: 0;
       min-height: 0;
       overflow-y: auto;
+      overflow-x: visible; /* the model picker opens into a fixed full-screen
+                              overlay; keep x overflow open so it isn't clipped */
       padding: calc(52px + 8px) calc(var(--line-height) * 2) var(--line-height);
       display: flex;
       flex-direction: column;
@@ -2445,16 +2455,16 @@
     .model-item {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       width: 100%;
-      padding: 5px 12px;
-      font-size: 11px;
+      padding: 8px 12px;
+      font-size: 12px;
       font-family: inherit;
       background: transparent;
       border: none;
       color: var(--text);
       cursor: pointer;
       text-align: left;
+      user-select: none;
     }
 
     .model-item:hover,
@@ -4418,48 +4428,132 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     }
 
+    /* Full-screen model picker: open/close is toggled via the `open` class
+       (the overlay is a sibling of the composer, so it can't use absolute
+       positioning without escaping #content's overflow). */
     .pi-chat-model-popup {
-      position: absolute;
-      bottom: calc(100% + 4px);
-      left: 0;
-      right: 0;
+      position: fixed;
+      inset: 0;
       background: var(--container-bg, #1e1e2e);
-      border: 1px solid var(--dim);
-      border-radius: 6px;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.3);
-      z-index: 200;
-      display: flex;
+      z-index: 1600;
+      display: none;
       flex-direction: column;
-      max-height: 320px;
     }
-    .pi-chat-model-search {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--dim);
-      color: var(--text);
-      font-size: 11px;
-      font-family: inherit;
-      padding: 8px 10px;
-      outline: none;
+    .pi-chat-model-popup.open { display: flex; }
+    .pi-chat-model-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: max(8px, env(safe-area-inset-top)) 12px 8px;
+      box-sizing: border-box;
       flex-shrink: 0;
     }
+    .pi-chat-model-search {
+      background: var(--input-bg);
+      border: 1px solid var(--dim);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      padding: 10px 14px;
+      outline: none;
+      flex: 1;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .pi-chat-model-search:focus { border-color: var(--accent); }
     .pi-chat-model-search::placeholder { color: var(--muted, #666); }
+    .pi-chat-model-close {
+      all: unset;
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+      padding: 6px 10px;
+      color: var(--muted, #666);
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pi-chat-model-close:hover { color: var(--text); }
+    @media (pointer: coarse) {
+      .pi-chat-model-close { padding: 10px 14px; font-size: 22px; }
+    }
     .pi-chat-model-list {
       overflow-y: auto;
       flex: 1;
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      box-sizing: border-box;
+      -webkit-overflow-scrolling: touch;
+    }
+    .model-section-label {
+      position: sticky;
+      top: 0;
+      padding: 10px 12px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      background: var(--container-bg, #1e1e2e);
+      z-index: 1;
+    }
+    .model-item .model-name-wrap {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .model-star-btn {
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+    /* The star sits in its own hit target, offset from the row, so tapping
+       it never falls into the model row and switches the model. */
+    .model-star {
+      all: unset;
+      cursor: pointer;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: var(--muted, #666);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .model-star:active { color: var(--text); }
+    .model-star.starred { color: var(--accent); }
+    /* Touch: the star hit target is deliberately larger than the glyph so
+       the "no accidental model select" property holds on phones. */
+    @media (pointer: coarse) {
+      .model-star { padding: 10px 14px; font-size: 15px; }
+    }
+    /* Header close button icon (lucide SVG rendered by ChatSelectorPopups.svelte). */
+    .pi-chat-model-close .close-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      vertical-align: middle;
     }
 
     .pi-chat-slash-popup {
-      position: absolute;
-      bottom: calc(100% + 4px);
-      left: 0;
-      right: 0;
+      /* fixed for the same viewport-clipping reason as .pi-chat-model-popup.
+         positionPopup() in slash-command.js / mention-autocomplete.js pins
+         the left/width via the --slash-popup-* custom properties; without
+         them the popup would span the full viewport width. */
+      position: fixed;
+      left: var(--slash-popup-left, 16px);
+      width: var(--slash-popup-width, auto);
+      bottom: var(--slash-popup-bottom, 16px);
+      max-width: calc(100vw - 32px);
       background: var(--container-bg, #1e1e2e);
       border: 1px solid var(--dim);
       border-radius: 6px;
       box-shadow: 0 -4px 16px rgba(0,0,0,0.3);
       z-index: 200;
-      max-height: 320px;
+      max-height: min(320px, calc(100vh - 120px));
+      max-height: min(320px, calc(100dvh - 120px));
       overflow-y: auto;
     }
     .slash-group {
