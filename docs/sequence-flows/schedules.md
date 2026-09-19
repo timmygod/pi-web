@@ -59,13 +59,15 @@ the chat workers and SSE broadcast.
      │── RecordRun(running) ────────────▶│                 │               │
      │── SetLastRun ────────────────────▶│                 │               │
      │── CreateSessionFileWithSettings ───────────────────▶│               │
-     │   (project dir or home; model/thinking as implicit entries)        │
+     │   (project dir or home; implicit model/thinking     │               │
+     │    entries are not restored on an empty session)    │               │
      │◀── filename ──────────────────────────────────────│               │
      │── ResolveByID ────────────────────────────────────▶│               │
      │◀── session UUID + path ───────────│                 │               │
      │── AttachSession(runID, uuid) ────▶│                 │               │
      │                │                  │                 │               │
      │── EnsureWorker(uuid, path) ───────────────────────▶│               │
+     │── SetModel / SetThinkingLevel (when configured) ──▶│               │
      │── Send(uuid, path, {instructions}) ───────────────▶│─── pi runs ──▶│
      │                │                  │                 │               │
      │  (file watcher sees the new .jsonl → broadcasts `new-session`)     │
@@ -104,7 +106,10 @@ that elapsed while the process was down are **skipped** rather than replayed.
 | GET | `/api/schedule/runs?id=` | run log |
 
 The `/schedules` page itself is the SPA shell (served by the catch-all index
-route); the Svelte router renders `SchedulesPage.svelte`.
+route); the Svelte router renders `SchedulesPage.svelte`. Create/update/delete
+(and run-now) broadcast an SSE `schedules` event on `__all__` so an open
+schedules page refetches. Agents can create schedules via `/skill:pi-web-schedule`
+(`pi-web-ctl`); see [skills.md](./skills.md).
 
 ## Push notifications
 

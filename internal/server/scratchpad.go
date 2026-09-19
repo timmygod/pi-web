@@ -3,6 +3,7 @@ package server
 import (
 	"database/sql"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -56,6 +57,7 @@ func (s *Server) handleSaveScratchpad(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		Project string `json:"project"`
 		Content string `json:"content"`
+		Mode    string `json:"mode"`
 	}
 	if !decodeJSONBody(w, r, &body) {
 		return
@@ -66,19 +68,52 @@ func (s *Server) handleSaveScratchpad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	mode := strings.TrimSpace(strings.ToLower(body.Mode))
+	if mode == "" {
+		mode = "replace"
+	}
+	if mode != "replace" && mode != "append" {
+		writeJSONError(w, http.StatusBadRequest, "mode must be replace or append")
+		return
+	}
+
 	if s.db == nil {
 		writeJSONError(w, http.StatusInternalServerError, "database is unavailable")
 		return
 	}
 
-	_, err := s.db.Exec(`INSERT INTO scratchpads (project_path, content, updated_at)
-		VALUES (?, ?, ?)
-		ON CONFLICT(project_path) DO UPDATE SET content=excluded.content, updated_at=excluded.updated_at`,
-		body.Project, body.Content, time.Now())
+	var err error
+	if mode == "append" {
+		_, err = s.db.Exec(`INSERT INTO scratchpads (project_path, content, updated_at)
+			VALUES (?, ?, ?)
+			ON CONFLICT(project_path) DO UPDATE SET
+				content = scratchpads.content || excluded.content,
+				updated_at = excluded.updated_at`,
+			body.Project, body.Content, time.Now())
+	} else {
+		_, err = s.db.Exec(`INSERT INTO scratchpads (project_path, content, updated_at)
+			VALUES (?, ?, ?)
+			ON CONFLICT(project_path) DO UPDATE SET content=excluded.content, updated_at=excluded.updated_at`,
+			body.Project, body.Content, time.Now())
+	}
 	if err != nil {
 		writeJSONError(w, http.StatusInternalServerError, "failed to save scratchpad: "+err.Error())
 		return
 	}
 
-	writeJSON(w, http.StatusOK, map[string]any{"ok": true})
+	content := body.Content
+	if mode == "append" {
+		if stored, lookupErr := s.lookupScratchpad(body.Project); lookupErr == nil {
+			content = stored
+		}
+	}
+	s.notifyScratchpadChanged(body.Project, content)
+	writeJSON(w, http.StatusOK, map[string]any{"ok": true, "content": content})
+}
+
+func (s *Server) notifyScratchpadChanged(project, content string) {
+	payload := map[string]any{"project": project, "content": content}
+	if msg, err := formatSSEJSONEvent("scratchpad", payload); err == nil {
+		s.broadcast(globalSessID, msg)
+	}
 }

@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"os"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -34,6 +36,27 @@ func waitForPending(t *testing.T, w *piRPCWorker, id string) {
 		time.Sleep(time.Millisecond)
 	}
 	t.Fatalf("pending request %q never registered", id)
+}
+
+func TestWorkerDirUsesSessionCWD(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/sess.jsonl"
+	if err := os.WriteFile(path, []byte(`{"type":"session","cwd":`+strconv.Quote(dir)+`}`+"\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if got := workerDir(path); got != dir {
+		t.Fatalf("workerDir = %q, want session cwd %q", got, dir)
+	}
+}
+
+func TestWorkerDirFallsBackToTempWhenCWDMissing(t *testing.T) {
+	path := t.TempDir() + "/sess.jsonl"
+	if err := os.WriteFile(path, []byte(`{"type":"session","cwd":""}`+"\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if got := workerDir(path); got != detachedPiDir() {
+		t.Fatalf("workerDir = %q, want detached dir %q", got, detachedPiDir())
+	}
 }
 
 func TestStatusReportsRunningDuringRecentStreamActivity(t *testing.T) {

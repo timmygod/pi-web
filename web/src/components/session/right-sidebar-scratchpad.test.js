@@ -127,4 +127,22 @@ describe('createScratchpadController', () => {
     expect(statusEl.textContent).toBe('Save failed');
     expect(statusEl.className).toBe('scratchpad-status');
   });
+
+  it('applies remote content when clean and skips when dirty', () => {
+    const { textarea, statusEl } = renderScratchpad('saved');
+    const scratchpad = createScratchpadController({
+      projectPath: '/proj',
+      textarea,
+      statusEl,
+    });
+    scratchpad.adoptCurrentValue();
+
+    expect(scratchpad.applyRemote('from skill')).toBe(true);
+    expect(textarea.value).toBe('from skill');
+
+    textarea.value = 'local edit';
+    expect(scratchpad.isDirty()).toBe(true);
+    expect(scratchpad.applyRemote('ignored')).toBe(false);
+    expect(textarea.value).toBe('local edit');
+  });
 });

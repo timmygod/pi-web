@@ -7,7 +7,9 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -167,6 +169,66 @@ func TestHandleSaveScratchpad(t *testing.T) {
 	sNoDB.handleSaveScratchpad(w5, req5)
 	if w5.Code != http.StatusInternalServerError {
 		t.Fatalf("expected 500 for nil db, got %d", w5.Code)
+	}
+}
+
+func TestHandleSaveScratchpadAppend(t *testing.T) {
+	db := newTestDB(t)
+	s := &Server{db: db}
+
+	body := bytes.NewBufferString(`{"project":"/p","content":"hello"}`)
+	s.handleSaveScratchpad(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, "/api/scratchpad", body))
+
+	body2 := bytes.NewBufferString(`{"project":"/p","content":" world","mode":"append"}`)
+	w := httptest.NewRecorder()
+	s.handleSaveScratchpad(w, httptest.NewRequest(http.MethodPost, "/api/scratchpad", body2))
+	if w.Code != http.StatusOK {
+		t.Fatalf("append status = %d, body %s", w.Code, w.Body.String())
+	}
+	var resp map[string]any
+	if err := json.Unmarshal(w.Body.Bytes(), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp["content"] != "hello world" {
+		t.Errorf("content = %v, want concatenated", resp["content"])
+	}
+	var stored string
+	if err := db.QueryRow("SELECT content FROM scratchpads WHERE project_path = ?", "/p").Scan(&stored); err != nil {
+		t.Fatal(err)
+	}
+	if stored != "hello world" {
+		t.Errorf("stored = %q", stored)
+	}
+}
+
+func TestHandleSaveScratchpadRejectsBadMode(t *testing.T) {
+	s := &Server{db: newTestDB(t)}
+	body := bytes.NewBufferString(`{"project":"/p","content":"x","mode":"merge"}`)
+	w := httptest.NewRecorder()
+	s.handleSaveScratchpad(w, httptest.NewRequest(http.MethodPost, "/api/scratchpad", body))
+	if w.Code != http.StatusBadRequest {
+		t.Fatalf("status = %d, want 400", w.Code)
+	}
+}
+
+func TestHandleSaveScratchpadBroadcastsSSE(t *testing.T) {
+	s := &Server{db: newTestDB(t)}
+	client := s.addClient(globalSessID)
+	defer s.removeClient(client)
+
+	body := bytes.NewBufferString(`{"project":"/p","content":"note"}`)
+	s.handleSaveScratchpad(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, "/api/scratchpad", body))
+
+	select {
+	case msg := <-client.ch:
+		if !strings.Contains(msg, "event: scratchpad") {
+			t.Fatalf("sse = %q", msg)
+		}
+		if !strings.Contains(msg, `"project":"/p"`) {
+			t.Fatalf("sse missing project: %q", msg)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("timed out waiting for scratchpad SSE")
 	}
 }
 

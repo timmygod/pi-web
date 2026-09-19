@@ -79,6 +79,24 @@ You can put anything in your assistant folder that helps pi be more useful:
 
 pi can read files in the folder, so the more context you give it, the better it gets.
 
+## Ask pi-web to do things
+
+After `pi install npm:@ygncode/pi-web@beta`, sessions can talk to pi-web itself.
+Try:
+
+- “Add a schedule at 2am Singapore time to summarize my inbox”
+- “List my pi-web schedules”
+- “Pause the inbox schedule”
+- “Write this down in the notes”
+- “Switch pi-web to dark mode / turn auto-title off”
+
+The bundled **/skill:pi-web-schedule** skill turns that into a real pi-web
+schedule (same ones you edit at `/schedules`). Each firing starts a **new**
+session, so the instructions have to stand alone — “summarize unread mail in
+~/inbox” works; “continue what we were doing” does not.
+
+Schedules only run while pi-web is running.
+
 ---
 
 > 💡 **Tip:** Start simple. Just a few lines about who you are and how you want the assistant to behave. Iterate over time as you learn what works.

@@ -19,3 +19,4 @@ called out in the flow and must remain synchronized with the upstream baseline.
 | [btw.md](./btw.md) | Throwaway "btw" floating scratch-chats attached to a session page |
 | [share.md](./share.md) | Exporting a session to a private GitHub Gist |
 | [schedules.md](./schedules.md) | Cron/preset schedules that auto-create pi sessions and push on completion |
+| [skills.md](./skills.md) | pi skills (`pi-web-ctl`) that call the local HTTP API from a session |

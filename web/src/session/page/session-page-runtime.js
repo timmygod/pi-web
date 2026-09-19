@@ -8,6 +8,8 @@ import * as sidebarApi from '../ui/sidebar.js';
 import * as searchFiltersApi from '../ui/search-filters.js';
 import * as toggleStateApi from '../ui/toggle-state.js';
 import { configureSettingsSync, hydrateSettings } from '../../shared/settings-store.js';
+import { applyRemoteSettings } from '../../shared/settings-live.js';
+import { createAppEvents } from '../../shared/app-events.js';
 import { getSessionRuntime } from '../session-runtime-context.js';
 
 export function startSessionPageRuntime({
@@ -78,8 +80,25 @@ export function startSessionPageRuntime({
   );
 
   const disposeGlobals = setupSessionGlobals({ windowImpl, documentImpl });
+  const settingsEvents = createAppEvents({
+    event: 'settings',
+    EventSourceImpl: windowImpl.EventSource,
+    windowImpl,
+    onEvent: (payload) => {
+      applyRemoteSettings(payload, {
+        storage: windowImpl.localStorage,
+        documentImpl,
+        windowImpl,
+      });
+      ui.toggleController.reload();
+    },
+  });
+  try {
+    settingsEvents.connect();
+  } catch {}
 
   return () => {
+    settingsEvents.cleanup?.();
     disposeGlobals?.();
     contentWiring.dispose?.();
   };

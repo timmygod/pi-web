@@ -182,6 +182,19 @@ func (s *Server) fireScheduleContext(ctx context.Context, sc schedules.Schedule)
 		_ = s.schedules.FailRun(runID, err.Error())
 		return sessionID, fmt.Errorf("ensure worker: %w", err)
 	}
+	// Empty sessions skip history restore, so implicit file entries are ignored.
+	if sc.ModelProvider != "" && sc.ModelID != "" {
+		if err := s.chatSender.SetModel(ctx, sessionID, resolved.Path, sc.ModelProvider, sc.ModelID); err != nil {
+			_ = s.schedules.FailRun(runID, err.Error())
+			return sessionID, fmt.Errorf("set model: %w", err)
+		}
+	}
+	if sc.ThinkingLevel != "" {
+		if err := s.chatSender.SetThinkingLevel(ctx, sessionID, resolved.Path, sc.ThinkingLevel); err != nil {
+			_ = s.schedules.FailRun(runID, err.Error())
+			return sessionID, fmt.Errorf("set thinking level: %w", err)
+		}
+	}
 	if err := s.sendSessionChat(ctx, resolved, chat.Request{Message: sc.Instructions}); err != nil {
 		_ = s.schedules.FailRun(runID, err.Error())
 		return sessionID, fmt.Errorf("send: %w", err)

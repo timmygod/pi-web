@@ -335,8 +335,9 @@ Browser POST /api/scratchpad
            ▼
     server.handleSaveScratchpad
            │
-           ├──▶ Decode JSON body → {"project": "...", "content": "..."}
-           ├──▶ UPSERT into SQLite scratchpads table (INSERT ... ON CONFLICT DO UPDATE)
+           ├──▶ Decode JSON body → {"project": "...", "content": "...", "mode": "replace"|"append"}
+           ├──▶ UPSERT into SQLite (replace is default; append concatenates atomically)
+           ├──▶ Broadcast SSE "scratchpad" on __all__ so an open sidebar can reload
            │
-           └──▶ Return {"ok": true}
+           └──▶ Return {"ok": true, "content": "..."}
 ```

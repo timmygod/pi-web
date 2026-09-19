@@ -119,6 +119,31 @@ function Install-Binary($src, $tag) {
   Info "pi-web $tag installed to $Binary"
 }
 
+function Install-Ctl {
+  if (-not $PSScriptRoot) { return }
+  $src = Join-Path $PSScriptRoot '.pi\skills\common\pi_web.py'
+  if (-not (Test-Path $src)) { return }
+  New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+  $py = Join-Path $InstallDir 'pi-web-ctl.py'
+  Copy-Item $src $py -Force
+  $cmdPath = Join-Path $InstallDir 'pi-web-ctl.cmd'
+  @"
+@echo off
+setlocal
+where python >nul 2>nul && (
+  python "%~dp0pi-web-ctl.py" %*
+  exit /b %ERRORLEVEL%
+)
+where py >nul 2>nul && (
+  py -3 "%~dp0pi-web-ctl.py" %*
+  exit /b %ERRORLEVEL%
+)
+echo pi-web-ctl requires Python 3 >&2
+exit /b 1
+"@ | Set-Content -Path $cmdPath -Encoding ASCII
+  Info "pi-web-ctl installed to $cmdPath"
+}
+
 function Set-EnvFileVar($file, $key, $value) {
   $lines = @()
   if (Test-Path $file) { $lines = @(Get-Content $file) }
@@ -195,6 +220,7 @@ function Main {
 
   $installed = Get-InstalledVersion
   if ((Test-Path $Binary) -and $installed -eq $tag) {
+    Install-Ctl
     Info "Already up-to-date ($tag)."
     Write-Host ''
     return
@@ -207,6 +233,7 @@ function Main {
   if ((Test-Path $Binary) -and -not $inplace) { Stop-PiWeb }
 
   Install-Binary $tmpBinary $tag
+  Install-Ctl
 
   # In-place self-update: pi-web triggered this and restarts itself afterward.
   # Skip env/auto-start setup so we don't kill the npm process running this

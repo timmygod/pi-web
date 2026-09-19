@@ -41,6 +41,14 @@ if (Test-Path $Binary) {
   Skip "binary not found at $Binary"
 }
 Remove-Item "$Binary.old" -Force -ErrorAction SilentlyContinue
+$ctlDir = Split-Path $Binary
+foreach ($name in @('pi-web-ctl', 'pi-web-ctl.py', 'pi-web-ctl.cmd')) {
+  $ctl = Join-Path $ctlDir $name
+  if (Test-Path $ctl) {
+    Info "Removing skill CLI: $ctl"
+    Remove-Item $ctl -Force -ErrorAction SilentlyContinue
+  }
+}
 
 # Remove version file
 $versionFile = Join-Path $HOME '.pi\agent\pi-web-version'

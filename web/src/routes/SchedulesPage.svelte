@@ -35,6 +35,7 @@
     defaultFetchModels,
     defaultFetchRecent,
   } from '../index/schedules.js';
+  import { createAppEvents } from '../shared/app-events.js';
 
   let schedules = $state([]);
   let loading = $state(true);
@@ -98,8 +99,8 @@
     `${String(form.hour).padStart(2, '0')}:${String(form.minute).padStart(2, '0')}`,
   );
 
-  async function refresh() {
-    loading = true;
+  async function refresh({ silent = false } = {}) {
+    if (!silent) loading = true;
     loadError = '';
     try {
       const data = await defaultFetchSchedules();
@@ -107,7 +108,7 @@
     } catch (err) {
       loadError = err.message || String(err);
     } finally {
-      loading = false;
+      if (!silent) loading = false;
     }
   }
 
@@ -123,6 +124,14 @@
         recent = Array.isArray(data.locations) ? data.locations : [];
       })
       .catch(() => {});
+    const events = createAppEvents({
+      event: 'schedules',
+      onEvent: () => {
+        refresh({ silent: true });
+      },
+    });
+    events.connect();
+    return () => events.cleanup();
   });
 
   function openCreate() {
@@ -318,6 +327,14 @@
   function freqLabel(schedule) {
     return describeFrequency(schedule, t);
   }
+
+  // /schedules is reachable from the index and from a session view, so the back
+  // button follows the origin recorded in history state (see backState) and
+  // falls back to the index for direct deep links.
+  const backHref =
+    typeof window !== 'undefined' && typeof window.history.state?.back === 'string'
+      ? window.history.state.back
+      : '/';
 </script>
 
 <!-- eslint-disable svelte/no-at-html-tags -- trusted: Lucide icon SVG from icons.js -->
@@ -325,12 +342,12 @@
 <div class="session-header-bar">
   <div class="session-header-left">
     <a
-      href="/"
+      href={backHref}
       class="session-header-back"
       onclick={(e) => {
         e.preventDefault();
-        navigate('/');
-      }}><span>←</span> {t('session.back')}</a
+        navigate(backHref);
+      }}><span>←</span> {backHref === '/' ? t('session.back') : t('common.back')}</a
     >
   </div>
   <span class="session-header-title">{t('schedules.title')}</span>

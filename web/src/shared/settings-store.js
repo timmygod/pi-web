@@ -110,6 +110,20 @@ export function writeSettings(values, { storage = defaultStorage() } = {}) {
   if (Object.keys(toSync).length > 0) postSettings(toSync);
 }
 
+export function applySettingsFromServer(settings, { storage = defaultStorage() } = {}) {
+  if (!settings || typeof settings !== 'object') return null;
+  for (const key of SERVER_SETTING_KEYS) {
+    if (key in settings && settings[key] != null) {
+      try {
+        storage?.setItem(key, String(settings[key]));
+      } catch {
+        // ignore
+      }
+    }
+  }
+  return settings;
+}
+
 /**
  * Pull server-backed settings from the server and seed the localStorage cache.
  * Call once on page load. Resolves to the settings object (or null on failure).
@@ -124,16 +138,7 @@ export async function hydrateSettings({ fetchImpl = syncFetch, storage = default
     const data = await resp.json();
     const settings = data && data.settings ? data.settings : null;
     if (!settings) return null;
-    for (const key of SERVER_SETTING_KEYS) {
-      if (key in settings && settings[key] != null) {
-        try {
-          storage?.setItem(key, String(settings[key]));
-        } catch {
-          // ignore
-        }
-      }
-    }
-    return settings;
+    return applySettingsFromServer(settings, { storage });
   } catch {
     return null;
   }

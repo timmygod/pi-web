@@ -20,6 +20,7 @@
 - Download a session as JSONL
 - Share static snapshots as secret GitHub Gists
 - `/web`, `/remote`, `/refresh`, `/pi-web token` and `/pi-web set-token` pi extensions for opening sessions, remote QR, session sync, and token management
+- `/skill:pi-web-schedule`, `/skill:pi-web-notes`, `/skill:pi-web-settings` (`pi-web-ctl`) so a session can manage schedules, the project scratchpad, and settings in natural language
 
 ## Choose the session mode
 

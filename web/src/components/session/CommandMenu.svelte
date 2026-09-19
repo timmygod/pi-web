@@ -19,12 +19,13 @@
     ChartColumn,
     BookOpen,
     Send,
+    CalendarClock,
     Settings,
     Tag,
   } from '../../shared/icons.js';
   import * as sidebarApi from '../../session/ui/sidebar.js';
   import { openVersionModal } from '../../shared/version.js';
-  import { navigate } from '../../shared/navigation.js';
+  import { navigate, handleNavClick, backState } from '../../shared/navigation.js';
   import { openSessionPalette } from '../../shared/command-palette-runtime.js';
   import { openModelUsage, openFork, openDiff } from '../../session/session-modals.svelte.js';
   import { showToast } from '../../shared/toast.js';
@@ -68,6 +69,7 @@
       icon: Send,
       label: 'common.telegram',
     },
+    { kind: 'link', href: '/schedules', icon: CalendarClock, label: 'schedules.navTitle' },
     { kind: 'link', href: '/settings', icon: Settings, label: 'common.settings', kbd: '⌘,' },
     { kind: 'version', action: 'version', icon: Tag, label: 'common.version', desktopOnly: true },
   ];
@@ -76,6 +78,11 @@
 
   const clickHidden = (id) => document.getElementById(id)?.click();
   const isMobile = () => sidebarApi.isMobileLayout();
+
+  // Filled in onMount. Footer links call this before SPA navigation so the
+  // popover does not linger if the session page ever stops unmounting
+  // (HomeMenu closes the same way).
+  let closeMenu = () => {};
 
   onMount(() => {
     const menuBtn = document.getElementById('command-menu-btn');
@@ -125,12 +132,13 @@
       if (isMobile()) openMobilePanel();
       else openDesktopPopover();
     };
-    const closeMenu = () => {
+    const hideMenu = () => {
       open = false;
       menuBtn.setAttribute('aria-expanded', 'false');
       closeMobilePanel();
       closeDesktopPopover();
     };
+    closeMenu = hideMenu;
 
     function handleAction(action) {
       switch (action) {
@@ -244,14 +252,15 @@
     const containers = [mobilePanel, desktopPopover].filter(Boolean);
 
     menuBtn.addEventListener('click', onMenuBtnClick);
-    mobileBackdrop?.addEventListener('click', closeMenu);
+    mobileBackdrop?.addEventListener('click', hideMenu);
     document.addEventListener('click', onDocClick);
     document.addEventListener('keydown', onKey);
     containers.forEach((c) => c.addEventListener('click', onContainerClick));
 
     return () => {
+      closeMenu = () => {};
       menuBtn.removeEventListener('click', onMenuBtnClick);
-      mobileBackdrop?.removeEventListener('click', closeMenu);
+      mobileBackdrop?.removeEventListener('click', hideMenu);
       document.removeEventListener('click', onDocClick);
       document.removeEventListener('keydown', onKey);
       containers.forEach((c) => c.removeEventListener('click', onContainerClick));
@@ -283,6 +292,15 @@
             role="menuitem"
             target={item.external ? '_blank' : undefined}
             rel={item.external ? 'noreferrer' : undefined}
+            onclick={(event) => {
+              if (item.external) return;
+              closeMenu();
+              handleNavClick(
+                event,
+                item.href,
+                item.href === '/schedules' ? { state: backState() } : {},
+              );
+            }}
             >{@render label(item)}{#if desktop && item.kbd}<kbd>{item.kbd}</kbd>{/if}</a
           >
         {:else if item.kind === 'version'}

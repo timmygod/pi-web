@@ -6,7 +6,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -234,6 +236,31 @@ func TestGetPostHandlerRejectsOtherMethods(t *testing.T) {
 	}
 	if called {
 		t.Error("get/post handlers should not run for unsupported methods")
+	}
+}
+
+func TestHandleSaveSettingsBroadcastsSSE(t *testing.T) {
+	s := &Server{db: newSettingsTestDB(t)}
+	client := s.addClient(globalSessID)
+	defer s.removeClient(client)
+
+	body := bytes.NewBufferString(`{"settings":{"pi-web-theme":"nord"}}`)
+	w := httptest.NewRecorder()
+	s.handleSaveSettings(w, httptest.NewRequest(http.MethodPost, "/api/settings", body))
+	if w.Code != http.StatusOK {
+		t.Fatalf("status = %d, body %s", w.Code, w.Body.String())
+	}
+
+	select {
+	case msg := <-client.ch:
+		if !strings.Contains(msg, "event: settings") {
+			t.Fatalf("sse = %q", msg)
+		}
+		if !strings.Contains(msg, `"pi-web-theme":"nord"`) {
+			t.Fatalf("sse missing theme: %q", msg)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("timed out waiting for settings SSE")
 	}
 }
 

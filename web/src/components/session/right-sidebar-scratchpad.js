@@ -60,6 +60,23 @@ export function createScratchpadController({
     if (textarea) lastSaved = textarea.value;
   }
 
+  function isDirty() {
+    return !!(textarea && textarea.value !== lastSaved);
+  }
+
+  function applyRemote(content) {
+    if (!textarea) return false;
+    if (isDirty()) return false;
+    const next = content ?? '';
+    // Our own debounced save echoes back over SSE; reassigning value would
+    // move the caret for no reason.
+    if (textarea.value === next) return true;
+    textarea.value = next;
+    lastSaved = next;
+    setStatus('Saved', 'saved');
+    return true;
+  }
+
   function bind() {
     textarea?.addEventListener('input', onInput);
     return () => {
@@ -73,6 +90,8 @@ export function createScratchpadController({
     save,
     setStatus,
     adoptCurrentValue,
+    isDirty,
+    applyRemote,
     bind,
   };
 }

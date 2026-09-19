@@ -91,6 +91,8 @@ Want more than coding? Turn it into a dedicated [personal assistant](personal-as
 | 🔔 **Notification sounds** | Customizable notification chimes for session events — stay in the loop even when pi-web is in another tab. |
 | ⌨️ **Keyboard shortcuts** | Vim-style navigation, quick actions — [full reference →](keyboard-shortcuts.md) |
 | 🤖 **Personal assistant** | Turn pi-web into your own AI assistant that lives on your computer — like OpenClaw or Hermes. [Set it up →](personal-assistant.md) |
+| 🗓️ **Talk to schedules** | From a pi session, say “add a schedule at 2am Singapore time to …” — `/skill:pi-web-schedule`. |
+| 📝 **Talk to notes & settings** | “Write this in the notes” (`/skill:pi-web-notes`) or “switch to dark mode” (`/skill:pi-web-settings`). |
 
 ---
 

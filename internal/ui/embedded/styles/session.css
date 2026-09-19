@@ -2618,7 +2618,9 @@
       border-color: var(--pi-menu-border);
     }
 
-    .session-header-new {
+    .session-header-new,
+    .session-header-schedules,
+    .session-header-projects {
       height: 24px;
       padding: 0 9px 0 7px;
       font-size: 11px;
@@ -2627,13 +2629,16 @@
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      background: var(--accent);
-      color: var(--bg);
-      border: 1px solid var(--accent);
       border-radius: 4px;
       cursor: pointer;
       flex-shrink: 0;
       margin-right: 8px;
+    }
+
+    .session-header-new {
+      background: var(--accent);
+      color: var(--bg);
+      border: 1px solid var(--accent);
       transition: opacity 0.12s;
     }
 
@@ -2647,18 +2652,34 @@
       opacity: 0.85;
     }
 
-    @media (max-width: 900px) {
-      .session-header-new {
-        padding: 0;
-        width: 28px;
-        height: 28px;
-        justify-content: center;
-        gap: 0;
-      }
+    .session-header-schedules,
+    .session-header-projects {
+      background: color-mix(in srgb, var(--surface) 54%, transparent);
+      color: var(--muted);
+      border: 1px solid color-mix(in srgb, var(--dim) 76%, transparent);
+      text-decoration: none;
+      transition: color 0.12s, background 0.12s, border-color 0.12s;
+    }
 
-      .session-header-new-label {
-        display: none;
-      }
+    /* Sits in the left group, which already supplies its own gap. */
+    .session-header-projects {
+      margin-right: 0;
+    }
+
+    .session-header-schedules-icon,
+    .session-header-projects-icon {
+      display: inline-flex;
+      align-items: center;
+      color: var(--accent);
+    }
+
+    .session-header-schedules:hover,
+    .session-header-schedules:active,
+    .session-header-projects:hover,
+    .session-header-projects:active {
+      color: var(--text);
+      background: var(--pi-menu-bg);
+      border-color: var(--pi-menu-border);
     }
 
     .session-header-shortcuts-help {
@@ -2688,6 +2709,22 @@
     }
 
     @media (max-width: 900px) {
+      .session-header-new,
+      .session-header-schedules,
+      .session-header-projects {
+        padding: 0;
+        width: 28px;
+        height: 28px;
+        justify-content: center;
+        gap: 0;
+      }
+
+      .session-header-new-label,
+      .session-header-schedules-label,
+      .session-header-projects-label {
+        display: none;
+      }
+
       .session-header-shortcuts-help {
         display: none;
       }

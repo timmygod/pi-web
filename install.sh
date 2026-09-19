@@ -216,6 +216,26 @@ install_binary() {
   return 0
 }
 
+# Copy the skill CLI next to the binary so `pi-web-ctl` works from any cwd.
+# Missing source (standalone binary-only install) is a no-op — skills ship
+# with the npm package, not the GitHub release tarball.
+install_ctl() {
+  local src="${SRC_DIR}/.pi/skills/common/pi_web.py"
+  if [[ ! -f "$src" ]]; then
+    return 0
+  fi
+  mkdir -p "$INSTALL_DIR"
+  local dest="${INSTALL_DIR}/pi-web-ctl"
+  if [[ ! -w "$INSTALL_DIR" ]]; then
+    sudo cp "$src" "$dest"
+    sudo chmod +x "$dest"
+  else
+    cp "$src" "$dest"
+    chmod +x "$dest"
+  fi
+  info "pi-web-ctl installed to ${dest}"
+}
+
 # ── Fetch config file from repo (for standalone installs) ──────────
 fetch_config() {
   local file="$1"
@@ -409,6 +429,7 @@ main() {
   fi
 
   if ! needs_update "$tag"; then
+    install_ctl
     info "Already up-to-date (${tag})."
     echo ""
     exit 0
@@ -432,11 +453,13 @@ main() {
   # via its own /api/restart. Skip env/service setup so we don't restart (and
   # kill) the npm process running this script, or clobber the service's PATH.
   if [[ -n "${PI_WEB_INPLACE_UPDATE:-}" ]]; then
+    install_ctl
     info "Binary updated to ${tag}; pi-web will restart to apply it."
     echo ""
     exit 0
   fi
 
+  install_ctl
   setup_env
 
   case "$(uname -s)" in

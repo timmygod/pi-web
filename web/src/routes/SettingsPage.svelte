@@ -12,6 +12,8 @@
   import { t } from '../shared/i18n.js';
   import { navigate } from '../shared/navigation.js';
   import { loadSettings, persistSetting } from '../settings/settings-support.js';
+  import { createAppEvents } from '../shared/app-events.js';
+  import { applyRemoteSettings } from '../shared/settings-live.js';
 
   let settings = $state({});
   let savedVisible = $state(false);
@@ -123,10 +125,25 @@
         settings = loaded || {};
       })
       .catch(() => {});
+    const settingsEvents = createAppEvents({
+      event: 'settings',
+      onEvent: (payload) => {
+        const next = applyRemoteSettings(payload, {
+          storage: localStorage,
+          documentImpl: document,
+          windowImpl: window,
+        });
+        if (next) settings = { ...settings, ...next };
+      },
+    });
+    try {
+      settingsEvents.connect();
+    } catch {}
     return () => {
       document.title = previousTitle;
       clearTimeout(savedTimer);
       mq?.removeEventListener('change', updateMobile);
+      settingsEvents.cleanup?.();
     };
   });
 </script>

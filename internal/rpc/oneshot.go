@@ -14,12 +14,17 @@ import (
 // OneShot spawns `pi --mode rpc`, sends a single command, awaits the matching
 // response, and tears the subprocess down. It exists so sessionless RPCs (e.g.
 // get_available_models) don't reimplement spawn/scan/timeout machinery.
+//
+// The subprocess cwd is detached from pi-web's (see detachedPiDir). Extensions
+// still load — including globally installed ones that register models — but
+// project extensions from this checkout are not loaded on top of that copy.
 func OneShot(ctx context.Context, command string, extraFields map[string]any) (json.RawMessage, error) {
 	if _, err := exec.LookPath("pi"); err != nil {
 		return nil, fmt.Errorf("pi executable not found: %w", err)
 	}
 
 	cmd := exec.CommandContext(ctx, "pi", "--mode", "rpc")
+	cmd.Dir = detachedPiDir()
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err

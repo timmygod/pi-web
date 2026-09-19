@@ -51,6 +51,11 @@ remove_binary() {
   else
     skip "binary not found at ${BINARY}"
   fi
+  local ctl="${BINARY%/*}/pi-web-ctl"
+  if [[ -f "$ctl" ]]; then
+    info "Removing skill CLI: ${ctl}"
+    rm -f "$ctl"
+  fi
 }
 
 # ── Remove version file ─────────────────────────────────────────────

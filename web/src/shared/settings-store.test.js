@@ -6,6 +6,7 @@ import {
   writeSetting,
   writeSettings,
   hydrateSettings,
+  applySettingsFromServer,
 } from './settings-store.js';
 
 function fakeStorage() {
@@ -103,5 +104,17 @@ describe('hydrateSettings', () => {
     const storage = fakeStorage();
     const result = await hydrateSettings({ fetchImpl: null, storage });
     expect(result).toBeNull();
+  });
+});
+
+describe('applySettingsFromServer', () => {
+  it('writes known keys without posting', () => {
+    const storage = fakeStorage();
+    const fetchImpl = vi.fn();
+    configureSettingsSync({ fetchImpl });
+    applySettingsFromServer({ 'pi-web-theme': 'light', unknown: 'x' }, { storage });
+    expect(storage.getItem('pi-web-theme')).toBe('light');
+    expect(storage.getItem('unknown')).toBeNull();
+    expect(fetchImpl).not.toHaveBeenCalled();
   });
 });

@@ -88,14 +88,19 @@ export function collectContextUsage(entries = []) {
     const entry = entries[i];
     if (entry?.type !== 'message' || !entry.message) continue;
     const msg = entry.message;
-    if (msg.role === 'assistant' && msg.usage) {
-      contextTokens =
-        msg.usage.totalTokens ||
-        (msg.usage.input || 0) +
-          (msg.usage.output || 0) +
-          (msg.usage.cacheRead || 0) +
-          (msg.usage.cacheWrite || 0);
-      contextKnown = contextTokens > 0;
+    if (msg.role !== 'assistant' || !msg.usage) continue;
+    const total =
+      msg.usage.totalTokens ||
+      (msg.usage.input || 0) +
+        (msg.usage.output || 0) +
+        (msg.usage.cacheRead || 0) +
+        (msg.usage.cacheWrite || 0);
+    // A streaming assistant message can land with an empty/zero usage object
+    // before the provider reports its totals. Skipping it keeps the indicator
+    // on the last message that actually measured the context.
+    if (total > 0) {
+      contextTokens = total;
+      contextKnown = true;
       break;
     }
   }
@@ -159,20 +164,27 @@ function formatLimit(n) {
   return n.toLocaleString();
 }
 
+// `previous` is the snapshot this function last rendered (the controller keeps
+// it). Live updates can arrive with a half-written assistant entry or before the
+// worker has reported a model, so anything missing falls back to the snapshot
+// instead of flickering to 0% or hiding the indicator. Returns the new snapshot.
 export function updateContextUsage({
   documentImpl = document,
   entries = [],
   knownModelLabel = '',
   contextWindows = {},
   positionPopover = () => {},
+  previous = null,
 } = {}) {
   const el = documentImpl.getElementById('pi-chat-context-usage');
-  if (!el) return;
+  if (!el) return previous;
 
   const usage = collectContextUsage(entries);
-  if (!usage.hasCompaction && usage.contextTokens <= 0 && usage.totalIOTokens <= 0) {
+  const contextTokens =
+    usage.contextTokens > 0 ? usage.contextTokens : previous?.contextTokens || 0;
+  if (!usage.hasCompaction && contextTokens <= 0 && usage.totalIOTokens <= 0) {
     el.style.display = 'none';
-    return;
+    return previous;
   }
 
   const lastEntryKey = entryKey(entries[entries.length - 1]);
@@ -185,8 +197,11 @@ export function updateContextUsage({
   delete el.dataset.contextInvalidated;
 
   const { modelName, providerName } = splitModelLabel(knownModelLabel);
-  const limit = getModelContextLimit(modelName, providerName, contextWindows);
-  const percent = Math.min(100, Math.max(0, Math.round((usage.contextTokens / limit) * 100)));
+  const limit =
+    !modelName && previous?.limit
+      ? previous.limit
+      : getModelContextLimit(modelName, providerName, contextWindows);
+  const percent = Math.min(100, Math.max(0, Math.round((contextTokens / limit) * 100)));
 
   const fillPath = el.querySelector('.pi-context-fill');
   const textSpan = el.querySelector('.pi-context-text');
@@ -197,7 +212,7 @@ export function updateContextUsage({
   const formatNumber = (num) => num.toLocaleString();
   el.setAttribute(
     'title',
-    `Click for details (${formatNumber(usage.contextTokens)} / ${formatNumber(limit)} tokens used in context)`,
+    `Click for details (${formatNumber(contextTokens)} / ${formatNumber(limit)} tokens used in context)`,
   );
 
   el.classList.remove('warning', 'danger');
@@ -221,7 +236,7 @@ export function updateContextUsage({
   if (valOutput) valOutput.textContent = formatTokensDetail(usage.outputTokens);
   if (valTotal) valTotal.textContent = formatTokensDetail(usage.totalIOTokens);
 
-  if (usedSpan) usedSpan.textContent = formatTokensDetail(usage.contextTokens);
+  if (usedSpan) usedSpan.textContent = formatTokensDetail(contextTokens);
   if (limitSpan) limitSpan.textContent = formatLimit(limit);
   if (popoverBar) popoverBar.style.width = `${percent}%`;
 
@@ -236,6 +251,8 @@ export function updateContextUsage({
   }
 
   el.style.display = 'inline-flex';
+
+  return { contextTokens, limit };
 }
 
 export function createContextUsageController({
@@ -247,19 +264,30 @@ export function createContextUsageController({
   isCurrentSession = () => true,
 } = {}) {
   let contextWindows = {};
+  let modelsPending = false;
+  let lastShown = null;
 
-  const update = () => {
+  const render = () => {
     if (!isCurrentSession()) return;
-    updateContextUsage({
+    lastShown = updateContextUsage({
       documentImpl,
       entries,
       knownModelLabel: getKnownModelLabel(),
       contextWindows,
       positionPopover,
+      previous: lastShown,
     });
+  };
+  // Hold the first paint until /api/models settles: drawing against the
+  // heuristic fallback limit and then swapping in the registry value makes the
+  // percentage visibly jump.
+  const update = () => {
+    if (modelsPending || !isCurrentSession()) return;
+    render();
   };
 
   if (chatApi && typeof chatApi.listModels === 'function') {
+    modelsPending = true;
     chatApi
       .listModels()
       .then((res) => {
@@ -269,9 +297,12 @@ export function createContextUsageController({
       .then((data) => {
         if (!isCurrentSession()) return;
         contextWindows = buildContextWindows(data.models || []);
-        update();
       })
-      .catch(() => {});
+      .catch(() => {})
+      .then(() => {
+        modelsPending = false;
+        render();
+      });
   }
 
   return {

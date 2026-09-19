@@ -61,6 +61,24 @@ describe('CommandMenu', () => {
     expect(sessionTitle.name).toBe('Old');
   });
 
+  it('closes the actions menu before navigating to /schedules', async () => {
+    const pushState = vi.spyOn(window.history, 'pushState');
+    render(CommandMenu, { props: { sessionId: 's' } });
+    await tick();
+
+    const menuBtn = document.getElementById('command-menu-btn');
+    await fireEvent.click(menuBtn);
+    expect(menuBtn.getAttribute('aria-expanded')).toBe('true');
+
+    const link = document.querySelector('#command-menu-popover a[href="/schedules"]');
+    expect(link).toBeTruthy();
+    expect(link.textContent).toContain('Schedules');
+
+    await fireEvent.click(link);
+    expect(pushState).toHaveBeenCalledWith({ back: '/' }, '', '/schedules');
+    expect(menuBtn.getAttribute('aria-expanded')).toBe('false');
+  });
+
   it('opens model usage via the modal store + the session-list palette runtime', async () => {
     const openPalette = vi.fn();
     render(CommandMenu, { props: { sessionId: 's' } });

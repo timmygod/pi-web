@@ -7,6 +7,8 @@
   import ProjectsModal from '../components/index/ProjectsModal.svelte';
   import SessionsList from '../components/index/SessionsList.svelte';
   import { createStatusEvents } from '../shared/status-events.js';
+  import { createAppEvents } from '../shared/app-events.js';
+  import { applyRemoteSettings } from '../shared/settings-live.js';
   import { openSessionPalette, refreshSessionPalette } from '../shared/command-palette-runtime.js';
   import { setupKeyboardNav } from '../shared/keyboard-nav.js';
   import { matchesAction } from '../shared/keybindings.js';
@@ -16,7 +18,7 @@
     hydrateSettings,
     writeSetting,
   } from '../shared/settings-store.js';
-  import { navigate } from '../shared/navigation.js';
+  import { navigate, backState } from '../shared/navigation.js';
   import { t } from '../shared/i18n.js';
   import { SvelteSet, SvelteMap } from 'svelte/reactivity';
   import {
@@ -269,6 +271,19 @@
     try {
       statusEvents.connect();
     } catch {}
+    const settingsEvents = createAppEvents({
+      event: 'settings',
+      onEvent: (payload) => {
+        applyRemoteSettings(payload, {
+          storage: localStorage,
+          documentImpl: document,
+          windowImpl: window,
+        });
+      },
+    });
+    try {
+      settingsEvents.connect();
+    } catch {}
 
     const keydown = (e) => {
       if (matchesAction('toggle-theme', e)) {
@@ -301,6 +316,7 @@
       window.removeEventListener('keydown', keydown, { capture: true });
       window.removeEventListener('click', click);
       statusEvents.cleanup?.();
+      settingsEvents.cleanup?.();
       if (reloadTimer) clearTimeout(reloadTimer);
     };
   });
@@ -314,7 +330,7 @@
   onSearch={openPalette}
   onToggleMenu={toggleMenu}
   onLayoutChange={setLayout}
-  onSchedules={() => navigate('/schedules')}
+  onSchedules={() => navigate('/schedules', { state: backState() })}
 />
 
 <HomeMenu

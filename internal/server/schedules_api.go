@@ -103,7 +103,9 @@ func (s *Server) handleApiSchedules(w http.ResponseWriter, r *http.Request) {
 			writeJSONError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		writeJSON(w, http.StatusCreated, map[string]any{"schedule": s.withNextRun(created)})
+		out := s.withNextRun(created)
+		s.notifySchedulesChanged("created", out)
+		writeJSON(w, http.StatusCreated, map[string]any{"schedule": out})
 	default:
 		w.Header().Set("Allow", "GET, POST")
 		writeJSONError(w, http.StatusMethodNotAllowed, "method not allowed")
@@ -150,12 +152,15 @@ func (s *Server) handleApiSchedule(w http.ResponseWriter, r *http.Request) {
 			writeJSONError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		writeJSON(w, 0, map[string]any{"schedule": s.withNextRun(updated)})
+		out := s.withNextRun(updated)
+		s.notifySchedulesChanged("updated", out)
+		writeJSON(w, 0, map[string]any{"schedule": out})
 	case http.MethodDelete:
 		if err := s.schedules.Delete(id); err != nil {
 			writeJSONError(w, http.StatusInternalServerError, err.Error())
 			return
 		}
+		s.notifySchedulesChanged("deleted", existing)
 		writeJSON(w, 0, map[string]any{"ok": true})
 	default:
 		w.Header().Set("Allow", "GET, POST, PUT, DELETE")
@@ -193,6 +198,11 @@ func (s *Server) handleApiScheduleRun(w http.ResponseWriter, r *http.Request) {
 		writeJSONError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+	if updated, getErr := s.schedules.Get(id); getErr == nil {
+		s.notifySchedulesChanged("ran", s.withNextRun(updated))
+	} else {
+		s.notifySchedulesChanged("ran", sc)
+	}
 	writeJSON(w, http.StatusAccepted, map[string]any{"ok": true, "sessionId": sessionID})
 }
 
@@ -217,4 +227,13 @@ func (s *Server) handleApiScheduleRuns(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, 0, map[string]any{"runs": runs})
+}
+
+// notifySchedulesChanged tells index/schedules SSE listeners to refetch.
+// The payload is small; the page reloads /api/schedules for canonical state.
+func (s *Server) notifySchedulesChanged(action string, sc schedules.Schedule) {
+	payload := map[string]any{"action": action, "id": sc.ID}
+	if msg, err := formatSSEJSONEvent("schedules", payload); err == nil {
+		s.broadcast(globalSessID, msg)
+	}
 }
