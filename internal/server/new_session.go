@@ -29,15 +29,14 @@ func (s *Server) initializeNewSessionWorker(ctx context.Context, sessionID, sess
 	if s.chatSender == nil {
 		return
 	}
-	// The settings have already been written into the new session file as
-	// implicit entries. Creating/switching the worker should pick them up from
-	// the session history. Do not call SetModel/SetThinkingLevel here: those RPC
-	// calls append visible "Switched to model" entries and duplicate the implicit
-	// initial settings.
+	// Empty sessions do not restore implicit settings into a fresh RPC worker.
+	// Keep the implicit entries as the durable session history, then explicitly
+	// apply them after the final worker has been created so pi does not fall back
+	// to its configured default model.
 	workerCtx, cancel := context.WithTimeout(ctx, 35*time.Second)
 	defer cancel()
 	mode := s.sessionMode(sessionID, settings.ModelProvider, settings.ModelID)
-	if mode.ContextWindow <= 0 {
+	if mode.ContextWindow <= 0 && (settings.ModelProvider == "" || settings.ModelID == "") {
 		if err := s.chatSender.EnsureWorker(workerCtx, sessionID, sessionPath); err != nil {
 			return
 		}
@@ -53,5 +52,15 @@ func (s *Server) initializeNewSessionWorker(ctx context.Context, sessionID, sess
 	if err := s.prepareWorkerMode(sessionID, mode); err != nil {
 		return
 	}
-	_ = s.chatSender.EnsureWorker(workerCtx, sessionID, sessionPath)
+	if err := s.chatSender.EnsureWorker(workerCtx, sessionID, sessionPath); err != nil {
+		return
+	}
+	if settings.ModelProvider != "" && settings.ModelID != "" {
+		if err := s.chatSender.SetModel(workerCtx, sessionID, sessionPath, settings.ModelProvider, settings.ModelID); err != nil {
+			return
+		}
+	}
+	if settings.ThinkingLevel != "" {
+		_ = s.chatSender.SetThinkingLevel(workerCtx, sessionID, sessionPath, settings.ThinkingLevel)
+	}
 }

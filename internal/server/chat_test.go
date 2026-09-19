@@ -240,6 +240,12 @@ func (f *fakeSender) modelSessionID() string {
 	return f.setModelSessionID
 }
 
+func (f *fakeSender) modelSelection() (sessionID, provider, modelID string) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.setModelSessionID, f.setModelProvider, f.setModelID
+}
+
 func (f *fakeSender) thinkingSessionID() string {
 	f.mu.Lock()
 	defer f.mu.Unlock()
@@ -1020,8 +1026,12 @@ func TestHandleNewSessionCopiesSourceModelAndThinking(t *testing.T) {
 		_, sessionID, _ := fake.ensureWorkerInfo()
 		return sessionID == id
 	})
-	if modelID, thinkingID := fake.modelSessionID(), fake.thinkingSessionID(); modelID != "" || thinkingID != "" {
-		t.Fatalf("new session initialization should not append visible setting changes, got setModel=%q setThinking=%q", modelID, thinkingID)
+	waitForCondition(t, time.Second, func() bool {
+		modelSessionID, provider, modelID := fake.modelSelection()
+		return modelSessionID == id && provider == "openai" && modelID == "gpt-5" && fake.thinkingSessionID() == id
+	})
+	if modelSessionID, provider, modelID := fake.modelSelection(); modelSessionID != id || provider != "openai" || modelID != "gpt-5" {
+		t.Fatalf("worker model = (%q, %q, %q), want (%q, openai, gpt-5)", modelSessionID, provider, modelID, id)
 	}
 	projectDir := filepath.Join(root, sessions.EncodeProjectName(projectPath))
 	data, err := os.ReadFile(filepath.Join(projectDir, id))
@@ -1035,6 +1045,32 @@ func TestHandleNewSessionCopiesSourceModelAndThinking(t *testing.T) {
 	if !strings.Contains(content, `"type":"thinking_level_change"`) || !strings.Contains(content, `"thinkingLevel":"high"`) {
 		t.Fatalf("new session file missing implicit thinking setting: %s", content)
 	}
+}
+
+func TestHandleNewSessionAppliesExplicitModelToWorker(t *testing.T) {
+	root := t.TempDir()
+	fake := &fakeSender{}
+	s := &Server{sessionsDir: root, chatSender: fake}
+
+	projectPath := filepath.Join(root, "test-project")
+	body := `{"path":` + jsonString(projectPath) + `,"modelProvider":"anthropic","modelId":"claude-sonnet-4"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/new-session", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	s.handleNewSession(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("status = %d body = %s", w.Code, w.Body.String())
+	}
+	var response map[string]any
+	if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
+		t.Fatal(err)
+	}
+	id, _ := response["id"].(string)
+	waitForCondition(t, time.Second, func() bool {
+		modelSessionID, provider, modelID := fake.modelSelection()
+		return modelSessionID == id && provider == "anthropic" && modelID == "claude-sonnet-4"
+	})
 }
 
 func TestHandleNewSessionWithoutChatSender(t *testing.T) {
