@@ -1,16 +1,24 @@
-ユーザーが pi-web を以下の方法でインストールしています：
+I'll look at the current working directory to understand the project context, though the main task is translating the provided Markdown.
 
-- pi install npm:@timmygod/pi-web-local@beta
+Let me just translate the provided content as requested.
 
-これは自動的に [install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) を実行し、pi をセットアップします。
+> このトラブルシューティングガイドは、ローカルモデル版のためにメンテナンスされています。
+> ローカルデプロイの詳細とアップストリーム同期に関する注記は、
+> [ローカルモデル版の開発](../../docs/dev/local-llm-development.md)と整合させてください。
 
-ユーザーが問題を抱えている場合、install.sh のセットアップが原因である可能性があります。状況を確認し、何が問題を引き起こしているのかをユーザーに正確に伝えてください。そして修正が必要かどうかを尋ねてください。必ずユーザーに確認してください。
+ユーザーは pi-web を以下を介してインストールしています。
 
-ユーザーがモバイルや他のネットワークから pi にアクセスできるようにするには、tailscale を使用して tailscale ネットワーク経由でアクセスする方法が推奨されます。また、ユーザーは tailscale ダッシュボード（https://login.tailscale.com/admin/dns）で HTTPs を有効にする必要があります。
+- pi install npm:@timmygod/pi-web-local
 
-tailscale がインストールされていない場合、または tailscale を使用したくない場合は、`pi-web status` を実行してバイナリパス、バイナリのステータス、およびアプリケーションにアクセスできるローカルエンドポイントを取得できます。ただし、HTTP であるためプッシュ通知は受け取れないことに注意してください。
+これにより、[install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) が自動的に実行され、pi がセットアップされます。
 
-mac では [com.pi-web.plist](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/init/com.pi-web.plist) がセットアップされます。
-linux では [pi-web.service](https://github.com/timmygod/pi-web/blob/main/init/pi-web.service) がセットアップされます。
+ユーザーに問題がある場合は、install.sh のセットアップが原因である可能性があります。何が起きているかをレビューし確認し、問題の正確な原因をユーザーに伝えることができます。修正してほしいかどうかを尋ねてください。必ずユーザーと確認してください。
 
-さらにデバッグして状況を確認する必要がある場合は、こちらを参照してください。
+ユーザーがモバイルやその他のネットワークから pi にアクセスできるようにするため、推奨される方法は tailscale を使用し、tailscale ネットワーク経由でアクセスすることです。その場合、ユーザーは tailscale ダッシュボードで HTTPs を有効にする必要があります - https://login.tailscale.com/admin/dns
+
+tailscale のインストールがない場合、または tailscale を使用したくない場合。`pi-web status` を実行して、バイナリのパス、バイナリのステータス、アプリケーションにアクセスできるローカルエンドポイントを取得できます。ただし、http であるため、プッシュ通知は受信できません。
+
+macOS では [com.pi-web.plist](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/init/com.pi-web.plist) を使用します。
+Linux では [pi-web.service](https://github.com/timmygod/pi-web/blob/main/init/pi-web.service) を使用します。
+
+さらなるデバッグが必要な場合、および何が起きているかを確認する場合に。

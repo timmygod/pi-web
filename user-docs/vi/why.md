@@ -1,30 +1,32 @@
-# Tại sao pi-web?
+# Vì sao chọn pi-web?
 
-Tôi khá là nghiện Claude Code. Tôi luôn sử dụng nó. Nếu không ngồi trước máy tính, tôi lại nghĩ về nó. Tôi cảm thấy như mình chưa đốt đủ token. Đó là những ngày đầu của Claude Code. Và tôi đã nghĩ, tại sao mình không thể tiếp tục từ điện thoại? Tôi đã cài đặt Termius và thực sự không thích nó.
+Tôi hơi bị mê mẩn Claude Code. Tôi luôn dùng nó. Nếu không ngồi trước máy tính, tôi cũng nghĩ về nó. Tôi có cảm giác như mình chưa đốt đủ token. Đó là những ngày đầu của Claude Code. Và tôi tự hỏi, tại sao tôi không thể tiếp tục từ điện thoại? Tôi đã cài đặt Termius nhưng không thực sự thích nó.
 
-Tôi bắt đầu tự tạo và dừng lại khi Claude giới thiệu ứng dụng di động Claude Code của họ.
+Tôi bắt đầu tự tạo cho mình, rồi dừng lại khi Claude ra mắt ứng dụng di động Claude Code của họ.
 
-Rồi tôi bị thoát vị đĩa đệm và thực sự không thể làm được gì nhiều. Thời gian trôi qua và tôi cảm thấy hồi phục một chút và muốn tiếp tục dự án Claude Code qua web/PWA của mình.
+Sau đó tôi bị thoát vị đĩa đệm và không thực sự làm được gì nhiều. Thời gian trôi qua, tôi cảm thấy hồi phục đôi chút và muốn tiếp tục dự án Claude Code qua web/PWA của mình.
 
-Rồi Claude Code bắt đầu cấm sử dụng bên ngoài harness của họ. Và tôi cảm thấy điều đó không đáng.
+Rồi Claude Code bắt đầu cấm việc sử dụng bên ngoài harness của chính họ. Và tôi cảm thấy không còn đáng làm nữa.
 
-Rồi tôi tìm thấy pi.dev và khám phá một chút nhưng chưa thực sự đào sâu. Tôi đã đọc về nó, xem video về nó và quyết định thử hết mình và giờ tôi hoàn toàn say mê pi.
+Sau đó tôi tìm thấy pi.dev và khám phá đôi chút, nhưng chưa thực sự đi sâu. Tôi đã đọc về nó, xem các video về nó và quyết định thử hoàn toàn, và giờ tôi đã hoàn toàn say mê pi.
 
-Vì nó là mã nguồn mở, tôi cảm thấy nó đáng để xây dựng. Tôi cũng có nhiều lựa chọn nhà cung cấp khác nhau. Tôi cũng cảm thấy việc phụ thuộc vào một nhà cung cấp/mô hình như Anthropic/Claude là không bền vững.
+Vì đây là mã nguồn mở, tôi cảm thấy đáng để đầu tư xây dựng. Tôi cũng có thêm các lựa chọn nhà cung cấp khác. Tôi cũng cảm thấy việc phụ thuộc vào một nhà cung cấp/mô hình như Anthropic/Claude không bền vững.
 
-Vì vậy tôi đang xây dựng nó ở đây.
+Vậy nên tôi đang xây dựng nó ở đây.
 
-## Tại sao mô hình cục bộ cần một hồ sơ hoạt động khác
+Phiên bản checkout này được bảo trì như một bản local-model của pi-web. Nó làm theo dự án upstream cho các cải tiến chung, đồng thời giữ việc triển khai cục bộ, tính ổn định ngữ cảnh và kiểm tra mô hình cục bộ trên một tuyến phát hành riêng.
 
-Trải nghiệm pi-web ban đầu là một nền tảng tuyệt vời, nhưng suy luận cục bộ có các chế độ lỗi khác với mô hình được lưu trữ thông thường. Một mô hình cục bộ có thể chậm lại đáng kể khi ngữ cảnh tăng lên, chia sẻ bộ nhớ hạn chế với phần còn lại của máy, dừng lại sau khi chỉ tạo ra suy luận, hoặc mất một quá trình chạy dài do lỗi truyền tải cục bộ tạm thời. Xử lý những trường hợp đó chính xác như lỗi đám mây khiến giao diện người dùng trông tương thích trong khi phiên thực tế vẫn dễ bị tổn thương.
+## Vì sao một mô hình cục bộ cần một hồ sơ vận hành khác
+
+Trải nghiệm pi-web gốc là một nền tảng tuyệt vời, nhưng suy luận cục bộ có các chế độ lỗi khác so với một mô hình được lưu trữ theo kiểu thông thường. Một mô hình cục bộ có thể chậm lại đột ngột khi ngữ cảnh mở rộng, chia sẻ bộ nhớ giới hạn với phần còn lại của máy, dừng lại sau khi chỉ tạo ra nội dung suy luận, hoặc mất một phiên chạy dài do một lỗi truyền tải cục bộ tạm thời. Xử lý những trường hợp đó hoàn toàn giống với lỗi cloud khiến giao diện trông như tương thích trong khi phiên thực sự vẫn mong manh.
 
 Phiên bản này tiếp cận vấn đề theo từng lớp:
 
-1. **Giữ nguyên upstream trước.** Hành vi giao diện người dùng và phiên chia sẻ tiếp tục đến từ pi-web; các thay đổi cục bộ được cô lập phía sau Local Mode hiệu quả.
-2. **Ngăn ngừa trước khi phục hồi.** Ranh giới ngữ cảnh 65% dựa trên phần trăm được thực thi trước các lệnh gọi nhà cung cấp sau đó, bao gồm các lệnh gọi trong vòng lặp công cụ dài.
-3. **Chỉ phục hồi khi có bằng chứng.** Việc tiếp tục tự động bị giới hạn ở các sự cố ngữ cảnh, truyền tải và chỉ-suy-nghĩ được nhận dạng, không phải lỗi xác thực, hạn mức hoặc lỗi nhà cung cấp tùy ý.
-4. **Giới hạn mọi hành động tự chủ.** Các sự cố phục hồi được loại bỏ trùng lặp, tiến độ là bắt buộc trước một lần cứu hộ khác, và khởi động chỉ xem xét tối đa một phiên Local hoạt động gần đây.
-5. **Giữ lối thoát thủ công.** Force Compact tóm tắt thay vì xóa lịch sử, để người dùng có thể cứu phiên mà không giả vờ rằng ngữ cảnh chưa bao giờ tồn tại.
-6. **Bảo vệ tính tương thích đám mây.** Cloud Mode giữ nguyên ngữ nghĩa và điều khiển upstream; các tối ưu hóa mô hình cục bộ không âm thầm định nghĩa lại các phiên đám mây.
+1. **Giữ nguyên upstream trước.** Giao diện và hành vi phiên chung vẫn đến từ pi-web; các thay đổi cục bộ được cô lập phía sau Local Mode hiệu lực.
+2. **Phòng ngừa trước khi phục hồi.** Một ranh giới ngữ cảnh 65% dựa trên phần trăm được áp dụng trước các lần gọi mô hình tiếp theo, bao gồm cả các lần gọi bên trong các vòng lặp tool dài.
+3. **Chỉ phục hồi khi có bằng chứng.** Việc tiếp tục tự động được giới hạn ở các sự cố ngữ cảnh, truyền tải và chỉ-suy-đ Coalition đã được nhận dạng—không bao gồm lỗi xác thực, hạn ngạch hoặc lỗi nhà cung cấp tùy ý.
+4. **Đặt giới hạn cho mọi hành động tự chủ.** Các sự cố phục hồi được khử trùng lặp, phải có tiến trình trước khi cứu hộ tiếp theo, và khi khởi động chỉ xem xét tối đa một phiên Local gần đây đang hoạt động.
+5. **Giữ một lối thoát thủ công.** Force Compact tóm tắt thay vì xóa lịch sử, để người dùng có thể cứu hộ một phiên mà không phải giả vờ rằng ngữ cảnh chưa bao giờ tồn tại.
+6. **Bảo vệ tính tương thích cloud.** Cloud Mode giữ nguyên ngữ nghĩa và các điều khiển của upstream; các tối ưu hóa cho mô hình cục bộ không âm thầm định nghĩa lại các phiên cloud.
 
-Đó là sự khác biệt thực sự trong fork này: nó coi suy luận cục bộ là một môi trường hoạt động riêng biệt, không chỉ đơn thuần là một tên mô hình khác trong danh sách thả xuống.
+Đó chính là sự khác biệt thực sự trong nhánh fork này: nó coi suy luận cục bộ như một môi trường vận hành riêng biệt, chứ không đơn thuần là một tên mô hình khác trong danh sách thả xuống.

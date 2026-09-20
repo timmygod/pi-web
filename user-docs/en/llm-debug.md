@@ -4,7 +4,7 @@
 
 User is installing pi-web via 
 
-- pi install npm:@timmygod/pi-web-local@beta
+- pi install npm:@timmygod/pi-web-local
 
 Which automatically runs [install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) and sets up pi.
 

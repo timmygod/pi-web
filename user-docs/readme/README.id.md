@@ -3,8 +3,8 @@
 <div align="center">
 
 [![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
-[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![npm downloads](https://img.shields.io/npm/dt/@timmygod/pi-web-local?label=downloads&color=2ea043)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -14,120 +14,120 @@
 
 <div align="center">
 
-Kendalikan [pi](https://pi.dev) coding agent Anda dari ponsel, tablet, atau laptop — di mana saja di jaringan Anda, atau dari jarak jauh melalui Tailscale.
+Kendalikan agen coding [pi](https://pi.dev) Anda dari ponsel, tablet, atau laptop — di mana pun dalam jaringan Anda, atau secara jarak jauh melalui Tailscale.
 
-Ini adalah PWA penuh, jadi Anda bisa memasangnya dan menggunakannya seperti aplikasi native di perangkat apa pun. Anggap saja sebagai ruang kerja AI pribadi Anda sendiri — seperti Cowork milik Claude, tetapi dengan model yang berbeda — mengobrol lintas model, menulis kode dari ponsel, atau menjadikannya [asisten pribadi](../en/personal-assistant.md) yang hidup di mesin Anda.
+Ini adalah PWA penuh, sehingga Anda bisa menginstalnya dan menggunakannya seperti aplikasi native di perangkat apa pun. Anggap saja sebagai ruang kerja AI pribadi Anda — seperti Cowork milik Claude, tetapi dengan model yang berbeda — lakukan percakapan lintas model, coding dari ponsel, atau ubah menjadi [asisten pribadi](../en/personal-assistant.md) yang berjalan di mesin Anda.
 
-Jadikan milik Anda: ganti tema dan font, dan gunakan dalam bahasa Anda sendiri — pi-web hadir dengan banyak bahasa dan Anda bisa menambahkan sendiri. Lebih banyak fitur sedang dalam perjalanan, tetapi tidak akan membengkak: apa pun yang tidak Anda perlukan bisa dimatikan di pengaturan.
+Jadikan milik Anda: ganti tema dan font, serta gunakan dalam bahasa Anda sendiri — pi-web hadir dengan beberapa bahasa dan Anda bisa menambah bahasa Anda sendiri. Lebih banyak fitur sedang dalam pengembangan, tetapi tidak akan menjadi berlebihan: apa pun yang tidak Anda butuhkan dapat dimatikan di pengaturan.
 
 </div>
 
 ## Mengapa edisi model lokal ini?
 
-pi-web asli tetap menjadi fondasi upstream untuk fitur dan perbaikan yang dibagikan. Edisi ini mempertahankan pengalaman tersebut, lalu menambahkan lapisan keandalan untuk model yang berjalan di mesin Anda sendiri atau di tempat lain di LAN Anda—di mana pembuatan sering lebih lambat, memori terbatas, dan konteks yang panjang dapat menghentikan sesi yang sebenarnya sehat.
+pi-web asli tetap menjadi fondasi upstream untuk fitur dan perbaikan bersama. Edisi ini mempertahankan pengalaman tersebut, kemudian menambahkan lapisan keandalan untuk model yang berjalan di mesin Anda sendiri atau di tempat lain dalam LAN Anda—di mana proses generasi sering kali lebih lambat, memori terbatas, dan konteks panjang dapat menghentikan sesi yang sebenarnya sehat.
 
-| Area | pi-web upstream | Edisi ini |
+| Area | Upstream pi-web | Edisi ini |
 |------|-----------------|--------------|
-| Kebijakan model/runtime | Perilaku pi-web standar | Mode **Auto / Local / Cloud** per sesi, dengan deteksi lokal yang sadar endpoint dan penggantian manual yang persisten |
-| Penanganan konteks panjang | Perilaku pemadatan pi normal | Local Mode memampatkan secara proaktif pada **65%** dan memeriksa lagi di dalam loop panggilan alat yang panjang sebelum permintaan penyedia lain |
-| Keamanan pemadatan | Ringkasan standar | Titik pemeriksaan bergulir yang terbatas, satu penulisan ulang yang lebih ketat untuk keluaran tidak valid/terbatas, dan deteksi tanpa kemajuan alih-alih pemadatan ulang tanpa akhir |
-| Eksekusi yang terganggu | Penanganan worker dan error normal | Pemulihan terbatas untuk overflow konteks, penghentian hanya-pemikiran, dan gangguan transportasi terpilih, dengan pemutus loop yang persisten |
+| Kebijakan model/runtime | Perilaku pi-web standar | Mode **Auto / Local / Cloud** per sesi, dengan deteksi lokal yang sadar endpoint dan override manual yang persisten |
+| Penanganan konteks panjang | Perilaku kompaksi pi normal | Local Mode mengompak secara proaktif pada **65%** dan mengecek lagi di dalam loop pemanggilan tool yang panjang sebelum permintaan model berikutnya |
+| Keamanan kompaksi | Ringkasan standar | Checkpoint rolling yang dibatasi, satu penulisan ulang yang lebih ketat untuk output tidak valid/terpotong, dan deteksi tanpa kemajuan alih-alih kompaksi ulang yang tak berujung |
+| Jalankan yang terputus | Penanganan worker dan error normal | Pemulihan yang dibatasi untuk overflow konteks, pemberhentian hanya-thinking, dan gangguan transport yang dipilih, dengan pemutus loop yang persisten |
 | Penyelamatan manual | Detail konteks standar | **Force Compact** tetap tersedia sebagai jalur pemulihan eksplisit tanpa menghapus percakapan |
-| Kompatibilitas dan rilis | Proyek dan jalur rilis asli | Langkah pengamanan khusus lokal tetap berada di belakang Local Mode; Cloud Mode mempertahankan perilaku upstream, dan perubahan upstream ditinjau dan dirilis di sini secara independen |
+| Kompatibilitas dan rilis | Proyek dan garis rilis asli | Pengaman khusus-lokal tetap di balik Local Mode; Cloud Mode mempertahankan perilaku upstream, dan perubahan upstream ditinjau dan dirilis di sini secara independen |
 
-Ini bukan penulisan ulang atau pengganti untuk upstream. Ini adalah profil operasional yang dipelihara secara sengaja bagi orang-orang yang menginginkan privasi dan kontrol model lokal tanpa menerima sesi berdurasi panjang yang rapuh. Lihat [panduan pengguna](../en/README.md) untuk alur kerja yang berorientasi pada pengguna dan [pengembangan edisi model lokal](../../docs/dev/local-llm-development.md) untuk implementasi dan kebijakan sinkronisasi.
-
-> [!WARNING]
-> pi-web saat ini dalam tahap **beta**. Banyak hal akan berubah dan rusak!
+Ini bukan penulisan ulang atau pengganti upstream. Ini adalah profil operasi yang dipelihara secara sengaja untuk orang-orang yang menginginkan privasi dan kendali model lokal tanpa menerima sesi jangka panjang yang rapuh. Lihat [panduan pengguna](../en/README.md) untuk alur kerja pengguna dan [pengembangan edisi model-lokal](../../docs/dev/local-llm-development.md) untuk implementasi dan kebijakan sinkronisasi.
 
 > [!TIP]
-> Baru di sini? **[Baca panduan pengguna →](../en/README.md)** untuk tur lengkap fitur, langkah pemasangan, dan tips. ([Bahasa lainnya →](../README.md))
+> Baru di sini? **[Baca panduan pengguna →](../en/README.md)** untuk tur lengkap fitur, langkah instalasi, dan tips. ([Bahasa lain →](../README.md))
 
-## Tangkapan Layar
+## Screenshot
 
 <div align="center">
   <img src="../assets/pi-web-desktop-screenshot.png" alt="Desktop" width="90%" /><br />
   <em>Desktop</em>
   <br /><br />
-  <img src="../assets/pi-web-mobile-screenshot.png" alt="PWA Seluler" width="90%" /><br />
-  <em>PWA Seluler</em>
+  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile" width="90%" /><br />
+  <em>Mobile</em>
 </div>
 
-## Bagaimana Semuanya Bekerja
+## Bagaimana Ini Terintegrasi
 
 ```
- pi (terminal)                 Peramban (ponsel / tablet / laptop)
+ pi (terminal)                 Browser (phone / tablet / laptop)
       │                                │
-      │  menulis JSONL                │  HTTP + SSE
+      │  writes JSONL                  │  HTTP + SSE
       ▼                                ▼
- ~/.pi/agent/sessions/  ←───  pi-web (server HTTP Go)
+ ~/.pi/agent/sessions/  ←───  pi-web (Go HTTP server)
                                       │
                     ┌─────────────────┼─────────────────┐
                     │                 │                 │
               pi --mode rpc      fsnotify         tailscale serve
-            (pekerja obrolan  (muat ulang       (HTTPS jarak jauh
-             per sesi)         langsung)          melalui MagicDNS)
+            (per‑session       (live reload)      (remote HTTPS
+             chat worker)                           via MagicDNS)
 ```
 
-- **pi** menulis JSONL percakapan ke `~/.pi/agent/sessions/` saat bekerja.
-- **pi-web** adalah server Go yang membaca file-file tersebut, merendernya di peramban, dan mengalirkan pembaruan langsung melalui SSE.
-- Pekerja **pi --mode rpc** menangani obrolan yang dimulai dari peramban — satu per sesi, dihentikan setelah 10 menit menganggur.
-- **fsnotify** memantau direktori sesi sehingga peramban memuat ulang dalam hitungan milidetik setelah ada keluaran baru.
-- **Tailscale Serve** mempublikasikan server localhost sebagai titik akhir HTTPS di tailnet Anda.
+- **pi** menuliskan JSONL percakapan ke `~/.pi/agent/sessions/` saat bekerja.
+- **pi-web** adalah server Go yang membaca file-file tersebut, merendernya di browser, dan mengirimkan pembaruan langsung melalui SSE.
+- Worker **pi --mode rpc** menangani chat yang diinisiasi browser — satu per sesi, dihapus setelah 10 menit idle.
+- **fsnotify** memantau direktori sesi sehingga browser dimuat ulang dalam hitungan milidetik dari output baru.
+- **Tailscale Serve** menerbitkan server localhost sebagai endpoint HTTPS di tailnet Anda.
 
-## Pemasangan
+## Instalasi
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-Itu saja — perintah ini mengunduh biner yang cocok, menyiapkan mulai-otomatis, dan mendaftarkan perintah `/web`, `/pi-web`, `/remote`, dan `/refresh`.
+Sekian — ini mengunduh binary yang sesuai, mengatur auto-start, dan mendaftarkan perintah `/web`, `/pi-web`, `/remote`, dan `/refresh`.
 
-Setelah terpasang, buka `http://127.0.0.1:31415` di peramban Anda. Dari pi, gunakan `/web` untuk membuka sesi saat ini di peramban secara instan. Jika Tailscale berjalan di mesin Anda, pi-web secara otomatis mempublikasikan titik akhir HTTPS di tailnet Anda — gunakan `/remote` dari pi untuk mendapatkan kode QR dan URL untuk perangkat apa pun di tailnet Anda.
+Setelah diinstal, buka `http://127.0.0.1:31415` di browser Anda. Dari pi, gunakan `/web` untuk membuka sesi saat ini di browser Anda secara instan. Jika Tailscale berjalan di mesin Anda, pi-web secara otomatis menerbitkan endpoint HTTPS di tailnet Anda — gunakan `/remote` dari pi untuk mendapatkan kode QR dan URL untuk perangkat apa pun di tailnet Anda.
 
-> **Akses jarak jauh di macOS:** Instal dan buka Tailscale secara interaktif, setujui permintaan administrator, lalu masuk. Kemudian jalankan `/pi-web restart`, diikuti dengan `/remote`.
+> **Akses jarak jauh macOS:** Instal dan buka Tailscale secara interaktif, setujui prompt administrator, dan masuk. Kemudian jalankan `/pi-web restart`, diikuti dengan `/remote`.
 
-Untuk pemasangan manual, unduhan biner, atau membangun dari sumber, lihat [user-docs/install.md](../en/install.md).
+Untuk instalasi manual, unduhan binary, atau build dari source, lihat [user-docs/install.md](../en/install.md).
 
 ## Integrasi Pi
 
-Setelah `pi install npm:@timmygod/pi-web-local@beta`, Anda mendapatkan:
+Setelah `pi install npm:@timmygod/pi-web-local`, Anda mendapatkan:
 
 | Perintah | Fungsinya |
-|----------|-----------|
-| `/web` | Buka sesi saat ini di peramban Anda (sadar-SSH: melewati peramban dan hanya menampilkan URL) |
-| `/pi-web` | Tampilkan status, versi, mulai/hentikan/mulai ulang server, atau perbarui |
+|---------|--------------|
+| `/web` | Buka sesi saat ini di browser Anda (SSH-aware: lewati browser dan hanya tampilkan URL) |
+| `/pi-web` | Tampilkan status, versi, mulai/berhenti/mulai ulang server, atau update |
 | `/remote` | Tampilkan kode QR dan URL untuk akses jarak jauh melalui Tailscale |
-| `/refresh` | Tarik pesan baru yang ditulis dari peramban jarak jauh kembali ke sesi terminal |
+| `/refresh` | Ambil pesan baru yang dituliskan dari browser jarak jauh kembali ke sesi terminal |
 
-**Pemberian judul otomatis** sesi sudah terpasang di pi-web dan dikonfigurasi di halaman `/settings`. Ini **aktif secara bawaan** dan memberi nama sesi secara otomatis. Anda dapat memilih:
+**Auto-titling** sesi dibangun di dalam pi-web itu sendiri dan dikonfigurasi di halaman `/settings`. Fitur ini **aktif secara default** dan memberi nama sesi secara otomatis. Anda bisa memilih:
 
-- **Kapan memberi judul** — sekali per sesi, atau pada setiap pesan baru (bawaan).
-- **Model judul** — **heuristik kata bawaan (tanpa AI)** yang gratis dan instan secara bawaan, atau pilih model (mis. yang kecil/cepat) untuk judul yang lebih cerdas yang ditulis oleh model.
+- **Kapan memberi judul** — sekali per sesi, atau pada setiap pesan baru (default).
+- **Model judul** — secara default heuristik kata bawaan yang gratis dan instan (tanpa AI), atau pilih model (misalnya yang kecil/cepat) untuk judul yang lebih cerdas dan ditulis oleh model.
 
-Paket ini juga memasang biner pi-web ke `~/.pi/agent/bin/pi-web` dan menyiapkan mulai-otomatis saat login.
+Paket ini juga menginstal binary pi-web ke `~/.pi/agent/bin/pi-web` dan mengatur auto-start saat login.
 
-## Mulai-Otomatis saat Login
+## Auto-Start Saat Login
 
-Perintah `pi install npm:@timmygod/pi-web-local@beta` menyiapkan ini secara otomatis:
+Perintah `pi install npm:@timmygod/pi-web-local` mengatur ini secara otomatis:
 
 | OS | Mekanisme |
 |----|-----------|
-| macOS | launchd plist di `~/Library/LaunchAgents/com.pi-web.plist` |
-| Linux | systemd user service di `~/.config/systemd/user/pi-web.service` |
+| macOS | plist launchd di `~/Library/LaunchAgents/com.pi-web.plist` |
+| Linux | layanan user systemd di `~/.config/systemd/user/pi-web.service` |
+| Windows | entri Run-key `HKCU` yang menjalankan starter tersembunyi di `~/.config/pi-web/` |
 
 Untuk mengatur token untuk akses jarak jauh, buat `~/.config/pi-web/env`:
 
 ```
-PI_WEB_TOKEN=token-anda-di-sini
+PI_WEB_TOKEN=your-token-here
 ```
 
-Untuk detail lebih lanjut (pengaturan manual, port kustom, binding non-loopback), lihat [user-docs/install.md](../en/install.md).
+Untuk detail lebih lanjut (setup manual, port kustom, bind non-loopback), lihat [user-docs/install.md](../en/install.md).
 
 ## Pengembangan
 
 ```bash
-make setup   # pasang dependensi frontend dan unduh modul Go
-make check   # uji frontend/build + uji Go/vet
-make build   # setup jika diperlukan, bangun frontend, lalu bangun ./pi-web
+make setup   # install frontend deps and download Go modules
+make check   # frontend test/build + Go test/vet
+make build   # setup if needed, build frontend, then build ./pi-web
 ```
+
+Untuk sinkronisasi upstream, pengujian model-lokal, dan alur kerja rilis paralel, lihat [Pengembangan edisi model-lokal](../../docs/dev/local-llm-development.md).

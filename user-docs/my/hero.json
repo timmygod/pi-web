@@ -1,53 +1,53 @@
 {
-  "text": "သင့် pi coding agent ကို အဝေးမှ ထိန်းချုပ်ပါ",
-  "tagline": "pi အတွက် လှပသော web UI နှင့် PWA — သင့် AI coding sessions များကို မည်သည့် browser၊ မည်သည့် စက်ပစ္စည်းမှမဆို ကြည့်ရှုရန်၊ ဖတ်ရှုရန်နှင့် ဆက်လက်လုပ်ဆောင်ရန်။",
+  "text": "သင့် pi coding agent ကို remote-control ပြုလုပ်ပါ",
+  "tagline": "pi အတွက် သင့်ရင့်တင့်တောတဲ့ web UI နဲ့ PWA — AI coding sessions တွေကို browser မှာ ဖတ်ရှုပြီး ဆက်လက်လုပ်ဆောင်ပါ၊ ဘယ် browser မှာမဆို၊ ဘယ် device တွင်မဆို။",
   "actions": [
     {
       "theme": "brand",
-      "text": "စတင်ရန်",
+      "text": "စတင်ပါ",
       "to": "guide"
     },
     {
       "theme": "alt",
-      "text": "ထည့်သွင်းရန်",
+      "text": "သွင်းယူပါ",
       "to": "install"
     },
     {
       "theme": "alt",
-      "text": "GitHub တွင် ကြည့်ရှုရန်",
+      "text": "GitHub မှာကြည့်ပါ",
       "link": "https://github.com/timmygod/pi-web"
     }
   ],
   "features": [
     {
       "icon": "📱",
-      "title": "မည်သည့်နေရာမှမဆို ပြန်လည်စတင်ရန်",
-      "details": "သင့်ဖုန်း၊ တက်ဘလက် သို့မဟုတ် အခြားကွန်ပျူတာမှ session တစ်ခုကို ဆက်လက်လုပ်ဆောင်ပါ။ SSH မလို၊ Termius မလို — browser ဖွင့်လိုက်ရုံပါပဲ။"
+      "title": "ဘယ်နေရာကနေမဆို ဆက်လုပ်ပါ",
+      "details": "ဖုန်း၊ tablet၊ သို့မဟုတ် တခြား computer ကနေ session ဆက်လုပ်ပါ။ SSH မလို၊ Termius မလို — browser ကို ဖွင့်ရုံပါပဲ။"
     },
     {
       "icon": "🗂️",
-      "title": "Session များစွာ ဒက်ရှ်ဘုတ်",
-      "details": " session တစ်ခုတွင် အလုပ်စလုပ်ရင်း အခြား session တစ်ခုကို စောင့်ကြည့်ပါ။ ပရောဂျက်များကြား ရှာဖွေပါ၊ branch အလိုက် စစ်ထုတ်ပါ၊ လိုအပ်သည်များကို လျင်မြန်စွာ ရှာပါ။"
+      "title": "Multi-session dashboard",
+      "details": "တစ် session မှာ လုပ်ငန်းစတင်လိုက်ရင်း တခြား session တစ်ခု stream တွင် စောင့်ကြည့်ပါ။ Projects တစ်ခုလုံးမှာ ရှာဖွေပါ၊ branch ဖြင့် filter လုပ်ပါ၊ လိုအပ်တာအလိုအလျင်တွေ့ပါ။"
     },
     {
       "icon": "🔓",
-      "title": "Open-source နှင့် မော်ဒယ်-ကန့်သတ်မှုမရှိ",
-      "details": "pi သည် အပြည့်အဝ open source ဖြစ်ပြီး provider-agnostic ဖြစ်သည်။ မည်သည့် မော်ဒယ်ကိုမဆို ရွေးချယ်ပါ၊ ကြိုက်သည့်အချိန် ပြောင်းပါ — vendor တစ်ခုတည်းတွင် ချုပ်နှောင်ထားခြင်း မရှိပါ။"
+      "title": "Open-source နှင့် model-agnostic",
+      "details": "pi သည် အလုံးစုံ open source နှင့် provider-agnostic ဖြစ်ပါတယ်။ ဘယ် model မဆိုရွေးပါ၊ ဘယ်တော့မဆိုပြောင်းပါ — vendor တစ်ခုခုအတွက် ပိတ်မိရန် မလိုပါ။"
     },
     {
       "icon": "🔒",
-      "title": "လုံခြုံသော အဝေးထိန်း အသုံးပြုခွင့်",
-      "details": "Built-in token auth ပါဝင်သောကြောင့် သင့် LAN သို့မဟုတ် Tailscale မှတစ်ဆင့် စိတ်ချစွာ ဖွင့်ထားနိုင်ပါသည်။"
+      "title": "လုံခြုံတဲ့ remote access",
+      "details": "token auth တွင် built-in ပါဝင်ထား၍ LAN သို့မဟုတ် Tailscale တို့ကနေ ပြလပ်နိုင်သည်ကို စိုးရိမ်ရန်မလိုပါ။"
     },
     {
       "icon": "📤",
-      "title": "သင့်အလုပ်ကို မျှဝေပါ",
-      "details": "Session များကို static snapshots အဖြစ် သို့မဟုတ် လျှို့ဝှက် GitHub Gists အဖြစ် တစ်ချက်နှိပ်ရုံဖြင့် ထုတ်ယူပါ။"
+      "title": "သင့်လုပ်ချက်များ မျှဝေပါ",
+      "details": "Sessions တွေကို static snapshots သို့မဟုတ် secret GitHub Gists အဖြစ် တစ် click ဖြင့် export လုပ်ပါ။"
     },
     {
       "icon": "🏠",
-      "title": "သင့်ကိုယ်ပိုင် AI အလုပ်ခွင်",
-      "details": "Native PWA အဖြစ် ထည့်သွင်းပြီး သင့်စက်ပေါ်တွင် အမြဲရှိနေသော ကိုယ်ပိုင်လက်ထောက်အဖြစ် ပြောင်းလဲလိုက်ပါ။"
+      "title": "သင့်အနုပညာ AI workspace",
+      "details": "native PWA လိုအတိုင်း သွင်းယူပြီး သင့် machine တွင် နေထိုင်တဲ့ personal assistant အဖြစ် ပြောင်းလဲပါ။"
     }
   ]
 }

@@ -1,10 +1,13 @@
-# Atajos de Teclado
+# Atajos de teclado
+
+Estos atajos se aplican a la edición local-model de pi-web. El comportamiento de
+ejecución específico de la edición está documentado en [Desarrollo de la edición local-model](../../docs/dev/local-llm-development.md).
 
 ## Página de índice (`/`)
 
 ### Desplazamiento de página (estilo vim)
 
-Los mismos atajos estilo vim funcionan en todas las páginas cuando el foco **no** está en un input, textarea o elemento contenteditable.
+Los mismos atajos de estilo vim funcionan en todas las páginas cuando el foco **no** está en un input, textarea o elemento contenteditable.
 
 | Atajo | Acción |
 |----------|--------|
@@ -12,24 +15,24 @@ Los mismos atajos estilo vim funcionan en todas las páginas cuando el foco **no
 | `k` | Desplazar hacia arriba 300px |
 | `g g` | Desplazar al inicio de la página |
 | `G` (Shift+G) | Desplazar al final de la página |
-| `Escape` | Quitar el foco del input activo para que funcione la navegación j/k |
+| `Escape` | Quitar el foco del input activo para que la navegación con j/k funcione |
 
-### Comandos de índice
+### Comandos del índice
 
 | Atajo | Contexto | Acción |
 |----------|---------|--------|
-| `⌘K` / `Ctrl+K` | Nivel de página | Abrir paleta de búsqueda/sesiones |
-| `⌘⇧L` / `Ctrl+Shift+L` | Nivel de página | Alternar tema del sistema (claro/oscuro) |
-| `Escape` | Nivel de página | Cerrar paleta, menú o modal |
-| `Enter` | Campo de ruta de nueva sesión | Crear nueva sesión |
+| `⌘K` / `Ctrl+K` | Nivel de página | Abrir el panel de búsqueda/sesiones |
+| `⌘⇧L` / `Ctrl+Shift+L` | Nivel de página | Alternar el tema del sistema (claro/oscuro) |
+| `Escape` | Nivel de página | Cerrar el panel, menú o modal |
+| `Enter` | Input de ruta de nueva sesión | Crear nueva sesión |
 
-> `⌘K` / `Ctrl+K` también es el atajo de Chrome "enfocar barra de direcciones". El navegador puede interceptarlo a menos que el foco esté dentro de un campo de texto.
+> `⌘K` / `Ctrl+K` también es el atajo de Chrome para "enfocar la barra de direcciones". El navegador puede interceptarlo a menos que el foco esté dentro de un input de texto.
 
 ## Página de detalle de sesión (`/session?id=...`)
 
 ### Desplazamiento de página (estilo vim)
 
-Estos funcionan tanto en páginas de índice como de sesión cuando el foco **no** está en un input, textarea o elemento contenteditable.
+Estos funcionan tanto en la página de índice como en la de sesión cuando el foco **no** está en un input, textarea o elemento contenteditable.
 
 | Atajo | Acción |
 |----------|--------|
@@ -38,48 +41,48 @@ Estos funcionan tanto en páginas de índice como de sesión cuando el foco **no
 | `g g` | Desplazar al inicio de la página |
 | `G` (Shift+G) | Desplazar al final de la página |
 | `I` (Shift+I) | Enfocar el textarea del compositor de chat |
-| `Escape` | Quitar el foco del input activo para que funcione la navegación j/k |
+| `Escape` | Quitar el foco del input activo para que la navegación con j/k funcione |
 
 ### Barra lateral y navegación
 
 | Atajo | Contexto | Acción |
 |----------|---------|--------|
-| `⌘B` / `Ctrl+B` | Nivel de página | Alternar visibilidad de la barra lateral |
-| `⌘K` / `Ctrl+K` | Nivel de página | Abrir paleta de lista de sesiones |
+| `⌘B` / `Ctrl+B` | Nivel de página | Alternar la visibilidad de la barra lateral |
+| `⌘K` / `Ctrl+K` | Nivel de página | Abrir el panel de lista de sesiones |
 | `⌘T` / `Ctrl+T` | Nivel de página | Nueva sesión |
-| `⌘⇧L` / `Ctrl+Shift+L` | Nivel de página | Alternar tema del sistema (claro/oscuro) |
-| `⌘⇧N` / `Ctrl+Shift+N` | Nivel de página | Alternar barra lateral de bloc de notas |
+| `⌘⇧L` / `Ctrl+Shift+L` | Nivel de página | Alternar el tema del sistema (claro/oscuro) |
+| `⌘⇧N` / `Ctrl+Shift+N` | Nivel de página | Alternar la barra lateral de borrador / notas |
 
-> `⌘K` y `⌘T` también son atajos del navegador (enfocar barra de direcciones / nueva pestaña). El navegador puede interceptarlos a menos que el foco esté dentro de un campo de texto.
+> `⌘K` y `⌘T` también son atajos del navegador (enfocar la barra de direcciones / nueva pestaña). El navegador puede interceptarlos a menos que el foco esté dentro de un input de texto.
 
 ### Compositor de chat
 
 | Atajo | Contexto | Acción |
 |----------|---------|--------|
-| `Enter` | Textarea de chat | Enviar mensaje |
-| `Shift+Enter` | Textarea de chat | Insertar nueva línea |
-| `Shift+Tab` | Textarea de chat | Cambiar al siguiente nivel de pensamiento (`off` → `minimal` → … → `xhigh` → `off`) |
-| `Ctrl+I` / `Ctrl+L` | Textarea de chat | Abrir ventana emergente de selector de modelo (escribe para filtrar, Enter para seleccionar, el foco vuelve al textarea) |
+| `Enter` | Textarea del chat | Enviar mensaje |
+| `Shift+Enter` | Textarea del chat | Insertar salto de línea |
+| `Shift+Tab` | Textarea del chat | Alternar al siguiente nivel de pensamiento (`off` → `minimal` → … → `xhigh` → `off`) |
+| `Ctrl+I` / `Ctrl+L` | Textarea del chat | Abrir la ventana emergente del selector de modelo (escribir para filtrar, Enter para seleccionar, el foco vuelve al textarea) |
 
-### Alternancia de visibilidad de entradas
-
-| Atajo | Contexto | Acción |
-|----------|---------|--------|
-| `t` | Cuando el foco **no** está en un input/textarea | Alternar visibilidad de pensamiento |
-| `o` | Cuando el foco **no** está en un input/textarea | Alternar visibilidad de herramientas |
-| `p` | Cuando el foco **no** está en un input/textarea | Alternar salidas de herramientas |
-
-### Paletas, menús y hojas
+### Alternadores de visibilidad de entradas
 
 | Atajo | Contexto | Acción |
 |----------|---------|--------|
-| `Escape` | Nivel de página | Cerrar cualquier paleta, menú u hoja abierta |
-| `⌘K` / `Ctrl+K` | Nivel de página | Abrir paleta de lista de sesiones |
-| `ArrowUp` / `ArrowDown` | Paleta de lista de sesiones | Navegar resultados de sesiones |
-| `Enter` | Paleta de lista de sesiones | Abrir la sesión seleccionada (o la primera) |
-| `ArrowUp` / `ArrowDown` | Ventana emergente de selector de modelo | Navegar lista de modelos |
-| `Enter` | Ventana emergente de selector de modelo | Seleccionar modelo resaltado |
-| `ArrowUp` / `ArrowDown` | Modal de bifurcación | Navegar mensajes |
+| `t` | Cuando el foco **no** está en un input/textarea | Alternar la visibilidad del pensamiento |
+| `o` | Cuando el foco **no** está en un input/textarea | Alternar la visibilidad de las herramientas |
+| `p` | Cuando el foco **no** está en un input/textarea | Alternar las salidas de herramientas |
+
+### Paneles, menús y hojas
+
+| Atajo | Contexto | Acción |
+|----------|---------|--------|
+| `Escape` | Nivel de página | Cerrar cualquier panel, menú o hoja abierta |
+| `⌘K` / `Ctrl+K` | Nivel de página | Abrir el panel de lista de sesiones |
+| `ArrowUp` / `ArrowDown` | Panel de lista de sesiones | Navegar por los resultados de sesiones |
+| `Enter` | Panel de lista de sesiones | Abrir la sesión seleccionada (o la primera) |
+| `ArrowUp` / `ArrowDown` | Ventana emergente del selector de modelo | Navegar por la lista de modelos |
+| `Enter` | Ventana emergente del selector de modelo | Seleccionar el modelo resaltado |
+| `ArrowUp` / `ArrowDown` | Modal de bifurcación | Navegar por los mensajes |
 | `Enter` | Modal de bifurcación | Bifurcar desde el mensaje resaltado |
-| `Tab` | Hoja a pantalla completa | Alternar foco dentro de la hoja |
+| `Tab` | Hoja a pantalla completa | Alternar el foco dentro de la hoja |
 | `Escape` | Hoja a pantalla completa | Cerrar la hoja |

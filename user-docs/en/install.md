@@ -50,7 +50,7 @@ settles, so the mode shown in the UI always matches the policy actually in use.
 ### Pi package (recommended)
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
 This single command:
@@ -68,16 +68,16 @@ On Linux, auto-start is configured as a user systemd service at `~/.config/syste
 To install only for a specific project (shared with your team via `.pi/settings.json`):
 
 ```bash
-pi install -l npm:@timmygod/pi-web-local@beta
+pi install -l npm:@timmygod/pi-web-local
 ```
 
 Then restart pi (or run `/reload`), and use `/web`, `/pi-web`, `/remote`, `/refresh`. Manage your access token with `/pi-web token` and `/pi-web set-token`.
 
-If npm aborts with `ENOTEMPTY` while renaming `@timmygod/pi-web-local`, remove npm's stale hidden backup directories and reinstall the beta channel:
+If npm aborts with `ENOTEMPTY` while renaming `@timmygod/pi-web-local`, remove npm's stale hidden backup directories and reinstall the package:
 
 ```bash
 rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-*
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
 ### Quick install (no build tools needed)
@@ -190,7 +190,7 @@ multi-instance mode.
 ## Uninstall
 
 ```bash
-pi remove npm:@timmygod/pi-web-local@beta
+pi remove npm:@timmygod/pi-web-local
 ```
 
 This runs the package `preuninstall` script (`uninstall.sh`, or `uninstall.ps1`

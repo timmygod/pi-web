@@ -16,14 +16,16 @@ The two lines are intentionally related but independent:
 
 ## Repository setup
 
-Keep the original project as an `upstream` remote and your maintained fork as
-`origin`:
+Use this independent repository as `origin`:
 
 ```bash
 git remote -v
-git remote add upstream https://github.com/ygncode/pi-web.git  # once, if absent
-git fetch --prune upstream
+git fetch --prune origin
 ```
+
+The project no longer keeps or publishes a fixed upstream repository address.
+Any future source imports must be reviewed and configured explicitly by the
+maintainer.
 
 Use a dedicated branch for local-model work. Do not develop directly on the
 temporary branch used to import upstream changes.

@@ -1,16 +1,20 @@
+> Panduan masalah ini dijaga untuk edisi model-tempatan. Pastikan
+> butiran penempatan tempatan dan nota penyegerakan hulu (upstream) selari dengan
+> [Pembangunan edisi model-tempatan](../../docs/dev/local-llm-development.md).
+
 Pengguna sedang memasang pi-web melalui 
 
-- pi install npm:@timmygod/pi-web-local@beta
+- pi install npm:@timmygod/pi-web-local
 
-Yang mana ia menjalankan [install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) secara automatik dan menyediakan pi.
+Yang secara automatik menjalankan [install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) dan menyiapkan pi.
 
-Jika pengguna menghadapi masalah, ia mungkin disebabkan oleh persediaan install.sh yang menyebabkan masalah. Anda boleh menyemak dan memeriksa apa yang berlaku serta memberitahu pengguna apa sebenarnya yang menyebabkan masalah. Dan tanya jika mereka mahu anda membetulkannya. Sentiasa sahkan dengan pengguna.
+Jika pengguna menghadapi masalah, ia mungkin disebabkan oleh penyediaan install.sh. Anda boleh semak apa yang berlaku dan beritahu pengguna apa yang tepat sekali menyebabkan masalah tersebut. Kemudian tanya sama ada mereka ingin anda memperbaikinya. Sentiasa sahkan dengan pengguna.
 
-Untuk membolehkan pengguna mengakses pi dalam telefon bimbit atau rangkaian lain mereka, cara yang disyorkan adalah menggunakan tailscale dan mengaksesnya dari rangkaian tailscale. Pengguna juga perlu mendayakan HTTPS dalam papan pemuka tailscale mereka - https://login.tailscale.com/admin/dns
+Agar pengguna dapat mengakses pi pada telefon mudah alih mereka atau rangkaian lain. Cara yang disyorkan ialah menggunakan tailscale dan mengaksesnya daripada rangkaian tailscale. Pengguna juga perlu mengaktifkan HTTPs dalam dasbor tailscale mereka - https://login.tailscale.com/admin/dns
 
-Jika mereka tidak mempunyai tailscale yang dipasang atau tidak mahu menggunakan tailscale, mereka boleh menjalankan `pi-web status` dan mendapatkan laluan binari, status binari dan titik akhir setempat yang boleh mereka gunakan untuk mengakses aplikasi. Tetapi perlu diingat, mereka tidak akan dapat menerima pemberitahuan tolak kerana ia menggunakan http.
+Jika mereka tidak memasang tailscale atau tidak ingin menggunakan tailscale. Mereka boleh menjalankan `pi-web status` dan mendapatkan laluan binary, status binary dan titik akhir tempatan (local endpoint) yang boleh digunakan untuk mengakses aplikasi. Walau bagaimanapun, perlu diberi perhatian bahawa mereka tidak akan dapat menerima notifikasi dorong (push notification) kerana ia menggunakan http.
 
-Dalam mac, ia disediakan sebagai [com.pi-web.plist](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/init/com.pi-web.plist)
-Dalam linux, ia disediakan sebagai [pi-web.service](https://github.com/timmygod/pi-web/blob/main/init/pi-web.service)
+Pada macOS, ia menggunakan [com.pi-web.plist](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/init/com.pi-web.plist).
+Pada Linux, ia menggunakan [pi-web.service](https://github.com/timmygod/pi-web/blob/main/init/pi-web.service).
 
-Sekiranya anda perlu menyahpepijat lebih lanjut dan melihat apa yang berlaku.
+Jika anda perlu menyahpepijat (debug) selanjutnya dan melihat apa yang berlaku.

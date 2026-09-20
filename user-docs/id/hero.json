@@ -1,15 +1,15 @@
 {
-  "text": "Kendalikan dari jarak jauh agen coding pi Anda",
-  "tagline": "UI web dan PWA yang indah untuk pi — jelajahi, baca, dan lanjutkan sesi coding AI Anda dari browser apa pun, di perangkat apa pun.",
+  "text": "Kendalikan agen coding pi Anda dari jarak jauh",
+  "tagline": "UI web dan PWA yang indah untuk pi — jelajahi, baca, dan lanjutkan sesi coding AI Anda dari browser mana pun, di perangkat apa pun.",
   "actions": [
     {
       "theme": "brand",
-      "text": "Mulai",
+      "text": "Mulai Sekarang",
       "to": "guide"
     },
     {
       "theme": "alt",
-      "text": "Pasang",
+      "text": "Instal",
       "to": "install"
     },
     {
@@ -21,33 +21,33 @@
   "features": [
     {
       "icon": "📱",
-      "title": "Lanjutkan dari mana saja",
+      "title": "Lanjutkan dari mana pun",
       "details": "Lanjutkan sesi dari ponsel, tablet, atau komputer lain. Tanpa SSH, tanpa Termius — cukup buka browser Anda."
     },
     {
       "icon": "🗂️",
       "title": "Dasbor multi-sesi",
-      "details": "Mulai pekerjaan di satu sesi sambil memantau sesi lain. Cari di seluruh proyek, filter berdasarkan cabang, temukan yang Anda butuhkan dengan cepat."
+      "details": "Mulai kerja dalam satu sesi sambil mengamati streaming sesi lainnya. Cari lintas proyek, filter berdasarkan branch, temukan apa yang Anda butuhkan dengan cepat."
     },
     {
       "icon": "🔓",
-      "title": "Sumber terbuka & agnostik model",
-      "details": "pi sepenuhnya sumber terbuka dan agnostik penyedia. Pilih model apa pun, ganti kapan pun Anda suka — Anda tidak terkunci pada satu vendor."
+      "title": "Open-source & model-agnostic",
+      "details": "pi sepenuhnya open source dan tidak terikat pada provider. Pilih model apa pun, ganti kapan pun Anda mau — Anda tidak terkunci pada vendor tertentu."
     },
     {
       "icon": "🔒",
       "title": "Akses jarak jauh yang aman",
-      "details": "Auth token bawaan sehingga Anda bisa mengeksposnya di LAN atau melalui Tailscale tanpa khawatir."
+      "details": "Token auth bawaan sehingga Anda dapat membuka aksesnya di LAN atau melalui Tailscale tanpa khawatir."
     },
     {
       "icon": "📤",
-      "title": "Bagikan hasil kerja Anda",
+      "title": "Bagikan pekerjaan Anda",
       "details": "Ekspor sesi sebagai snapshot statis atau GitHub Gist rahasia dalam satu klik."
     },
     {
       "icon": "🏠",
       "title": "Ruang kerja AI pribadi Anda",
-      "details": "Pasang seperti PWA native dan ubah menjadi asisten pribadi yang tinggal di mesin Anda."
+      "details": "Instal seperti PWA native dan jadikan asisten pribadi yang hidup di mesin Anda."
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "text": "Controla remotamente tu agente de codificación pi",
+  "text": "Controla a distancia tu agente de código pi",
   "tagline": "Una hermosa interfaz web y PWA para pi — explora, lee y continúa tus sesiones de codificación con IA desde cualquier navegador, en cualquier dispositivo.",
   "actions": [
     {
@@ -21,18 +21,18 @@
   "features": [
     {
       "icon": "📱",
-      "title": "Retoma desde cualquier lugar",
+      "title": "Reanuda desde cualquier lugar",
       "details": "Continúa una sesión desde tu teléfono, tableta u otra computadora. Sin SSH, sin Termius — solo abre tu navegador."
     },
     {
       "icon": "🗂️",
       "title": "Panel de múltiples sesiones",
-      "details": "Inicia trabajo en una sesión mientras observas otra transmitiendo. Busca entre proyectos, filtra por rama, encuentra lo que necesitas rápido."
+      "details": "Inicia trabajo en una sesión mientras observas otra en streaming. Busca entre proyectos, filtra por rama y encuentra lo que necesitas rápidamente."
     },
     {
       "icon": "🔓",
-      "title": "Código abierto y compatible con cualquier modelo",
-      "details": "pi es completamente de código abierto e independiente del proveedor. Elige cualquier modelo, cambia cuando quieras — no estás atado a un proveedor."
+      "title": "Código abierto e independiente de modelos",
+      "details": "pi es completamente de código abierto e independiente del proveedor. Elige cualquier modelo, cámbialo cuando quieras — no estás atado a un proveedor."
     },
     {
       "icon": "🔒",
@@ -42,11 +42,11 @@
     {
       "icon": "📤",
       "title": "Comparte tu trabajo",
-      "details": "Exporta sesiones como instantáneas estáticas o Gists secretos de GitHub en un solo clic."
+      "details": "Exporta sesiones como instantáneas estáticas o como Gists privados de GitHub con un clic."
     },
     {
       "icon": "🏠",
-      "title": "Tu espacio de trabajo personal de IA",
+      "title": "Tu espacio de trabajo de IA personal",
       "details": "Instálalo como una PWA nativa y conviértelo en un asistente personal que vive en tu máquina."
     }
   ]

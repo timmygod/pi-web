@@ -1,4 +1,4 @@
-# pi-web မှကြိုဆိုပါ၏ 🖥️
+# pi-web သို့ အဆိုထည့်ပါ 🖥️
 
 <div align="center">
 
@@ -6,118 +6,120 @@
 
 </div>
 
-**pi-web ကိုစမ်းကြည့်ဖို့စဉ်းစားနေလား။ သွားလိုက်ပါ — သင်ချစ်မိသွားပါလိမ့်မယ်။**
+**pi-web ကို စမ်းကြည့်ဖို့ စဉ်းစားနေပါသလား? ဝိုင်းပါ — အရူးသွပ်သွပ် ရှိလာပါလိမ့်မယ်။**
 
-pi-web သည် [pi](https://pi.dev) အတွက် လှပသော web UI နှင့် PWA တစ်ခုဖြစ်သည် — open-source AI coding agent ဖြစ်သည်။ ၎င်းသည် သင့်အား မည်သည့် browser မှမဆို၊ မည်သည့် device ပေါ်တွင်မဆို သင်၏ pi sessions များကို ရှာဖွေကြည့်ရှုရန်၊ ဖတ်ရှုရန်နှင့် ဆက်လက်လုပ်ဆောင်ရန် ခွင့်ပြုပေးပြီး နေရာတိုင်းတွင် စဉ်းစားထားသော feature များပါရှိသည်။
+pi-web သည် [pi](https://pi.dev) — open-source AI coding agent အတွက် အလှကောင်းကောင်း web UI နှင့် PWA တစ်ခုဖြစ်ပါသည်။ ကိုယ်တိုင်၏ pi session များကို browser မည်သည့်စက်မှမဆို၊ device မည်သည့်အလက်နဲ့မဆို လေ့လာရန်၊ ဖတ်ရှုရန်၊ ဆက်လက်လုပ်ဆောင်ရန် ကြိုတင်စဉ်းစားထားသော features များဖြင့် ဖြစ်စေပါသည်။
 
-## ဤထုတ်ဝေမှုတွင် မည်သည့်အရာ ကွာခြားသနည်း?
+## ဤ version ထဲမှာ ဘာကွဲပြားသလဲ?
 
-ဤ repository သည် upstream ၏ pi-web interface နှင့် မျှဝေထားသော လုပ်ဆောင်ချက်များကို ထိန်းသိမ်းထားသော်လည်း ရွေးချယ်ထားသော မော်ဒယ်သည် ဒေသတွင်း သို့မဟုတ် သင့်၏ LAN တွင် လည်ပတ်သည့်အခါ session များကို ကာကွယ်ပုံကို ပြောင်းလဲထားသည်။
+ဤ repository သည် upstream pi-web interface နှင့် shared features များကို ထိန်းသိမ်းထားပြီး၊ selected model ကို လက်ရှိပတ်ဝန်းကျင်တွင် သို့မဟုတ် ကိုယ်တိုင်၏ LAN တွင် လည်ပတ်စဉ် session များကို how to protect သည်ကို ပြောင်းလဲထားပါသည်။
 
-- **Session တစ်ခုစီအတွက် runtime မူဝါဒကို ရွေးချယ်ပါ။** Provider metadata ရှင်းလင်းပါက Auto သည် ဒေသတွင်း/LAN endpoint များကို ထောက်လှမ်းသည်; Local နှင့် Cloud တို့သည် ပုံမှန် manual override များ ဖြစ်ကြသည်။
-- **Context ပျက်စီးမှုကို စောစောစီးစီး တားဆီးပါ။** Local Mode သည် အသုံးပြုမှု 65% တွင် compact လုပ်ပြီး provider ၏ နောက်တစ်ကြိမ် တောင်းဆိုမှုမတိုင်မီ tool call များကြားတွင် ပြန်လည်စစ်ဆေးသည်။
-- **အကျဉ်းချုပ်များကို ကန့်သတ်ထားပါ။** Rolling checkpoint များသည် အဟောင်းအကျဉ်းချုပ်ကို အဆုံးမရှိ ကြီးထွားခြင်းမှ ရှောင်ရှားပြီး ပိုမိုတင်းကျပ်သော ဘတ်ဂျက်ဖြင့် တစ်ကြိမ် ပြန်လည်ကြိုးစားကာ compact လုပ်ခြင်းက အဓိပ္ပာယ်ရှိသော တိုးတက်မှု မရှိပါက လုံခြုံစွာ ရပ်တန့်သည်။
-- **သတိထား၍ ပြန်လည်ရယူပါ။** Context overflow၊ ရွေးချယ်ထားသော transport ပြတ်တောက်မှုများနှင့် အကြောင်းပြချက်အတွက်သာ ဖြစ်သော အစောပိုင်းရပ်တန့်မှုများကို အလိုအလျောက် ပြန်လည်စတင်နိုင်သော်လည်း incident deduplication နှင့် တိုးတက်မှုကို သိရှိသော circuit breaker များသည် ပြန်လည်ရယူခြင်း loop များကို တားဆီးသည်။
-- **အသုံးပြုသူကို ထိန်းချုပ်ခွင့် ပေးပါ။** Force Compact သည် အမြဲတမ်း မြင်နိုင်သော manual ကယ်ဆယ်ရေး လမ်းကြောင်းဖြစ်ပြီး Cloud Mode သည် upstream workflow နှင့် ထိန်းချုပ်မှုများကို ထိန်းသိမ်းထားသည်။
+- **Session တစ်ခုချင်းစီအတွက် runtime policy ကိုရွေးချယ်နိုင်သည်။** provider metadata က ရှင်းလင်းပါက local/LAN endpoint များကို auto detect ပေးသည်; Local နှင့် Cloud များသည် manual override ပြစ်ပွန်းပွဲအသိများဖြစ်ပါသည်။
+- **Context failure များကို ကြိုတင်ကာကွယ်သည်။** Local Mode သည် usage 65% တွင် compact လုပ်ပြီး၊ tool call များကြားတွင် ကြည့်ရှုသည့်အလုပ်၊ အနောက်ဆုံး model request အတွင်း မတိုင်မီ ထပ်မံစစ်ဆေးသည်။
+- **Summary များကို သတ်မှတ်ထားသည်။** Rolling checkpoints များသည် old summary ကို ပြီးစီးအောင် ကြီးထွားစေရန် ကာကွယ်ပြီး၊ tighter budget ဖြင့် once ကျော်လွှား retry လုပ်ကာ، compaction က meaningful progress မမီပါက ရပ်ရပ်စနစ်သင့်ရပ်သည်။
+- **conservative ဖြင့် ပြန်လည်ရယူသည်။** Context overflow, selected transport interruptions, နှင့် reasoning-only premature stops များသည် auto resume ဖြစ်နိုင်သော်လည်း， incident deduplication နှင့် progress-aware circuit breakers များသည် recovery loops များကို ကာကွယ်သည်။
+- **User ကို မိမိထိန်းချုပ်ခွင့် ပေးသည်။** Force Compact မည်သည့်အခါတွင်မဆို visible manual rescue path အဖြစ် ရှိနေပြီး၊ Cloud Mode သည် upstream workflow နှင့် controls များကို ထိန်းသိမ်းထားသည်။
 
-လက်တွေ့ရလဒ်မှာ ရိုးရှင်းသည်။ ဒေသတွင်းမော်ဒယ်ဖြင့် ရှည်လျားသော လုပ်ငန်းစဉ်တစ်ခုသည် ပျက်စီးမတိုင်မီ compact လုပ်သင့်ပြီး၊ ပြန်လည်ရယူခြင်း လုံခြုံပါက တစ်ကြိမ် ပြန်လည်ရယူပြီး လုံခြုံမှုမရှိပါက loop မဖြစ်စေရန် သန့်ရှင်းစွာ ရပ်တန့်သင့်သည်။
+အကျိုးရလဒ်ကလည်း ရိုးရှင်းပါသည် — local model ကြာရှည်သော task တစ်ခုသည် ပြိုကျမယ့်အရင် compact ဖြစ်သင့်ပြီး， recovery သည် safe ဖြစ်နေပါက once ဖြင့် ပြန်ရယူသင့်ကာ， မဖြစ်ပါက loop မနေဘဲ လင်းလင်းလျင်လျင် ရပ်သင့်ပါသည်။
 
-**pi-web ကို လူနှစ်မျိုးအတွက် တည်ဆောက်ထားသည်-**
+**pi-web သည် လူနှစ်မျိုးအတွက် ဖန်တီးထားပါသည်:**
 
-- 🧑‍💻 **developer များအတွက်** — terminal ထဲတွင်နေထိုင်သော်လည်း mobile မှ sessions များကို ဆက်လက်လုပ်ဆောင်လိုသူများ၊ remote server သို့လွှဲပြောင်းလိုသူများ၊ သို့မဟုတ် မည်သည့်နေရာမှမဆို အချိန်ကြာမြင့်စွာလုပ်ဆောင်နေသော task များကို စောင့်ကြည့်လိုသူများအတွက်။
-- ✨ **developer မဟုတ်သူများအတွက်** — အလုပ်လုပ်သည့် လှပသော AI app တစ်ခုကိုသာလိုချင်သူများအတွက်။ ဖွင့်လိုက်၊ ရိုက်ထည့်လိုက်၊ vibe ယူလိုက်။ terminal မလို၊ SSH မလို၊ ရှုပ်ထွေးမှုမရှိ။ အသုံးပြုရအဆင်ပြေဆုံး AI tools များကဲ့သို့ပင်၊ သို့သော် model ရွေးချယ်ခွင့်နှင့် open-source လွတ်လပ်မှုတို့ဖြင့်။
-
----
-
-## အဘယ်ကြောင့် pi-web နည်း။
-
-သင် terminal ထဲတွင် pi နှင့် flow ထဲသို့ နက်ရှိုင်းစွာ ဝင်ရောက်နေပြီးသားဖြစ်သည်။ pi-web သည် သင် desk မှထွက်ခွာသောအခါ ထို momentum ကို ဆက်လက်ထိန်းသိမ်းပေးသည်-
-
-- **မည်သည့်နေရာမှမဆို ပြန်လည်စတင်နိုင်ခြင်း** — သင့်ဖုန်း၊ tablet သို့မဟုတ် အခြားကွန်ပျူတာမှ session တစ်ခုကို ဆက်လက်လုပ်ဆောင်ပါ။ SSH မလို၊ Termius မလို — browser ကိုသာဖွင့်လိုက်ပါ။
-- **Multi-session dashboard** — session တစ်ခုတွင် အလုပ်စလုပ်နေစဉ် အခြားတစ်ခုက stream လုပ်နေသည်ကို ကြည့်ရှုနိုင်သည်။ project များအနှံ့ ရှာဖွေနိုင်သည်၊ branch အလိုက် filter လုပ်နိုင်သည်၊ လိုအပ်သည်ကို မြန်ဆန်စွာ ရှာတွေ့နိုင်သည်။
-- **Open-source အခြေခံ** — pi သည် အပြည့်အဝ open source ဖြစ်ပြီး provider-agnostic ဖြစ်သည်။ model တစ်ခုတည်း သို့မဟုတ် vendor တစ်ခုတည်းတွင် ပိတ်မိနေခြင်းမရှိပါ။ pi-web သည်လည်း open source ဖြစ်သည်။
-- **လုံခြုံသော remote access** — built-in token auth ပါရှိသောကြောင့် ၎င်းကို သင်၏ LAN သို့မဟုတ် Tailscale ပေါ်တွင် စိတ်ပူစရာမလိုဘဲ ဖွင့်ထားနိုင်သည်။
-- **သင့်အလုပ်ကို မျှဝေပါ** — sessions များကို static snapshots အဖြစ် သို့မဟုတ် လျှို့ဝှက် GitHub Gists အဖြစ် တစ်ချက်နှိပ်ရုံဖြင့် export လုပ်ပါ။
-
-> နောက်ခံအကြောင်းကို သိချင်ပါသလား။ [ကျွန်ုပ်တို့ အဘယ်ကြောင့်တည်ဆောက်ခဲ့သည်ကို ဖတ်ရှုပါ →](why.md)
+- 🧑‍💻 **Developers အတွက်** — terminal တွင် နေရင်း mobile မှ sessions ကို ဆက်လက်လုပ်ချင်၊ remote server သို့ hand off လုပ်ချင်၊ မည်သည့်နေရာမှမဆို ကြာရှည်သော tasks များကို monitor လုပ်ချင်သူများ။
+- ✨ **Non-developers အတွက်** — လုပ်ဆောင်နိုင်သော လှပသော AI app တစ်ခုပဲ လိုချင်သူများ။ ဖွင့်၊ ရေး， vibe ဖြစ်ပါ။ Terminal မလို၊ SSH မလို၊ ပေါက်ကြောမှု မလို။ Model choice နှင့် open-source freedom ဖြင့် အရည်အသွေးမြင့်လှသော AI tools များနက်တောင့်။
 
 ---
 
-## သင့်ကိုယ်ပိုင် AI workspace အဖြစ် pi-web 🏠
+## pi-web ဟာ ဘာကြောင့်လဲ?
 
-pi-web သည် PWA (Progressive Web App) ဖြစ်သောကြောင့် ၎င်းကို သင်၏ desktop၊ laptop၊ ဖုန်း သို့မဟုတ် tablet ပေါ်တွင် **native app တစ်ခုကဲ့သို့ install လုပ်နိုင်သည်** — app store မလိုအပ်ပါ။ Desktop ပေါ်တွင် ၎င်းသည် browser chrome မပါဘဲ ၎င်း၏ကိုယ်ပိုင် window ဖြင့်ဖွင့်သောကြောင့် တကယ့် desktop application တစ်ခုကဲ့သို့ မြင်ရပြီး ခံစားရသည်။
+ကိုယ်တိုင်သည် terminal တွင် pi ဖြင့် flow တွင် ရပ်တန့်နေပါသည်။ pi-web သည် မိမိ၏ desk မှ အနီးစပ်တွင် နေရာရောက်ချိန် momentum ကို ဆက်ရှက်ရွက်စေသည်:
 
-၎င်းကို **သင့်ကိုယ်ပိုင် Claude Cowork** အဖြစ် တွေးကြည့်ပါ — သင့်စက်ပေါ်တွင်နေထိုင်သည့် ကိုယ်ပိုင် AI workspace — သို့သော် open source ဖြစ်ပြီး model-agnostic ဖြစ်သည်-
+- **မည်သည့်နေရာမှမဆို resume** — phone၊ tablet၊ သို့မဟုတ် ကွန်ပျူတာအခြားမှ session တစ်ခုကို ဆက်လက်လုပ်ဆောင်။ SSH မလို၊ Termius မလို — browser ဖွင့်ပါပဲ။
+- **Multi-session dashboard** — session တစ်ခုတွင် work ကို စတင်စဉ်， အခြား session တစ်ခု stream ကို ကြည့်ရှုနိုင်။ Project များကြား search လုပ်၊ branch ဖြင့် filter လုပ်， လိုအပ်သောအရာကို မြန်မြန် မှန်မှန် ရှာဖွေနိုင်။
+- **Open-source foundation** — pi သည် fully open source နှင့် provider-agnostic ဖြစ်သည်။ Model တစ်ခုလက်တစ်ခု သို့ vendor တစ်ခုတည်းတွင် lock in မဖြစ်ပါ။ pi-web ကလည်း open source ဖြစ်သည်။
+- **Safe remote access** — LAN သို့မဟုတ် Tailscale တွင် expose လုပ်သည့်အခါ စိုးရိမ်စရာမရှိသည့် built-in token auth။
+- **မိမိ၏ work ကို share လုပ်ပါ** — session များကို static snapshots သို့မဟုတ် secret GitHub Gists အဖြစ် တစ်ကြိမ် click ဖြင့် export လုပ်ပါ။
 
-- **stack ကို သင်ပိုင်ဆိုင်သည်။** မည်သည့် model ကိုမဆို ရွေးချယ်ပါ၊ ကြိုက်သည့်အချိန်တွင် ပြောင်းလဲပါ။ local model တစ်ခုကို run ပါက သင့်ဒေတာသည် သင့်စက်မှ ဘယ်တော့မှ ထွက်ခွာမသွားပါ။
-- **နည်းပညာမဟုတ်သူများ အသုံးပြုနိုင်သည်။** သူတို့၏စက်ပေါ်တွင် pi-web ကို set up လုပ်ပေးပါ၊ တစ်ကြိမ်အသုံးပြုနည်းပြသပေးပါ၊ သူတို့အဆင်ပြေသွားပါပြီ။ သင့်မိဘများ၊ သင့်အဖော်၊ သင့် non-tech သူငယ်ချင်းများ — terminal မလို၊ SSH မလို၊ ရင်းနှီးပြီးသား chat interface တစ်ခုသာ။
-- **တစ်ကြိမ် set up၊ အသုံးပြုသူများစွာ။** သင့် desktop ပေါ်တွင် install လုပ်ပြီး screen share လုပ်ပါ၊ သို့မဟုတ် သင့်အိမ်သုံး network ပေါ်တွင် ဖွင့်ထားပြီး မိသားစုဝင်များကို ၎င်းတို့၏ကိုယ်ပိုင် devices များပေါ်တွင် ဖွင့်ခွင့်ပေးပါ။
-
-Coding ထက်ပို၍လိုချင်ပါသလား။ သင်မည်သူဖြစ်သည်ကိုသိပြီး သင့်စက်ပေါ်တွင်နေထိုင်သည့် သီးသန့် [ကိုယ်ပိုင်လက်ထောက်](personal-assistant.md) အဖြစ် ပြောင်းလဲလိုက်ပါ — သင့်ကိုယ်ပိုင် OpenClaw သို့မဟုတ် Hermes ကဲ့သို့။
-
-> 💡 **Pro tip:** Chrome/Edge (လိပ်စာဘားရှိ install icon ကိုနှိပ်ပါ) သို့မဟုတ် Safari (Share → Add to Dock) မှ pi-web ကို PWA အဖြစ် install လုပ်ပါ။ ၎င်းသည် native app တစ်ခုနှင့် ခွဲခြားမရနိုင်ဖြစ်သွားသည်။
+> Background story ကို စိတ်ဝင်စားပါသလား? [ဘာကြောင့် build လုပ်တာလဲ ဖတ်ပါ →](why.md)
 
 ---
 
-## pi-web ဖြင့် သင်လုပ်ဆောင်နိုင်သည်များ
+## pi-web ကို ကိုယ်ပိုင် personal AI workspace အဖြစ်သုံးပါ 🏠
+
+pi-web သည် PWA (Progressive Web App) ဖြစ်သောကြောင့်， desktop， laptop， phone၊ tablet တွင် **native app ကဲ့သို့ install** လုပ်နိုင်ပါသည် — app store မလိုပါ။ Desktop တွင် browser chrome မရှိဘဲ window သီးခြားဖြင့် ဖွင့်သည်， ထို့ကြောင့် desktop application လက်ရှိမြင်စွာဖြင့် ခံစားစေသည်။
+
+**မိမိ၏ Claude Cowork** အဖြစ် ယူပါ — ကိုယ်တိုင်၏ machine တွင် နေသော personal AI workspace — သို့သော် open source နှင့် model-agnostic ဖြစ်သည်:
+
+- **Stack ကို မိမိပိုင်သည်။** Model မည်သည့်အရာကိုမဆို pick လုပ်၊ ဘယ်وقتမဆို ချွေ့နိုင်သည်။ Local တစ်ခုကို run လုပ်ပါက ကိုယ်တိုင်၏ data မည်သည့်အရာမှ မထွက်သွားပါ။
+- **Non-technical လူများသည် သုံးနိုင်သည်။** သူတို့၏ machine တွင် pi-web ကို setup လုပ်၊ အသုံးပြုပုံ တစ်ကြိမ် ပြသပြီး၊ သူတို့သည် စတင်နိုင်သည်။ မိဘများ， partner， non-tech friends — terminal မလို， SSH မလို， သိချင်သော chat interface တစ်ခုသာ။
+- **Setup တစ်ကြိမ်， users အများ။** Desktop တွင် install လုပ်ပြီး screen ကို share လုပ်， သို့မဟုတ် home network တွင် expose လုပ်ပြီး ဘုံကြီးသားများအတွက် ကိုယ်တိုင်၏ device များတွင် ဖွင့်နိုင်အောင် ပေးပါ။
+
+Coding ထက်ပိုအပ်ပါသလား? ကိုယ်တိုင်၏ ပတ်ဝန်းကျင်ကို ကြိုတင်သိထားပြီး machine တွင် နေသော dedicated [personal assistant](personal-assistant.md) အဖြစ် ပြောင်းလဲပါ — မိမိ၏ OpenClaw သို့မဟုတ် Hermes ကဲ့သို့။
+
+> 💡 **Pro tip:** Chrome/Edge တွင် (address bar တွင် install icon ကို click) သို့မဟုတ် Safari တွင် (Share → Add to Dock) မှ pi-web ကို PWA အဖြစ် install လုပ်ပါ။ Native app နှင့် မခွဲခြားနိုင်တော့ပါ။
+
+---
+
+## pi-web ဖြင့် မည်သည့်အရာများ လုပ်နိုင်သလဲ
 
 | | |
 |---|---|
-| 📱 **PWA** | pi-web ကို desktop၊ ဖုန်း သို့မဟုတ် tablet ပေါ်တွင် Progressive Web App အဖြစ် install လုပ်၍ native အတွေ့အကြုံကိုရယူပါ။ |
-| 🔄 **Sessions များကို ဆက်လက်လုပ်ဆောင်ပါ** | မည်သည့်စကားဝိုင်းကိုမဆို သင်ရပ်ထားသည့်နေရာမှပင် ပြန်လည်ကောက်ယူပါ — စာသား၊ ပုံများ၊ model ပြောင်းလဲခြင်း၊ အားလုံးကို browser မှ။ |
-| 🆕 **Session အသစ်များ စတင်ပါ** | မည်သည့် project path ကိုမဆို ဆန့်ကျင်ပြီး session အသစ်များကို web UI မှ တိုက်ရိုက်ဖန်တီးပါ။ |
-| 📡 **Live streaming** | pi ၏တုံ့ပြန်မှုများကို ~ms latency ဖြင့် real time streaming ကြည့်ရှုပါ။ Follow mode က သင့်ကို နောက်ဆုံးအကြောင်းအရာပေါ်တွင် lock လုပ်ထားပေးသည်။ |
-| 🌲 **Tree view** | pi ၏ native message tree ကို လမ်းညွှန်ကြည့်ရှုပါ — စကားဝိုင်းဖွဲ့စည်းပုံအပြည့်အစုံကို ကြည့်ရှုပါ၊ မည်သည့် branch သို့မဆို ခုန်သွားပါ၊ မည်သည့်နေရာမှမဆို fork လုပ်ပါ။ |
-| 🔀 **Fork sessions** | မည်သည့် message မှမဆို သို့မဟုတ် တိကျသော tool call တစ်ခုမှပင် session တစ်ခုကို fork လုပ်ပါ — သင့်နေရာမပျောက်ဘဲ မတူညီသောလမ်းကြောင်းများကို စူးစမ်းပါ။ |
-| 🔍 **ရှာဖွေကြည့်ရှုခြင်း** | project များအနှံ့ sessions များကို filter လုပ်ပါ၊ အမည်ဖြင့်ရှာဖွေပါ၊ branch များကို လမ်းညွှန်ပါ — သင်၏ session မှတ်တမ်းအပြည့်အစုံကို တစ်ချက်ကြည့်ရုံဖြင့်။ |
-| 🌿 **Git ပေါင်းစည်းမှု** | လက်ရှိ branch ကိုကြည့်ရှုပြီး session viewer မှ GitHub PR တစ်ခုကို တိုက်ရိုက်ဖွင့်ပါ။ |
-| 📝 **Scratchpad** | app များပြောင်းစရာမလိုဘဲ သင်၏ sessions များနှင့်အတူ မှတ်စုများ၊ လုပ်စရာများ သို့မဟုတ် မြန်ဆန်သောအတွေးများကို ချရေးပါ။ |
-| 💬 **မှတ်ချက်များ (Annotations)** | session တစ်ခု၏ မည်သည့်အစိတ်အပိုင်းကိုမဆို highlight လုပ်ပြီး comment ရေးပါ — code review၊ feedback သို့မဟုတ် အရေးကြီးအချိန်များကို bookmark လုပ်ရန် အကောင်းဆုံး။ |
-| 🎨 **Themes နှင့် စိတ်ကြိုက်ပြင်ဆင်ခြင်း** | dark mode နှင့် light mode ကြားပြောင်းပါ၊ UI ကို သင်ကြိုက်သလို ပြင်ဆင်ပါ — pi-web ကို *သင့်ဟာသင်* ခံစားရအောင်လုပ်ပါ။ |
-| 🌐 **ဘာသာစကားမျိုးစုံ** | built-in ဘာသာစကား ၁၄ မျိုး (English, Español, Français, Deutsch, 中文, 日本語, Bahasa Indonesia, Bahasa Melayu, Tiếng Việt, ไทย, Filipino, မြန်မာ, ភាសាខ្មែរ, ລາວ)။ Settings မှ သင့်ကိုယ်ပိုင် စိတ်ကြိုက်ဘာသာစကားကို ထည့်သွင်းပါ။ |
-| 🐱 **ကျန်းမာရေးနှင့် pomodoro** | vibe coding အလွန်အကျွံလုပ်ခြင်းသည် ကျန်းမာရေးအတွက်မကောင်းပါ။ ကြောင်အဖော်ပါသော built-in pomodoro timer နှင့် အိပ်ချိန်သတိပေးချက်များက သင့်ကို မျှတစေသည်။ |
-| 📤 **မျှဝေခြင်းနှင့် export လုပ်ခြင်း** | JSONL ဒေါင်းလုဒ်လုပ်ပါ၊ pi ၏ native `pi.dev` look ဖြင့် render လုပ်ထားသော static snapshots များကို export လုပ်ပါ၊ သို့မဟုတ် လျှို့ဝှက် GitHub Gists အဖြစ် မျှဝေပါ — အားလုံးကို client-side တွင် render လုပ်သည်။ |
-| 🔔 **အကြောင်းကြားသံများ** | session event များအတွက် စိတ်ကြိုက်ပြင်ဆင်နိုင်သော အကြောင်းကြားသံများ — pi-web က အခြား tab တစ်ခုတွင်ရှိနေသည့်တိုင် အသိပေးချက်များကို လက်လွတ်မခံပါနှင့်။ |
-| ⌨️ **Keyboard shortcuts** | Vim-style navigation၊ မြန်ဆန်သော လုပ်ဆောင်ချက်များ — [အပြည့်အစုံကိုးကားချက် →](keyboard-shortcuts.md) |
-| 🤖 **ကိုယ်ပိုင်လက်ထောက်** | pi-web ကို သင့်ကွန်ပျူတာပေါ်တွင်နေထိုင်သည့် သင့်ကိုယ်ပိုင် AI assistant အဖြစ်ပြောင်းလဲလိုက်ပါ — OpenClaw သို့မဟုတ် Hermes ကဲ့သို့။ [Set up လုပ်ရန် →](personal-assistant.md) |
+| 📱 **PWA** | Native feel အတွက် desktop， phone， tablet တွင် pi-web ကို Progressive Web App အဖြစ် install လုပ်ပါ။ |
+| 🔄 **Sessions ဆက်လက်သည်** | ရပ်ခဲ့သည့်နေရာတွင် စကားပြောမှု မည်သည့်အရာကိုမဆို ပြန်စပါ — text， images， model switching， browser ကုန်ကြမ်းပြုခြင်း။ |
+| 🆕 **Sessions အသစ်စတင်သည်** | Project path မည်သည့်အရာမှမဆို fresh session များကို web UI တွင် တိုက်ရိုက် ဖန်တီးပါ။ |
+| 📡 **Live streaming** | pi responses ကို ~ms latency ဖြင့် real time တွင် stream ဖြင့် ကြည့်ရှုပါ။ Follow mode ကို latest တွင် locked ဖြင့်ထားသည်။ |
+| 🌲 **Tree view** | pi ကို native message tree ကို လမ်းကြောင်းရှာပါ — full conversation structure ကို မြင်ပါ၊ branch မည်သည့်အရာကိုမဆို jump လုပ်ပါ၊ မည်သည့်နေရာမှမဆို fork လုပ်ပါ။ |
+| 🔀 **Sessions fork လုပ်သည်** | Message မည်သည့်အရာမှ သို့မဟုတ် tool call သီးခြားတစ်ခုမှ session ကို fork လုပ်ပါ — မိမိ၏ position ကို မဆုံးရှုံးဘဲ လမ်းကြောင်း အမျိုးမျိုးကို explore လုပ်ပါ။ |
+| 🔍 **Browse & search** | Project များကြား sessions ကို filter လုပ်၊ name ဖြင့် search လုပ်၊ branches ကို လမ်းကြောင်းရှာပါ — ကိုယ်တိုင်၏ full session history ကို ချက်ချင်းမြင်ပါ။ |
+| 🌿 **Git integration** | Current branch ကို မြင်ပြီး， session viewer တွင် တိုက်ရိုက် GitHub PR ကို ဖွင့်ပါ။ |
+| 📝 **Scratchpad** | Apps ကို ပြောင်းမလုပ်ဘဲ session များနဲ့အတူ notes， todos， ချက်ချင်း thoughts များကို မှတ်တမ်းတင်ပါ။ |
+| 💬 **Annotations** | Session ကို မည်သည့်အပိုင်းကိုမဆို highlight လုပ်ပြီး comment ပါ — code review， feedback， သို့မဟုတ် key moments များအတွက် bookmark လုပ်ရာတွင် ကောင်းသည်။ |
+| 🎨 **Themes & customization** | Dark နှင့် light mode ကြား ချွေ့ပါ， UI ကို ကိုက်ညီအောင် tweak လုပ်ပါ — pi-web ကို *ကိုယ်တိုင်၏* ကဲ့သို့ ခံစားစေပါ။ |
+| 🌐 **Multi-language** | Built-in languages 14 များ (English, Español, Français, Deutsch, 中文, 日本語, Bahasa Indonesia, Bahasa Melayu, Tiếng Việt, ไทย, Filipino, မြန်မာ, ភាសာខ្មែរ, ລາວ). Settings တွင် ကိုယ်တိုင်၏ custom language ကို ပေါင်းထည့်ပါ။ |
+| 🐱 **Wellness & pomodoro** | Vibe coding လွန်ကဲခြင်းသည် ကျန်းမာမှု မကောင်းပါ။ Balanced ဖြစ်အောင် cat companion နှင့် sleep reminders ဖြင့် built-in pomodoro timer။ |
+| 📤 **Share & export** | JSONL ကို download လုပ်， pi ကို native `pi.dev` look ဖြင့် render လုပ်ထားသော static snapshots များကို export လုပ်， သို့မဟုတ် private GitHub Gists အဖြစ် share လုပ်ပါ — အားလုံးသည် client-side တွင် render လုပ်သည်။ |
+| 🔔 **Notification sounds** | Session events များအတွက် customizable notification chimes — pi-web က အခြား tab တွင် ဖြစ်နေချိန်တွင် ဖြတ်မသွားအောင်။ |
+| ⌨️ **Keyboard shortcuts** | Vim-style navigation， quick actions — [full reference →](keyboard-shortcuts.md) |
+| 🤖 **Personal assistant** | pi-web ကို ကိုယ်တိုင်၏ computer တွင် နေသော မိမိ၏ AI assistant အဖြစ် ပြောင်းလဲပါ — OpenClaw သို့မဟုတ် Hermes ကဲ့သို့။ [Setup လုပ်ပါ →](personal-assistant.md) |
+| 🗓️ **Schedules နဲ့ တိုင်ပင်သည်** | Pi session တစ်ခုမှ， "add a schedule at 2am Singapore time to …" ဟု ပြောပါ — `/skill:pi-web-schedule`။ |
+| 📝 **Notes & settings နဲ့ တိုင်ပင်သည်** | "Write this in the notes" (`/skill:pi-web-notes`) သို့မဟုတ် "switch to dark mode" (`/skill:pi-web-settings`) ဟု ပြောပါ။ |
 
 ---
 
-## အမြန်လမ်းညွှန်
+## Quick navigation
 
-| သင်ရှာဖွေနေသည်မှာ… | ဖတ်ရှုရန် |
+| မိမိရှာဖွေနေသည့်အရာ… | ဖတ်ပါ |
 |---|---|
-| pi-web ကို install လုပ်နည်း၊ configure လုပ်နည်းနှင့် အသုံးပြုနည်း | [install.md](install.md) |
-| pi-web ကို ကိုယ်ပိုင်လက်ထောက်အဖြစ် အသုံးပြုနည်း | [personal-assistant.md](personal-assistant.md) |
-| Keyboard shortcuts ကိုးကားချက် | [keyboard-shortcuts.md](keyboard-shortcuts.md) |
-| pi-web အဘယ်ကြောင့်ရှိသနည်း | [why.md](why.md) |
-| နောက်ထပ်လာမည့်အရာများ | [roadmap.md](roadmap.md) |
-| Install လုပ်ရာတွင် အခက်အခဲရှိနေပါသလား။ သင်၏ LLM ကို ပြင်ဆင်ခွင့်ပေးပါ — llm-debug.md link ကို သူတို့ထံ paste လုပ်ပါ | [llm-debug.md](llm-debug.md) |
-| ဖွံ့ဖြိုးတိုးတက်ရေးမှတ်စုများ | [ဖွံ့ဖြိုးတိုးတက်ရေးမှတ်စုများ](../../docs/dev/local-llm-development.md) |
+| pi-web ကို install， configure， အသုံးပြုပုံ | [install.md](install.md) |
+| pi-web ကို personal assistant အဖြစ် အသုံးပြုခြင်း | [personal-assistant.md](personal-assistant.md) |
+| Keyboard shortcuts reference | [keyboard-shortcuts.md](keyboard-shortcuts.md) |
+| pi-web သည် ဘာကြောင့် ရှိတာလဲ | [why.md](why.md) |
+| နောက်တစ်ခု ဘာလာမလဲ | [roadmap.md](roadmap.md) |
+| Install trouble ရှိပါသလား? LLM ကို fix လုပ်အောင် ပေးပါ — llm-debug.md link ကို သူတို့ထဲသို့ paste လုပ်ပါ | [llm-debug.md](llm-debug.md) |
+| ဤ local-model edition ကို maintain လုပ်ခြင်း | [development notes](../../docs/dev/local-llm-development.md) |
 
 ---
 
 ## Screenshots
 
-| Desktop | Mobile PWA |
+| Desktop | Mobile |
 |---|---|
-| ![Desktop](../assets/pi-web-desktop-screenshot.png) | ![Mobile PWA](../assets/pi-web-mobile-screenshot.png) |
+| ![Desktop](../assets/pi-web-desktop-screenshot.png) | ![Mobile](../assets/pi-web-mobile-screenshot.png) |
 
 ---
 
 ## 💛 Sponsor
 
-pi-web ကို ချစ်ခြင်းမေတ္တာနှင့် ညနက်များစွာ အိပ်ရေးပျက်ခံကာ တည်ဆောက်ထားသည်။ ဤ project ဆက်လက်ရှင်သန်နိုင်ရန် coding plan များ (Claude Code, OpenCode စသည်) အတွက် ကိုယ်ပိုင်ငွေဖြင့် ကျွန်ုပ်ပေးချေနေသည်။ pi-web သည် သင့်အတွက် အသုံးဝင်ခဲ့ပါက သင့်၏ပံ့ပိုးမှုသည် ကမ္ဘာလောကအတိုင်းပင် တန်ဖိုးရှိပါလိမ့်မည်။
+pi-web သည် love နှင့် ညမစောစော များဖြင့် build လုပ်ထားပါသည်။ Coding plans များ (Claude Code， OpenCode， etc.) ကို ကိုယ်တိုင်၏ pocket ထဲမှ ပေးချေပြီး ဤ project ကို ဆက်လက်ရှေ့တန်းသို့ ဆောင်ရွက်စေပါသည်။ pi-web ကို မိမိအတွက် ကြိုက်နှစ်သက်ပါက၊ မိမိ၏ support သည် ကိုယ်တိုင်အတွက် ကမ္ဘာအလျား ဖြစ်ပါမည်။
 
-**ကူညီနိုင်သောနည်းလမ်းများ-**
+**Support လုပ်နိုင်သည့်နည်းလမ်းများ:**
 
-- 💰 **[GitHub တွင် Sponsor လုပ်ပါ](https://github.com/sponsors/setkyar)** — ဤအရာကိုဖြစ်မြောက်စေသော tools များကို cover လုပ်ရန် ကူညီပါ
-- ☕ **[ကော်ဖီတစ်ခွက်လှူပါ](https://buymeacoffee.com/setkyar)** — အနည်းငယ်တိုင်းက အကူအညီဖြစ်သည်
-- ⭐ **repo ကို star ပေးပါ** — ဘာမှမကုန်ကျပါ၊ လူများစွာ pi-web ကိုရှာတွေ့ရန် ကူညီပေးသည်
-- 📢 **သူငယ်ချင်းများနှင့် မိသားစုကို မျှဝေပါ** — pi-web ကိုကြိုက်နှစ်သက်မည့်သူတစ်ဦးကို သင်သိပါက သူတို့ဆီသို့ ပေးပို့ပါ
+- 💰 **[GitHub တွင် Sponsor](https://github.com/sponsors/setkyar)** — ဤအရာကို ဖြစ်စေသည့် tools များအတွက် ကူညီပါ
+- ☕ **[ကော်ဖီ တစ်ဇွန်း ကိုယ်တိုင်အတွက် ဝယ်ပါ](https://buymeacoffee.com/setkyar)** — ဟင်းသေးသေး မည်သည့်အရာကပဲ ဖြစ်စေ ကူညီပါသည်
+- ⭐ **Repo ကို Star လုပ်ပါ** — အလုံးခြေမသုံးဘဲ， pi-web ကို ပိုမိုအများပြည့်ဖြင့် မြင်စေပါ
+- 📢 **Friends နှင့် family နှင့် share လုပ်ပါ** — pi-web ကို ကြိုက်နှစ်သက်ဖို့ ချက်ချင်းရှိသူတစ်ယောက်ကို သိပါက， သူတို့ထဲသို့ send လုပ်ပါ
 
-Sponsor မလုပ်နိုင်ပါက စိတ်မပူပါနှင့် — star တစ်ခုနှင့် share တစ်ခုက များစွာအထောက်အကူပြုသည်။ ဤနေရာတွင်ရှိနေသည့်အတွက် ကျေးဇူးတင်ပါသည်။ 🙏
+Sponsor မလုပ်နိုင်ပါသလား? ဘယ်လိုအရာမှ မလိုပါ — star တစ်ခုနှင့် share တစ်ခုသည် အများကြီး သွားပါသည်။ ဤနေရာတွင် ဖြစ်နေသည့်အတွက် ကျေးဇူးတင်ပါသည်။ 🙏
 
 ---
 
-Happy coding! 🚀
+Coding ဖြတ်ကြရပါစို့! 🚀

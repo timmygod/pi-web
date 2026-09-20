@@ -1,16 +1,20 @@
-အသုံးပြုသူသည် pi-web ကို အောက်ပါအတိုင်း ထည့်သွင်းနေပါသည်
+> ဤ troubleshooting guide (ပျက်ငြဲချက် ဖြေရှင်းရေး လမ်းညွှန်) သည် local-model edition အတွက် ဖြစ်သည်။
+> Local deployment အသေးစိတ်များနှင့် upstream synchronization မှတ်ချက်များကို
+> [Local-model edition development](../../docs/dev/local-llm-development.md) နှင့် ဆက်စပ်အောင် ထားပါ။
 
-- pi install npm:@timmygod/pi-web-local@beta
+User သည် အောက်ပါနည်းအားဖြင့် pi-web ကို install လုပ်နေပါသည်။
 
-၎င်းသည် [install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) ကို အလိုအလျောက် run ပြီး pi ကို setup ပြုလုပ်ပေးပါသည်။
+- pi install npm:@timmygod/pi-web-local
 
-အသုံးပြုသူတွင် ပြဿနာရှိနေပါက install.sh ၏ setup ကြောင့် ပြဿနာဖြစ်နိုင်ပါသည်။ သင်သည် ပြန်လည်သုံးသပ်ပြီး မည်သည့်အရာက ပြဿနာဖြစ်စေသည်ကို စစ်ဆေးကာ အသုံးပြုသူအား အတိအကျဖော်ပြနိုင်ပါသည်။ ထို့နောက် ၎င်းတို့က သင့်အား ပြင်ဆင်စေလိုပါက မေးမြန်းပါ။ အမြဲတမ်း အသုံးပြုသူနှင့် အတည်ပြုပါ။
+ဤသည်မှာ [install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) ကို အလိုအလျောက် run ပေးပြီး pi ကို setup ပေးသည်။
 
-အသုံးပြုသူအနေဖြင့် ၎င်းတို့၏ မိုဘိုင်း သို့မဟုတ် အခြားကွန်ရက်မှ pi ကို ဝင်ရောက်အသုံးပြုနိုင်ရန်အတွက် အကြံပြုထားသည့်နည်းလမ်းမှာ tailscale ကို အသုံးပြုပြီး tailscale ကွန်ရက်မှ ဝင်ရောက်ခြင်းဖြစ်သည်။ ထို့အပြင် အသုံးပြုသူသည် ၎င်းတို့၏ tailscale dashboard တွင် HTTPs ကို enable ပြုလုပ်ရန် လိုအပ်ပါသည် - https://login.tailscale.com/admin/dns
+User တွေ့နေရသော ပြဿနာသည် install.sh ၏ setup လုပ်ငန်းစဉ်ကြောင့် ဖြစ်နိုင်သည်။ ဘာဖြစ်နေသည်ကို ရွေးချယ်စစ်ဆေးပြီး user တွေ့နေရသော ပြဿနာ၏ အဓိက အကြောင်းရင်းကို ရှင်းလင်းဖြေကြားနိုင်သည်။ ပြေထင်ပေးရန် သဘောတူကြောင်းကိုလည်း မေးမြန်းပါ။ User နှင့် အမြဲတမ်း ရွေးချယ်တိုင်ပင်ပါ။
 
-အကယ်၍ ၎င်းတို့တွင် tailscale ထည့်သွင်းမထားပါက သို့မဟုတ် tailscale ကို အသုံးမပြုလိုပါက `pi-web status` ကို run ၍ binary လမ်းကြောင်း၊ binary ၏ အခြေအနေနှင့် အပလီကေးရှင်းကို ဝင်ရောက်နိုင်သည့် local endpoint ကို ရယူနိုင်ပါသည်။ သို့သော် သတိပြုရန်မှာ ၎င်းသည် http ဖြစ်သောကြောင့် push notification ရရှိနိုင်မည်မဟုတ်ပါ။
+User သည် mobile သို့မဟုတ် အခြား network တွင် pi သို့ access လုပ်နိုင်ရန်အတွက် အကြံပြုထားသော နည်းလမ်းမှာ tailscale ကို အသုံးပြု၍ tailscale network မှတစ်ဆင့် access လုပ်ရန် ဖြစ်သည်။ User သည် tailscale dashboard တွင် HTTPs ကို enable ပေးရမည်ဖြစ်ပြီး - https://login.tailscale.com/admin/dns
 
-mac တွင် [com.pi-web.plist](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/init/com.pi-web.plist) ဖြင့် setup ပြုလုပ်ပါသည်။
-Linux တွင် [pi-web.service](https://github.com/timmygod/pi-web/blob/main/init/pi-web.service) ဖြင့် setup ပြုလုပ်ပါသည်။
+Tailscale install မရှိသော သို့မဟုတ် tailscale ကို အသုံးမပြုလိုသူများအတွက် `pi-web status` ကို run ပေးပြီး binary path ကို၊ binary ၏ status ကို၊ application သို့ access လုပ်နိုင်သော local endpoint ကို ရယူနိုင်သည်။ သို့သော် http ဖြစ်နေသောကြောင့် push notification ကို မရရှိနိုင်ကြောင်း သတိပြုပါ။
 
-အကယ်၍ သင်သည် ထပ်မံ၍ debug ပြုလုပ်ရန်နှင့် မည်သို့ဖြစ်နေသည်ကို ကြည့်ရှုရန် လိုအပ်ပါက။
+macOS တွင် [com.pi-web.plist](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/init/com.pi-web.plist) ကို အသုံးပြုသည်။
+Linux တွင် [pi-web.service](https://github.com/timmygod/pi-web/blob/main/init/pi-web.service) ကို အသုံးပြုသည်။
+
+ထပ်မံ debug လုပ်လိုပြီး ဘာဖြစ်နေသည်ကို သတိပြုလိုပါက။

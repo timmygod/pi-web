@@ -1,91 +1,101 @@
-# ການຕິດຕັ້ງ ແລະ ການນຳໃຊ້
+# การติดตั้งและการใช้งาน
 
-## ຄຸນສົມບັດ
+## ฟีเจอร์
 
-### ການຄວບຄຸມທາງໄກ
+### ควบคุมระยะไกล
 
-- ສືບຕໍ່ເຊສຊັນໃດໆຈາກບຣາວເຊີດ້ວຍຂໍ້ຄວາມ ຫຼື ໄຟລ໌ແນບຮູບພາບ
-- ເລີ່ມເຊສຊັນໃໝ່ສຳລັບພາດໂປຣເຈັກໃດໆ, ໂດຍກົງຈາກໜ້າເວັບ UI
-- ການປ່ຽນໂມເດລໃນບຣາວເຊີ ແລະ ຕົວເລືອກລະດັບການຄິດ, ຕໍ່ເຊສຊັນ
-- ສະຖານະ worker ຕໍ່ເຊສຊັນ (idle / running / error) ພ້ອມການຟື້ນຟູອັດຕະໂນມັດເມື່ອລົ້ມ
-- ຫຼາຍເຊສຊັນເຮັດວຽກພ້ອມກັນ — ເລີ່ມວຽກໃນເຊສຊັນໜຶ່ງ, ເບິ່ງສະຕີມອີກເຊສຊັນໜຶ່ງ
-- `PI_WEB_TOKEN` ສຳລັບການເປີດເຜີຍຜ່ານ LAN ຢ່າງປອດໄພ — ຕ້ອງການຕາມຄ່າເລີ່ມຕົ້ນສຳລັບການ bind ແບບ non-loopback ແບບຊັດເຈນໃດໆ
+- ต่อสายเซสชันใดก็ได้จากเบราว์เซอร์พร้อมไฟล์แนบข้อความหรือรูปภาพ
+- เริ่มเซสชันใหม่ตั้งต้นที่ส่งตรงไปยังพาธโครงการใดๆ ได้เลย จาก UI บนเว็บ
+- สลับโมเดลภายในเบราว์เซอร์และตัวเลือกระดับการคิด (thinking-level) รายเซสชัน
+- สถานะ worker ของแต่ละเซสชัน (idle / running / error) พร้อมฟื้นตัวอัตโนมัติเมื่อ crash
+- รันเซสชันหลายตัวขนานกัน — สั่งงานตัวหนึ่ง แล้วดูอีกตัวที่กำลังสตรีมอยู่
+- `PI_WEB_TOKEN` เพื่อความปลอดภัยเมื่อเปิดเผยบน LAN — บังคับใช้โดยค่าเริ่มต้นสำหรับการ bind ชัดเจนที่ไม่ใช่ loopback
 
-### ການອ່ານເຊສຊັນ
+### การอ่านเซสชัน
 
-- ເບິ່ງເຊສຊັນຂ້າມໂປຣເຈັກດ້ວຍຕົວກອງ, ການຄົ້ນຫາ, ແລະ ການນຳທາງສາຂາຢ່າງເຕັມຮູບແບບ
-- ການອັບເດດແບບສົດໆເທື່ອລະໜ້ອຍໃນຂະນະທີ່ pi ຍັງເຮັດວຽກຢູ່ (ຜ່ານ fsnotify; ~ms latency)
-- ໂໝດຕິດຕາມສຳລັບການຕິດຕາມເຊສຊັນທີ່ກຳລັງເຮັດວຽກ
-- ລິ້ງເລິກໄປຫາຂໍ້ຄວາມແຕ່ລະອັນ
-- ດາວໂຫຼດເຊສຊັນເປັນ JSONL
-- ແບ່ງປັນພາບຖ່າຍ static ເປັນ GitHub Gists ແບບລັບ
-- `/web`, `/remote`, `/refresh`, `/pi-web token` ແລະ `/pi-web set-token` pi extensions ສຳລັບການເປີດເຊສຊັນ, QR ທາງໄກ, ຊິງຄ໌ເຊສຊັນ, ແລະ ການຈັດການ token
+- ไล่ดูเซสชันข้ามโครงการพร้อมตัวกรอง การค้นหา และการนำทาง branch เต็มรูปแบบ
+- อัปเดตแบบ_incremental โดยสด ในขณะที่ pi ยังกำลังทำงาน (ผ่าน fsnotify; ความล่าช้าประมาณ ~ms)
+- โหมด Follow สำหรับ追尾 (tail) เซสชันที่กำลังทำงาน
+- ลิงก์直达 (deep link) ไปยังข้อความเฉพาะ
+- ดาวน์โหลดเซสชันเป็น JSONL
+- แชร์ snapshot แบบ static เป็น secret GitHub Gists
+- การขยาย (pi extensions) ของ pi ได้แก่ `/web`, `/remote`, `/refresh`, `/pi-web token` และ `/pi-web set-token` สำหรับเปิดเซสชัน, QR ระยะไกล, ซิงค์เซสชัน และการจัดการ token
+- `/skill:pi-web-schedule`, `/skill:pi-web-notes`, `/skill:pi-web-settings` (`pi-web-ctl`) เพื่อให้เซสชันจัดการตารางเวลา, กระดานสเก็ตช์ (scratchpad) ของโครงการ และการตั้งค่าด้วยภาษาธรรมชาติ
 
-## ເລືອກໂໝດຊັດ
+## เลือกโหมดเซสชัน
 
-ເວີຊັນນີ້ໃຊ້ຜູ້ໃຫ້ບໍລິການ ແລະ ແບບຈຳລອງທີ່ຖືກກຳນົດໄວ້ແລ້ວໃນ pi. Local Mode ແມ່ນນະໂຍບາຍເວລາປະຕິບັດງານ, ບໍ່ແມ່ນຕົວຕິດຕັ້ງແບບຈຳລອງແຍກຕ່າງຫາກ ຫຼື ຫນ້າຈໍກຸນແຈ API ທີສອງ.
-ເລືອກໂໝດເມື່ອສ້າງຊັດ, ຫຼື ປ່ຽນແປງຫຼັງຈາກການເຮັດວຽກປັດຈຸບັນສຳເລັດ:
+รุ่นนี้ใช้ providers และโมเดลที่ตั้งค่าไว้แล้วใน pi; โหมด Local เป็นนโยบาย runtime ไม่ใช่ตัวติดตั้งโมเดลแยกต่างหาก หรือหน้า API-key ตัวที่สอง
+เลือกโหมดเมื่อสร้างเซสชัน หรือเปลี่ยนภายหลังเมื่อการรันปัจจุบันเสร็จนิ่ง:
 
-| ໂໝດ | ໃຊ້ເມື່ອ | ພຶດຕິກຳ |
+| โหมด | ใช้เมื่อ | พฤติกรรม |
 |------|-------------|----------|
-| **Auto** | ທ່ານຕ້ອງການໃຫ້ pi-web ຕັດສິນໃຈ | ແກ້ໄຂຈຸດປາຍທາງທ້ອງຖິ່ນ/LAN ຈາກຂໍ້ມູນເມຕາຂອງຜູ້ໃຫ້ບໍລິການເມື່ອເປັນໄປໄດ້; ຖ້າບໍ່ແມ່ນ, ຮັກສາເສັ້ນທາງປົກກະຕິ |
-| **Local** | ແບບຈຳລອງກຳລັງເຮັດວຽກຢູ່ເຄື່ອງນີ້ ຫຼື LAN ຂອງທ່ານ | ເປີດໃຊ້ຂອບເຂດການຫຍໍ້ 65%, ຈຸດກວດສອບທີ່ມີຂອບເຂດ, Force Compact ແລະ ການກູ້ຄືນອັດຕະໂນມັດທີ່ມີການປ້ອງກັນ |
-| **Cloud** | ແບບຈຳລອງທີ່ເລືອກຖືກເຊົ່າບໍລິການ ແລະ ຄວນປະຕິບັດຕາມພຶດຕິກຳ upstream | ຮັກສານະໂຍບາຍການຫຍໍ້ ແລະ ການກູ້ຄືນສຳລັບທ້ອງຖິ່ນເທົ່ານັ້ນ ໃຫ້ຢູ່ນອກຊັດ |
+| **Auto** | คุณต้องการให้ pi-web ตัดสินใจ | ปรับปลายทาง local/LAN จาก metadata ของ provider เมื่อเป็นไปได้; หรือไม่งั้นก็ยังคงเส้นทางปกติ |
+| **Local** | โมเดลกำลังรันบนเครื่องนี้หรือ LAN ของคุณ | เปิดขอบเขต compaction 65%, checkpoints ที่จำกัดขนาด, Force Compact และการฟื้นตัวอัตโนมัติภายใต้การป้องกัน |
+| **Cloud** | โมเดลที่เลือกเป็นแบบ hosted และควรใช้พฤติกรรมแบบ upstream | ยีงเว้นนโยบาย compaction และ recovery ที่เฉพาะ local ไว้ไม่ให้อยู่ในเซสชัน |
 
-ການເລືອກ Local ຫຼື Cloud ດ້ວຍມື ມີຄວາມສຳຄັນກວ່າການກວດສອບອັດຕະໂນມັດ ແລະ ຍັງຄົງຢູ່ຫຼັງຈາກການໂຫຼດໃໝ່ ແລະ ເລີ່ມຕົ້ນໃໝ່. ຊັດທີ່ກຳລັງເຮັດວຽກ ປະຕິເສດການປ່ຽນແປງໂໝດ ຈົນກວ່າ worker ຂອງມັນຈະສຳເລັດ, ດັ່ງນັ້ນໂໝດທີ່ສະແດງໃນ UI ຈະກົງກັບນະໂຍບາຍທີ່ໃຊ້ຢູ່ຈິງສະເໝີ.
+การเลือก Local หรือ Cloud แบบ manual ชนะการตรวจจับอัตโนมัติ และคงอยู่ข้ามการโหลดใหม่และการรีสตาร์ท เซสชันที่กำลังรันจะปฏิเสธการเปลี่ยนโหมดจนกว่า worker ของมันจะนิ่ง ดังนั้นโหมดที่แสดงใน UI จึงตรงกับนโยบายที่ถูกใช้จริงเสมอ
 
-## ຂໍ້ກຳນົດ
+## ความต้องการ
 
-- [Go](https://go.dev) 1.25+
-- `pi` ຢູ່ໃນ `PATH` ຂອງທ່ານສຳລັບການສົນທະນາຜ່ານບຣາວເຊີ/ການປ່ຽນໂມເດລ
-- ທາງເລືອກ: `gh` ສຳລັບການແບ່ງປັນ
+- [Go](https://go.dev) 1.25+ (ใช้เฉพาะในการ build จาก source)
+- `pi` บน `PATH` ของคุณ สำหรับ chat/การสลับโมเดลในเบราว์เซอร์
+- เพิ่มเติม (optional): `gh` สำหรับแชร์
+- บน Windows: pi ต้องการ bash shell สำหรับ shell tool ของมัน — [Git for Windows](https://git-scm.com/download/win) เพียงพอ (ดูเอกสาร Windows ของ pi)
 
-## ການຕິດຕັ້ງ
+## ติดตั้ง
 
-### Pi package (ແນະນຳ)
-
-```bash
-pi install npm:@timmygod/pi-web-local@beta
-```
-
-ຄຳສັ່ງດຽວນີ້:
-- ຕິດຕັ້ງ npm pi package ພາຍໃຕ້ໄດເຣັກທໍຣີ package ຂອງ pi
-- ເຮັດວຽກສະຄຣິບ `postinstall` ຂອງ package (`bash install.sh`)
-- ດາວໂຫຼດໄບນາຣີ pi-web ທີ່ກົງກັບເວີຊັນ package ແລະ ແພລັດຟອມຂອງທ່ານຈາກ GitHub Releases
-- ຕິດຕັ້ງມັນໃສ່ `~/.pi/agent/bin/pi-web`
-- ຕັ້ງຄ່າການເລີ່ມອັດຕະໂນມັດເມື່ອ login (launchd ສຳລັບ macOS, systemd ສຳລັບ Linux)
-- ລົງທະບຽນຄຳສັ່ງ `/web`, `/remote`, `/refresh`, `/pi-web token`, ແລະ `/pi-web set-token` ສຳລັບ pi
-
-ການຕັ້ງຊື່ເຊສຊັນອັດຕະໂນມັດຖືກສ້າງຢູ່ໃນ pi-web (ບໍ່ແມ່ນໃນ extension) ແລະ ຕັ້ງຄ່າໄດ້ທີ່ໜ້າ `/settings`. ມັນເປີດຢູ່ຕາມຄ່າເລີ່ມຕົ້ນ: pi-web ຕັ້ງຊື່ເຊສຊັນອັດຕະໂນມັດໂດຍໃຊ້ຮິວຣິສຕິກຄຳສັບທີ່ມີໃນຕົວແບບຟຣີ (ບໍ່ໃຊ້ AI), ປ່ຽນຊື່ໃໝ່ທຸກຄັ້ງທີ່ມີຂໍ້ຄວາມໃໝ່. ທ່ານສາມາດປ່ຽນເປັນການຕັ້ງຊື່ຄັ້ງດຽວຕໍ່ເຊສຊັນ, ແລະ/ຫຼື ເລືອກໂມເດລເພື່ອຂຽນຊື່ທີ່ສະຫຼາດຂຶ້ນແທນຮິວຣິສຕິກ.
-
-ໃນ Linux, ການເລີ່ມອັດຕະໂນມັດຖືກຕັ້ງຄ່າເປັນ user systemd service ທີ່ `~/.config/systemd/user/pi-web.service`. ຕົວຕິດຕັ້ງຈະຂຽນ `ExecStart` ໃໝ່ໃຫ້ເປັນພາດໄບນາຣີທີ່ຕິດຕັ້ງຈິງ. ຖ້າ Tailscale ມີຢູ່ໃນ runtime, pi-web ຈະເຜີຍແພ່ເຊີບເວີ localhost ດ້ວຍ Tailscale Serve HTTPS. ຖ້າ user systemd ບໍ່ສາມາດໃຊ້ໄດ້, ໃຫ້ເຮັດວຽກມັນດ້ວຍຕົນເອງດ້ວຍ `~/.pi/agent/bin/pi-web -o`.
-
-ເພື່ອຕິດຕັ້ງສະເພາະສຳລັບໂປຣເຈັກໃດໜຶ່ງ (ແບ່ງປັນກັບທີມຂອງທ່ານຜ່ານ `.pi/settings.json`):
+### ปิ แพ็กเกจ (แนะนำ)
 
 ```bash
-pi install -l npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-ຈາກນັ້ນ restart pi (ຫຼື ເຮັດ `/reload`), ແລະ ໃຊ້ `/web`, `/pi-web`, `/remote`, `/refresh`. ຈັດການ token ການເຂົ້າເຖິງຂອງທ່ານດ້ວຍ `/pi-web token` ແລະ `/pi-web set-token`.
+คำสั่งเดียวนี้:
+- ติดตั้ง npm pi package ภายใต้ไดเรกทอรี package ของ pi
+- รันสคริปต์ `postinstall` ของ package (`install.sh` หรือ `install.ps1` บน Windows)
+- ดาวน์โหลด binary pi-web ที่ตรงกับเวอร์ชัน package และแพลตฟอร์มของคุณ จาก GitHub Releases
+- ติดตั้งไปที่ `~/.pi/agent/bin/pi-web` (`pi-web.exe` บน Windows)
+- ตั้งค่าเริ่มทำงานอัตโนมัติเมื่อเข้าสู่ระบบ (launchd บน macOS, systemd บน Linux, Run-key launcher บน Windows)
+- จดทะเบียนคำสั่ง pi ได้แก่ `/web`, `/remote`, `/refresh`, `/pi-web token` และ `/pi-web set-token`
 
-ຖ້າ npm ຢຸດດ້ວຍ `ENOTEMPTY` ໃນຂະນະທີ່ປ່ຽນຊື່ `@timmygod/pi-web-local`, ໃຫ້ລຶບໄດເຣັກທໍຣີສຳຮອງທີ່ເຊື່ອງໄວ້ທີ່ຄ້າງຢູ່ຂອງ npm ແລະ ຕິດຕັ້ງ beta channel ໃໝ່:
+การตั้งชื่อเซสชันอัตโนมัติถูกรวมอยู่ใน pi-web (ไม่ใช่ใน extension) และตั้งค่าได้ที่หน้า `/settings` เปิดไว้โดยค่าเริ่มต้น: pi-web ตั้งชื่อเซสชันอัตโนมัติโดยใช้ heuristic คำศัพท์ builtin ที่ฟรี (ไม่ใช้ AI) และตั้งชื่อใหม่ทุกข้อความใหม่ คุณสามารถสลับไปตั้งชื่อหนึ่งครั้งต่อเซสชัน และ/หรือเลือกโมเดลเพื่อเขียนชื่อที่ชาญฉลาดขึ้นแทน heuristic
+
+บน Linux การเริ่มทำงานอัตโนมัติถูกตั้งค่าเป็น user systemd service ที่ `~/.config/systemd/user/pi-web.service` ตัวติดตั้งจะเขียน `ExecStart` ใหม่เป็นพาธ binary ที่ติดตั้งจริง หาก Tailscale มีอยู่ขณะ runtime pi-web จะเผยแพร่เซิร์ฟเวอร์ localhost ด้วย Tailscale Serve HTTPS หาก user systemd ใช้ไม่ได้ ให้รันเองด้วย `~/.pi/agent/bin/pi-web -o`
+
+เพื่อติดตั้งเฉพาะสำหรับโครงการเฉพาะ (แชร์กับทีมของคุณผ่าน `.pi/settings.json`):
 
 ```bash
-rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@timmygod/pi-web-local@beta
+pi install -l npm:@timmygod/pi-web-local
 ```
 
-### ການຕິດຕັ້ງແບບດ່ວນ (ບໍ່ຕ້ອງມີ build tools)
+จากนั้นรีสตาร์ท pi (หรือรัน `/reload`) และใช้ `/web`, `/pi-web`, `/remote`, `/refresh` จัดการ access token ของคุณด้วย `/pi-web token` และ `/pi-web set-token`
+
+หาก npm หยุดด้วย `ENOTEMPTY` ขณะ rename `@timmygod/pi-web-local` ให้ลบไดเรกทอรี backup ซ่อนค้างของ npm แล้วติดตั้ง package ใหม่:
+
+```bash
+rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-*
+pi install npm:@timmygod/pi-web-local
+```
+
+### ติดตั้งด่วน (ไม่ต้องใช้เครื่องมือ build)
+
+macOS / Linux:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
-ຄຳສັ່ງນີ້ດາວໂຫຼດໄບນາຣີ pi-web ລ່າສຸດ, ຕິດຕັ້ງມັນໃສ່ `/usr/local/bin`, ແລະ ຕັ້ງຄ່າການເລີ່ມອັດຕະໂນມັດເມື່ອ login. ບໍ່ຕ້ອງການ Go, Node, ຫຼື pi.
+Windows (PowerShell):
 
-### ດາວໂຫຼດໄບນາຣີ
+```powershell
+irm https://raw.githubusercontent.com/timmygod/pi-web/main/install.ps1 | iex
+```
 
-ໄບນາຣີທີ່ສ້າງມາກ່ອນຖືກແນບມາໃນແຕ່ລະ [GitHub Release](https://github.com/timmygod/pi-web/releases).
+สิ่งนี้ดาวน์โหลด binary pi-web ล่าสุด ติดตั้งไปที่ `/usr/local/bin` (`~/.pi/agent/bin` บน Windows) และตั้งค่าเริ่มทำงานอัตโนมัติเมื่อเข้าสู่ระบบ ไม่ต้องใช้ Go, Node หรือ pi
+
+### ดาวน์โหลด binary
+
+binary ที่ build ไว้ล่วงหน้าถูกแนบมากับแต่ละ [GitHub Release](https://github.com/timmygod/pi-web/releases)
 
 ```bash
 # macOS (Apple Silicon)
@@ -105,118 +115,153 @@ curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi
 chmod +x pi-web
 ```
 
-ຈາກນັ້ນຍ້າຍມັນໃສ່ PATH ຂອງທ່ານ:
+```powershell
+# Windows (x64)
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-amd64.exe
+
+# Windows (ARM64)
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-arm64.exe
+```
+
+จากนั้นย้ายมันไปที่ PATH ของคุณ:
 
 ```bash
 cp pi-web ~/.pi/agent/bin/
-# ຫຼື ທົ່ວລະບົບ:
+# หรือทั้งระบบ:
 sudo cp pi-web /usr/local/bin/
 ```
 
-### ສ້າງຈາກ source
+### Build จาก source
+
+checkout นี้คือรุ่น local-model ของ pi-web การ build ปกติสร้าง web application และ backend ด้วยกัน; ความปลอดภัยสำหรับ local-model ถูกเปิดใน runtime ด้วย Local Mode ที่มีผลของเซสชัน ไม่ใช่ด้วย binary แยกต่างหาก
 
 ```bash
 git clone https://github.com/timmygod/pi-web.git
 cd pi-web
-make build   # ສ້າງ Vite bundle, ຈາກນັ້ນຝັງມັນໃສ່ Go binary
+make build   # build Vite bundle จากนั้นฝังมันเข้าไปใน binary ของ Go
 
-# ທາງເລືອກ: ເອົາໃສ່ PATH
+# optional: วางมันบน PATH
 cp pi-web ~/.pi/agent/bin/
 ```
 
-frontend bundle ຖືກຝັງໂດຍ `web/assets_embed.go`, ດັ່ງນັ້ນ `go build` ຕ້ອງການ
-`web/dist` ໃຫ້ມີຢູ່ກ່ອນ. `make build` ເຮັດທັງສອງຂັ້ນຕອນຕາມລຳດັບ; ຖ້າທ່ານສ້າງ
-ດ້ວຍຕົນເອງ, ໃຫ້ເຮັດ `npm --prefix web install && npm --prefix web run build` ກ່ອນ
-`go build ./cmd/pi-web`.
+frontend bundle ถูกฝังโดย `web/assets_embed.go` ดังนั้น `go build` ต้องมี
+`web/dist` ก่อน `make build` ทำทั้งสองขั้นตอนตามลำดับ; หากคุณ build
+ด้วยมือ ให้รัน `npm --prefix web install && npm --prefix web run build` ก่อน
+`go build ./cmd/pi-web`
 
-## ການຖອນການຕິດຕັ້ງ
+สำหรับ workflow fork ที่บำรุงรักษาไว้ การซิงค์กับ upstream และรายการตรวจสอบการยืนยัน Local Mode ดู [ заметки การพัฒนา local-model](../../docs/dev/local-llm-development.md)
+
+### พัฒนาไปพร้อมกันกับ instance ที่ติดตั้งไว้
+
+ปล่อย instance ที่ติดตั้งไว้ทำงานต่อที่พอร์ต `31415` จากนั้นเปิด
+checkout ของ source ในโหมด development:
 
 ```bash
-pi remove npm:@timmygod/pi-web-local@beta
+make dev
 ```
 
-ຄຳສັ່ງນີ້ເຮັດວຽກສະຄຣິບ `preuninstall` ຂອງ package (`bash uninstall.sh`), ເຊິ່ງຢຸດ
-instance ທີ່ກຳລັງເຮັດວຽກຢູ່ ແລະ ລຶບ:
+เปิด `http://127.0.0.1:31416` `make dev` ตั้งค่าสภาพแวดล้อม `PI_WEB_DEV=1`
+ภายในสำหรับ development ดังนั้น checkout ของ source จึงแชร์เซสชัน การตั้งค่า และข้อมูล SQLite กับ instance ที่ติดตั้งไว้ โดยยังคง runtime lock และไฟล์ state ของ development ไว้แยกต่างหาก instance ที่ติดตั้งไว้ปกติและที่เริ่มต้นด้วยมือไม่เปลี่ยนและคงพฤติกรรม single-instance แบบเดิม
 
-- ໄບນາຣີ pi-web (`~/.pi/agent/bin/pi-web`, ຫຼື `/usr/local/bin/pi-web` ສຳລັບການຕິດຕັ້ງແບບ standalone)
-- ໄຟລ໌ເວີຊັນ (`~/.pi/agent/pi-web-version`)
-- ໄຟລ໌ສະຖານະ runtime (`~/.pi/agent/pi-web/pi-web-state.json`)
-- ການຕັ້ງຄ່າການເລີ່ມອັດຕະໂນມັດ (launchd plist ສຳລັບ macOS, systemd user service ສຳລັບ Linux)
+เพื่อป้องกันการทำงาน autonomous ซ้ำซ้อน โหมด development ไม่ได้รัน
+schedule loop, chat-queue drainer, auto-titling หรือ push notifications คำขอโดยตรงที่ทำผ่าน UI ของ development ยังคงทำงานได้ อย่าขับเซสชัน chat เดียวกันจากทั้งสอง instance พร้อมกัน; แต่ละกระบวนการมีตัวจัดการ RPC worker ของตัวเอง
 
-ຂໍ້ມູນຂອງທ່ານຖືກເກັບຮັກສາໄວ້ ເພື່ອໃຫ້ການຕິດຕັ້ງໃໝ່ໃນພາຍຫຼັງສາມາດເລີ່ມຕໍ່ຈາກຈຸດທີ່ທ່ານຢຸດໄວ້:
-`~/.pi/agent/pi-web.sqlite`, `~/.pi/agent/pi-web-memory.sqlite`, ໄຟລ໌ເຊສຊັນຂອງທ່ານ
-ພາຍໃຕ້ `~/.pi/agent/sessions/`, ແລະ `~/.config/pi-web/env` (ລວມທັງ
-`PI_WEB_TOKEN`). ລຶບສິ່ງເຫຼົ່ານັ້ນດ້ວຍຕົນເອງ ຖ້າທ່ານຕ້ອງການເລີ່ມຕົ້ນໃໝ່ທັງໝົດ.
-
-## ການນຳໃຊ້
+`make dev` ต้องการ [Air](https://github.com/air-verse/air) สำหรับ Go hot reload:
 
 ```bash
-# ເລີ່ມເຮັດວຽກທີ່ພອດເລີ່ມຕົ້ນ (31415)
+go install github.com/air-verse/air@latest
+```
+
+`PI_WEB_DEV` เป็นเครื่องมือของ harness สำหรับ development ไม่ใช่โหมด multi-instance อย่างเป็นทางการของ production
+
+## เลิกติดตั้ง
+
+```bash
+pi remove npm:@timmygod/pi-web-local
+```
+
+สิ่งนี้รันสคริปต์ `preuninstall` ของ package (`uninstall.sh` หรือ `uninstall.ps1`
+บน Windows) ซึ่งหยุด instance ที่กำลังทำงานและลบ:
+
+- binary ของ pi-web (`~/.pi/agent/bin/pi-web` หรือ `/usr/local/bin/pi-web` สำหรับ installation แบบ standalone)
+- ไฟล์เวอร์ชัน (`~/.pi/agent/pi-web-version`)
+- ไฟล์ state ของ runtime (`~/.pi/agent/pi-web/pi-web-state.json`)
+- การตั้งค่าเริ่มทำงานอัตโนมัติ (launchd plist บน macOS, user service ของ systemd บน Linux, Run-key entry + สคริปต์ launcher บน Windows)
+
+ข้อมูลของคุณยังคงอยู่ ดังนั้นการติดตั้งใหม่ภายหลังจะต่อตรงที่คุณหยุดไว้:
+`~/.pi/agent/pi-web.sqlite`, `~/.pi/agent/pi-web-memory.sqlite`, ไฟล์เซสชัน
+ของคุณใต้ `~/.pi/agent/sessions/` และ `~/.config/pi-web/env` (รวมถึง
+`PI_WEB_TOKEN`) หากต้องการเริ่มใหม่โดยสะอาด ให้ลบสิ่งเหล่านี้ด้วยมือ
+
+## การใช้งาน
+
+```bash
+# เริ่มที่พอร์ตค่าเริ่มต้น (31415)
 pi-web
 
-# ເລີ່ມເຮັດວຽກ ແລະ ເປີດບຣາວເຊີ
+# เริ่มและเปิดเบราว์เซอร์
 pi-web -o
 
-# ພອດທີ່ກຳນົດເອງ
+# พอร์ตกำหนดเอง
 pi-web -p 8080
 
-# ປ່ຽນ bind host (loopback ບໍ່ມີການຢືນຢັນຕາມຄ່າເລີ່ມຕົ້ນ)
+# override bind host (loopback ไม่มี authentication โดยค่าเริ่มต้น)
 pi-web --host 127.0.0.1
 
-# ການ bind ແບບ non-loopback ຕ້ອງການ token — pi-web ຈະປະຕິເສດບໍ່ເລີ່ມເຮັດວຽກຖ້າບໍ່ມີ
+# bind ที่ไม่ใช่ loopback ต้องการ token — pi-web ปฏิเสธที่จะเริ่มในทางกลับกัน
 PI_WEB_TOKEN=$(openssl rand -hex 16) pi-web --host 192.168.1.50
 ```
 
-ຕາມຄ່າເລີ່ມຕົ້ນ, pi-web binds ກັບ `127.0.0.1`. ຖ້າ Tailscale ກຳລັງເຮັດວຽກດ້ວຍ MagicDNS, pi-web ຍັງຈະເຮັດ `tailscale serve --bg --https=<port> http://127.0.0.1:<port>` ແລະ ສະແດງ HTTPS tailnet URL. ການ bind non-loopback ແບບຊັດເຈນໃດໆ ຕ້ອງການໃຫ້ `PI_WEB_TOKEN` ຖືກຕັ້ງຄ່າ; ໃຊ້ `--insecure` ເພື່ອຂ້າມສຳລັບການທົດສອບພາຍໃນ.
+โดยค่าเริ่มต้น pi-web bind ไปที่ `127.0.0.1` หาก Tailscale กำลังรันด้วย MagicDNS **และ `PI_WEB_TOKEN` ถูกตั้งไว้** pi-web จะรัน `tailscale serve --bg --https=<port> http://127.0.0.1:<port>` ด้วย และพิมพ์ URL ของ HTTPS tailnet หากไม่มี token pi-web จะคง loopback-only และข้าม Tailscale Serve ดังนั้น peer ใน tailnet จึงไม่สามารถเข้าถึง agent โดยไม่มี authentication การ bind ที่ไม่ใช่ loopback ที่ระบุชัดก็ต้องการ `PI_WEB_TOKEN` ให้ตั้งเช่นกัน; ส่ง `--insecure` เพื่อ override สำหรับทดสอบภายใน
 
-## ການເຂົ້າເຖິງທາງໄກ
+## การเข้าถึงระยะไกล
 
-ປ່ອຍໃຫ້ pi-web ຟັງຢູ່ພາຍໃນ, ຈາກນັ້ນໃຊ້ Tailscale HTTPS URL ທີ່ສະແດງຈາກໂທລະສັບ ຫຼື ແລັບທັອບຂອງທ່ານໃນ tailnet.
+ปล่อย pi-web รับฟังในระดับ local แล้วใช้ URL ของ Tailscale HTTPS ที่พิมพ์มาจากโทรศัพท์หรือแล็ปท็อปบน tailnet
 
-ໃນ macOS, ຕິດຕັ້ງ ແລະ ເປີດ Tailscale ແບບໂຕ້ຕອບ, ອະນຸມັດຄຳຂໍສິດ administrator ແລະ ເຂົ້າລະບົບ. ຈາກນັ້ນເອີ້ນໃຊ້ `/pi-web restart`, ຕາມດ້ວຍ `/remote`.
+บน macOS ติดตั้งและเปิด Tailscale แบบ interactive ยืนยันคำสั่งของ administrator และเข้าสู่ระบบ จากนั้นรัน `/pi-web restart` ตามด้วย `/remote`
 
-ໃນ Linux, ໃຫ້ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ຂອງທ່ານຈັດການ Tailscale ກ່ອນການຕິດຕັ້ງ/ເຮັດວຽກ pi-web, ຖ້າບໍ່ດັ່ງນັ້ນ `tailscale serve` ອາດຕ້ອງການ sudo ແລະ ການເລີ່ມອັດຕະໂນມັດອາດລົ້ມເຫຼວ:
+บน Linux อนุญาตให้ผู้ใช้ของคุณจัดการ Tailscale ก่อนติดตั้ง/รัน pi-web มิฉะนั้น `tailscale serve` อาจต้องการ sudo และการเริ่มทำงานอัตโนมัติอาจล้มเหลว:
 
 ```bash
 sudo tailscale set --operator=$USER
 ```
 
 ```bash
-# 1. ເລີ່ມ pi-web
-pi-web
+# 1. เริ่ม pi-web ด้วย token เพื่อให้มันเผยแพร่ endpoint ของ Tailscale HTTPS
+PI_WEB_TOKEN=$(openssl rand -hex 16) pi-web
 
-# 2. ຈາກອຸປະກອນອື່ນທີ່ເຊື່ອມຕໍ່ Tailscale, ເປີດ
-#    "Tailscale HTTPS" URL ທີ່ສະແດງຢູ່.
+# 2. จากอุปกรณ์อื่นที่เชื่อม Tailscale แล้ว ให้เปิด
+#    URL "Tailscale HTTPS" ที่พิมพ์ไว้ และป้อน token หนึ่งครั้ง
 ```
 
-> ຕາມຄ່າເລີ່ມຕົ້ນ, pi-web ປະຕິເສດການ bind ກັບທີ່ຢູ່ non-loopback ເວັ້ນເສຍແຕ່ວ່າ `PI_WEB_TOKEN` ຖືກຕັ້ງຄ່າ — ຜູ້ທີ່ສາມາດເຂົ້າເຖິງທີ່ຢູ່ທີ່ຖືກ bind ໄດ້ ອາດສາມາດເບິ່ງເຊສຊັນ ແລະ ສົ່ງຄຳສັ່ງໄປຫາ pi. ເພື່ອຂ້າມການປ້ອງກັນນີ້ສຳລັບການທົດສອບພາຍໃນເຄືອຂ່າຍ, ໃຫ້ໃຊ້ `--insecure`. **ຢ່າໃຊ້ `--insecure` ເທິງ Tailscale ຫຼື ທີ່ຢູ່ໃດໆທີ່ສາມາດເຂົ້າເຖິງໄດ້ຈາກພາຍນອກເຄື່ອງຂອງທ່ານ.**
+> โดยค่าเริ่มต้น pi-web ปฏิเสธที่จะ bind ไปที่ address ที่ไม่ใช่ loopback เว้นแต่ `PI_WEB_TOKEN` จะถูกตั้งไว้ — โดยไม่เช่นนั้นผู้ใดก็ตามที่สามารถเข้าถึง address ที่ bind ได้สามารถดูเซสชันและส่งคำสั่งไปที่ pi ได้ เพื่อ override การป้องกันนี้สำหรับการทดสอบบนเครือข่ายภายใน ให้ส่ง `--insecure` **อย่าใช้ `--insecure` บน Tailscale หรือ address ใดที่เข้าถึงได้จากภายนอกเครื่องของคุณ**
 >
-> ຜູ້ໃຊ້ສາມາດສົ່ງ token ຜ່ານ header `Authorization: Bearer <token>`, header `X-Pi-Token`, ຫຼື ຄັ້ງດຽວຜ່ານ `?token=<token>` (ເຊິ່ງຕັ້ງ cookie `pi_token` ສຳລັບຄຳຂໍຕໍ່ໄປ). tokens ທີ່ສົ່ງຜ່ານ `?token=` ຈະປາກົດຢູ່ໃນປະຫວັດບຣາວເຊີ, ລັອກການເຂົ້າເຖິງເຊີບເວີ, ແລະ `Referer` headers ຈາກລິ້ງໃດໆໃນໜ້າ — ແນະນຳໃຫ້ໃຊ້ຮູບແບບ header ສຳລັບທຸກຢ່າງນອກເໜືອຈາກ bookmark ເບື້ອງຕົ້ນ.
+> Client สามารถส่ง token ผ่าน header `Authorization: Bearer <token>`, header `X-Pi-Token` หรือหนึ่งครั้งผ่าน `?token=<token>` (ซึ่งตั้ง cookie `pi_token` สำหรับการขอขอกับกำลังจะมาถึง) token ที่ส่งผ่าน `?token=` จะเข้าไปอยู่ใน history ของเบราว์เซอร์ server access logs และ header `Referer` จากลิงก์ทุกตัวบนหน้า — แนะนำให้ใช้รูปแบบ header สำหรับทุกสิ่งเกินจาก bookmark เริ่มต้น
 
-## ການສົນທະນາຜ່ານບຣາວເຊີ
+## Chat ในเบราว์เซอร์
 
-ເປີດໜ້າເຊສຊັນ ແລະ ໃຊ້ composer ດ້ານລຸ່ມເພື່ອສືບຕໍ່ເຊສຊັນນັ້ນໆ.
+เปิดหน้าของเซสชันแล้วใช้ composer ที่ด้านล่างเพื่อต่อเซสชันนั้นพอดี
 
-- `Enter` ສົ່ງ, `Shift+Enter` ໃສ່ບັນທັດໃໝ່
-- ລາກແລ້ວວາງ ຫຼື ວາງຮູບພາບໂດຍກົງໃສ່ composer
-- ຕົວເລືອກໂມເດລ ແລະ ຕົວເລືອກລະດັບການຄິດຢູ່ໃນ header — ການປ່ຽນແປງຈະມີຜົນຕໍ່ pi worker ທີ່ຢູ່ເບື້ອງຫຼັງທັນທີ
-- ແຕ່ລະເຊສຊັນທີ່ເຮັດວຽກມີ `pi --mode rpc` worker ຂອງຕົນເອງ, ດັ່ງນັ້ນເຊສຊັນທີ່ແຕກຕ່າງກັນຈະບໍ່ບລັອກກັນ
+- `Enter` ส่งข้อความ `Shift+Enter` แทรกบรรทัดใหม่
+- ลาก-วางหรือวางรูปโดยตรงเข้าไปใน composer
+- ตัวเลือกโมเดลและตัวเลือกระดับการคิดอยู่ที่ header — การเปลี่ยนแปลงมีผลกับ pi worker ฐานทันที
+- แต่ละเซสชันที่กำลังทำงานได้ worker `pi --mode rpc` ส่วนตัวของมันเอง ดังนั้นเซสชันต่างๆ จึงไม่บล็อกกัน
 
-## ການແບ່ງປັນເຊສຊັນ
+## แชร์เซสชัน
 
-ຄລິກ **Share** ໃນໜ້າເຊສຊັນເພື່ອສ້າງ GitHub Gist ແບບລັບ.
+คลิก **แชร์** บนหน้าของเซสชันเพื่อสร้าง secret GitHub Gist
 
-ຂໍ້ກຳນົດ:
-- `gh` ຖືກຕິດຕັ້ງ
-- `gh auth login` ສຳເລັດແລ້ວ
+ความต้องการ:
+- ติดตั้ง `gh` แล้ว
+- `gh auth login` เสร็จแล้ว
 
-ການແບ່ງປັນສົ່ງຄືນ:
-- secret gist URL
-- preview URL ທີ່ `https://pi.dev/session/#<gistId>`
+การแชร์คืน:
+- URL ของ secret gist
+- URL preview ที่ `https://pi.dev/session/#<gistId>`
 
-gists ທີ່ແບ່ງປັນແມ່ນພາບຖ່າຍ ແລະ ບໍ່ມີການອັບເດດແບບສົດໆ.
+gist ที่แชร์เป็น snapshot และไม่ได้ live-update
 
-## ການເລີ່ມອັດຕະໂນມັດເມື່ອ Login
+## เริ่มทำงานอัตโนมัติเมื่อเข้าสู่ระบบ
 
 ### macOS
 
@@ -228,25 +273,48 @@ launchctl load ~/Library/LaunchAgents/com.pi-web.plist
 ### Linux (systemd)
 
 ```bash
-# ຕິດຕັ້ງ systemd user service
+# ติดตั้ง user service ของ systemd
 mkdir -p ~/.config/systemd/user
 cp init/pi-web.service ~/.config/systemd/user/
 
-# ທາງເລືອກ: ຕັ້ງຄ່າ PI_WEB_TOKEN ຂອງທ່ານສຳລັບ non-loopback binds
-# (ຫຼື ໃຊ້ /pi-web set-token <token> ຈາກພາຍໃນ pi)
+# optional: ตั้ง PI_WEB_TOKEN ของคุณสำหรับ bind ที่ไม่ใช่ loopback
+# (หรือใช้ /pi-web set-token <token> จากภายใน pi)
 mkdir -p ~/.config/pi-web
 echo 'PI_WEB_TOKEN=your-token-here' > ~/.config/pi-web/env
 
-# ເປີດໃຊ້ງານ ແລະ ເລີ່ມ
+# เปิดใช้งานและเริ่ม
 systemctl --user daemon-reload
 systemctl --user enable --now pi-web.service
 
-# ກວດສອບສະຖານະ
+# ดูสถานะ
 systemctl --user status pi-web.service
 
-# ເບິ່ງລັອກ
+# ดู log
 journalctl --user -u pi-web.service -f
 ```
 
-> ສຳລັບການເລີ່ມ service ຕອນ boot (ກ່ອນ login), ໃຫ້ໃຊ້ system service ແທນ:
-> ກັອບປີ້ `init/pi-web.service` ໃສ່ `/etc/systemd/system/` ແລະ ໃຊ້ `sudo systemctl`.
+> เพื่อให้ service เริ่มเมื่อเครื่องเปิด (ก่อนเข้าสู่ระบบ) ให้ใช้ระบบ service แทน:
+> คัดลอก `init/pi-web.service` ไปที่ `/etc/systemd/system/` และใช้ `sudo systemctl`
+
+### Windows
+
+ตัวติดตั้งตั้งค่าสิ่งนี้อย่างอัตโนมัติ โดยไม่ต้องใช้สิทธิ์ admin:
+entry `pi-web` ภายใต้ `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`
+จะเปิด `~/.config/pi-web/pi-web-start.vbs` เมื่อเข้าสู่ระบบ ซึ่งเริ่ม binary
+แบบซ่อน (ไม่มี console window) หลังจากโหลด `~/.config/pi-web/env`
+(`PI_WEB_TOKEN`, `PATH`, ...)
+
+เพื่อจัดการด้วยมือ:
+
+```powershell
+# เริ่ม / หยุด
+wscript.exe "$HOME\.config\pi-web\pi-web-start.vbs"
+taskkill /IM pi-web.exe /F
+
+# ลบการเริ่มทำงานอัตโนมัติ
+Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'pi-web'
+```
+
+ไม่มี service supervision บน Windows: หาก pi-web crash มันจะหยุดทำงาน
+จนถึงการเข้าสู่ระบบครั้งถัดไป (launchd/systemd restart มันอัตโนมัติบนแพลตฟอร์ม
+อื่น)

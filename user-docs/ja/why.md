@@ -1,30 +1,48 @@
-# なぜpi-webなのか？
+# Why pi-web?
 
-私はClaude Codeにちょっとした中毒になっています。いつも使っています。コンピューターの前に座っていないときも、それについて考えています。十分なトークンを消費していない気がします。それはClaude Codeの初期の頃でした。そして考えていました、なぜスマートフォンから再開できないのか？Termiusを設定しましたが、あまり気に入りませんでした。
+I'm kind of addicted to Claude Code. I am always using it. If I am not sitting in front of the computer, I am thinking about it. I feel like I am not burning enough tokens. It was the early days of Claude Code. And I was thinking, why can't I resume from my phone? I set up Termius and I didn't really like it.
 
-自分で作り始めましたが、ClaudeがClaude Codeのモバイルアプリを導入した時点でやめました。
+I started to create my own and stopped when Claude introduced their Claude Code mobile app.
 
-それから椎間板ヘルニアになって、あまり何もできなくなりました。時間が経ち、少し回復したと感じ、Claude Codeをweb/PWA経由で続けるプロジェクトを再開したいと思いました。
+Then I got a herniated disc and I couldn't really do anything that much. Time went on and I felt recovered a bit and I wanted to continue my Claude Code via web/PWA project.
 
-それからClaude Codeが自社のハーネス外での使用を禁止し始めました。そして、それには価値がないと感じました。
+Then Claude Code started banning usage outside of their own harness. And I feel like it's not worth it.
 
-それからpi.devを見つけて少し探ってみましたが、まだ本格的には取り組んでいませんでした。それについて読み、動画を見て、本格的に試してみることに決め、今ではすっかりpiに夢中です。
+Then I found pi.dev and explored a bit but hadn't really dived in. I read about it, watched videos about it and decided to give a full try and now I am totally into pi.
 
-オープンソースなので、そのために開発する価値があると感じています。さまざまなプロバイダーを選べるのも良い点です。また、Anthropic/Claudeのような一つのプロバイダー/モデルに依存するのは持続可能ではないとも感じています。
+Since it's open source I feel like it's worth building for. I get different provider choices as well. I also feel like relying on one provider/model like Anthropic/Claude is not sustainable.
 
-だからここで開発しています。
+So I am building it here.
 
-## ローカルモデルが異なる運用プロファイルを必要とする理由
+This checkout is maintained as a local-model edition of pi-web. It follows the
+upstream project for shared improvements, while keeping local deployment,
+context stability, and local-model testing on a separately released track.
 
-元の pi-web の体験は優れた基盤ですが、ローカル推論は典型的なホスト型モデルとは異なる障害モードを持っています。ローカルモデルは、コンテキストが増大するにつれて急激に遅くなったり、マシンの他の部分と限られたメモリを共有したり、推論のみを生成した後に停止したり、一時的なローカルトランスポート障害により長時間の実行を失ったりする可能性があります。これらのケースをクラウド障害と全く同じように扱うと、UI は互換性があるように見えますが、実際のセッションは依然として脆弱です。
+## Why a local model needs a different operating profile
 
-このエディションは問題を階層的にアプローチします：
+The original pi-web experience is an excellent foundation, but local inference
+has different failure modes from a typical hosted model. A local model may slow
+down sharply as context grows, share limited memory with the rest of the machine,
+stop after producing only reasoning, or lose a long run to a transient local
+transport failure. Treating those cases exactly like cloud failures makes the UI
+look compatible while the actual session remains fragile.
 
-1. **まず上流を保持する。** 共有 UI とセッションの動作は pi-web から引き続き提供され、ローカルの変更は有効な Local Mode の背後に分離されています。
-2. **回復する前に予防する。** 長いツールループ内の呼び出しを含め、後続のプロバイダー呼び出しの前に、パーセンテージベースの 65% コンテキスト境界が適用されます。
-3. **証拠がある場合のみ回復する。** 自動続行は、認証、クォータ、または任意のプロバイダーエラーではなく、認識されたコンテキスト、トランスポート、および思考のみのインシデントに限定されます。
-4. **すべての自律的なアクションを制限する。** 回復インシデントは重複排除され、別の救出の前に進捗が必要であり、起動時には最近アクティブな Local セッションを最大 1 つ考慮します。
-5. **手動の出口を維持する。** Force Compact は履歴を消去するのではなく要約するため、ユーザーはコンテキストが存在しなかったかのように見せかけずにセッションを救出できます。
-6. **クラウド互換性を保護する。** Cloud Mode は上流のセマンティクスとコントロールを維持し、ローカルモデルの最適化はクラウドセッションを黙って再定義しません。
+This edition approaches the problem in layers:
 
-これがこのフォークの本当の違いです。ローカル推論を単なるドロップダウン内の別のモデル名としてではなく、独立した運用環境として扱います。
+1. **Preserve upstream first.** Shared UI and session behavior continue to come
+   from pi-web; local changes are isolated behind effective Local Mode.
+2. **Prevent before recovering.** A percentage-based 65% context boundary is
+   enforced before subsequent model calls, including calls inside long tool loops.
+3. **Recover only with evidence.** Automatic continuation is limited to recognized
+   context, transport, and thinking-only incidents—not authentication, quota, or
+   arbitrary provider errors.
+4. **Bound every autonomous action.** Recovery incidents are deduplicated,
+   progress is required before another rescue, and startup considers at most one
+   recently active Local session.
+5. **Keep a manual exit.** Force Compact summarizes rather than wipes history, so
+   the user can rescue a session without pretending the context never existed.
+6. **Protect cloud compatibility.** Cloud Mode keeps the upstream semantics and
+   controls; local-model optimizations do not silently redefine cloud sessions.
+
+That is the real difference in this fork: it treats local inference as a distinct
+operational environment, not merely another model name in a dropdown.

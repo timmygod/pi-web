@@ -89,7 +89,7 @@ func workerDir(sessionPath string) string {
 
 // detachedPiDir is a cwd with no project .pi/extensions. The installed
 // LaunchAgent uses /tmp for the same reason: pi loads project extensions from
-// cwd, and this repo's tools collide with `pi install npm:@ygncode/pi-web`.
+// cwd, and this repo's tools collide with `pi install npm:@timmygod/pi-web-local`.
 func detachedPiDir() string {
 	return os.TempDir()
 }

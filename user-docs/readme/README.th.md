@@ -3,8 +3,8 @@
 <div align="center">
 
 [![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
-[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![npm downloads](https://img.shields.io/npm/dt/@timmygod/pi-web-local?label=downloads&color=2ea043)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -14,120 +14,129 @@
 
 <div align="center">
 
-ขับเคลื่อน [pi](https://pi.dev) coding agent ของคุณจากโทรศัพท์, แท็บเล็ต, หรือแล็ปท็อป — ทุกที่บนเครือข่ายของคุณ, หรือจากระยะไกลผ่าน Tailscale
+ใช้งาน [pi](https://pi.dev) coding agent ของคุณได้จากมือถือ แท็บเล็ต หรือแล็ปท็อป — ที่ไหนก็ได้บนเครือข่ายของคุณ หรือแบบระยะไกลผ่าน Tailscale
 
-มันเป็น PWA เต็มรูปแบบ ดังนั้นคุณสามารถติดตั้งและใช้งานได้เหมือนแอป native บนทุกอุปกรณ์ คิดว่ามันเป็นพื้นที่ทำงาน AI ส่วนตัวของคุณ — เหมือนกับ Claude's Cowork, แต่มีโมเดลที่หลากหลาย — แชทข้ามโมเดล, เขียนโค้ดจากโทรศัพท์ของคุณ, หรือเปลี่ยนมันให้เป็น [ผู้ช่วยส่วนตัว](../en/personal-assistant.md) ที่อาศัยอยู่บนเครื่องของคุณ
+เป็น PWA เต็มรูปแบบ ทำให้คุณติดตั้งและใช้งานเหมือนแอปเนทีฟได้บนทุกอุปกรณ์ คิดว่านี่คือพื้นที่ทำงาน AI ส่วนตัวของคุณ — คล้าย Claude's Cowork แต่ใช้โมเดลอื่นได้ — แชทข้ามโมเดล โคดจากมือถือ หรือเปลี่ยนให้เป็น [ผู้ช่วยส่วนตัว](../en/personal-assistant.md) ที่อยู่บนเครื่องของคุณ
 
-ทำให้เป็นของคุณ: สลับธีมและฟอนต์, และใช้งานในภาษาของคุณเอง — pi-web มาพร้อมกับหลายภาษาและคุณสามารถเพิ่มภาษาของคุณเองได้ ฟีเจอร์เพิ่มเติมกำลังจะมา, แต่มันจะไม่บวม: อะไรก็ตามที่คุณไม่ต้องการสามารถปิดได้ในการตั้งค่า
+ปรับให้เป็นของคุณ: สลับธีมและฟอนต์ และใช้งานได้ในภาษาของคุณเอง — pi-web มาพร้อมหลายภาษาและคุณสามารถเพิ่มภาษาของตัวเองได้ คุณลักษณะเพิ่มเติมกำลังจะมา แต่จะไม่เต็มไปด้วยของที่ไม่จำเป็น: สิ่งที่เลือกใช้ได้ทั้งหมดสามารถปิดได้ใน settings
 
 </div>
 
-## ทำไมถึงเป็นรุ่นโมเดลท้องถิ่นนี้?
+## ทำไมต้อง edeทื่ลโมเดลลอคคานี้?
 
-pi-web ดั้งเดิมยังคงเป็นรากฐาน upstream สำหรับฟีเจอร์และการแก้ไขที่ใช้ร่วมกัน รุ่นนี้คงประสบการณ์นั้นไว้ จากนั้นเพิ่มชั้นความน่าเชื่อถือสำหรับโมเดลที่ทำงานบนเครื่องของคุณเองหรือที่อื่น ๆ บน LAN ของคุณ—ซึ่งการสร้างมักช้ากว่า หน่วยความจำมีจำกัด และบริบทที่ยาวอาจทำให้เซสชันที่ปกติดีหยุดชะงัก
+pi-web ต้นฉบับยังคงเป็นฐานพื้นฐาน upstream สำหรับฟีเจอร์ที่ share ร่วมกันและ
+fixes ทิศนี้รักษาก_experience นั้น แล้วเพิ่มชั้น reliability
+สำหรับโมเดลที่รันอยู่บนเครื่องของคุณเองหรือที่อื่นบน LAN ของคุณ—ซึ่งการ generate
+มักช้ากว่า ความจำมีจำกัด และ context ยาวอาจทำให้ session ที่สุขภาพดีปกติหยุดชะงัก
 
-| ด้าน | pi-web upstream | รุ่นนี้ |
+| Area | Upstream pi-web | ทิศนี้ |
 |------|-----------------|--------------|
-| นโยบายโมเดล/รันไทม์ | พฤติกรรม pi-web มาตรฐาน | โหมด **Auto / Local / Cloud** ต่อเซสชัน พร้อมการตรวจจับท้องถิ่นที่ตระหนักถึง endpoint และการเขียนทับด้วยตนเองแบบถาวร |
-| การจัดการบริบทที่ยาว | พฤติกรรมการบีบอัด pi ปกติ | Local Mode บีบอัดเชิงรุกที่ **65%** และตรวจสอบอีกครั้งภายในลูปการเรียกเครื่องมือที่ยาวก่อนการขอผู้ให้บริการรายอื่น |
-| ความปลอดภัยของการบีบอัด | สรุปมาตรฐาน | จุดตรวจสอบแบบหมุนเวียนที่มีขอบเขต การเขียนใหม่แบบเข้มงวดหนึ่งครั้งสำหรับผลลัพธ์ที่ไม่ถูกต้อง/ถูกจำกัด และการตรวจจับความไม่คืบหน้าแทนการบีบอัดซ้ำไม่สิ้นสุด |
-| การรันที่ถูกขัดจังหวะ | การจัดการ worker และข้อผิดพลาดปกติ | การกู้คืนที่มีขอบเขตสำหรับบริบทล้น การหยุดเฉพาะการคิด และการขัดจังหวะการส่งข้อมูลที่เลือก พร้อมตัวตัดลูปแบบถาวร |
-| การกู้คืนด้วยตนเอง | รายละเอียดบริบทมาตรฐาน | **Force Compact** ยังคงพร้อมใช้งานเป็นเส้นทางการกู้คืนที่ชัดเจนโดยไม่ลบการสนทนา |
-| ความเข้ากันได้และการเผยแพร่ | โปรเจกต์เดิมและไลน์การเผยแพร่ | มาตรการป้องกันเฉพาะท้องถิ่นยังคงอยู่เบื้องหลัง Local Mode; Cloud Mode คงพฤติกรรม upstream ไว้ และการเปลี่ยนแปลง upstream ได้รับการตรวจสอบและเผยแพร่ที่นี่อย่างอิสระ |
+| Model/runtime policy | พฤติกรรมมาตรฐานของ pi-web | โหมด **Auto / Local / Cloud** ต่อ session พร้อม local detection ที่คำนึงถึง endpoint และ manual override แบบถาวร |
+| Long-context handling | พฤติกรรม compaction ปกติของ pi | Local Mode ทำ compaction อย่าง proactively ที่ **65%** และตรวจสอบอีกครั้งในลูป tool-call ยาวก่อนคำขอโมเดลครั้งถัดไป |
+| Compaction safety | summary มาตรฐาน | rolling checkpoints แบบ bounded, rewrite อีกครั้งสำหรับ output ที่ไม่ถูกต้อง/ถูกจำกัด และตรวจจับ no-progress แทนการ re-compactionEndless |
+| Interrupted runs | การจัดการ worker และ error ปกติ | recovery แบบ bounded สำหรับ context overflow, thinking-only stops และ transport interruptions ที่เลือก พร้อม loop breakers แบบถาวร |
+| Manual rescue | context details มาตรฐาน | **Force Compact** ยังพร้อมใช้ในฐานะ explicit recovery path โดยไม่ลบการสนทนา |
+| Compatibility and releases | โปรเจกต์และ release line ต้นฉบับ | safeguards สำหรับ local-only ยังอยู่หลัง Local Mode; Cloud Mode รักษาวีติกรรม upstream, และ upstream changes ถูก review และ release ที่นี่อย่างอิสระ |
 
-นี่ไม่ใช่การเขียนใหม่หรือการแทนที่ upstream นี่คือโปรไฟล์การทำงานที่ได้รับการดูแลอย่างจงใจสำหรับผู้ที่ต้องการความเป็นส่วนตัวและการควบคุมโมเดลท้องถิ่นโดยไม่ยอมรับเซสชันระยะยาวที่เปราะบาง ดู[คู่มือผู้ใช้](../en/README.md)สำหรับเวิร์กโฟลว์ที่เน้นผู้ใช้และ[การพัฒนาเวอร์ชันโมเดลท้องถิ่น](../../docs/dev/local-llm-development.md)สำหรับการใช้งานและนโยบายการซิงโครไนซ์
-
-> [!WARNING]
-> pi-web อยู่ในช่วง **beta** สิ่งต่างๆ จะเปลี่ยนแปลงและพังได้!
+นี่ไม่ใช่การ rewrite หรือตัวแทนของ upstream แต่เป็น operating profile
+ที่บำรุงรักษาอย่างตั้งใจสำหรับคนที่ต้องการ privacy และ control ของ local-model
+โดยไม่ยอมรับ session ที่รันยาวและเปราะบาง ดู
+[user guide](../en/README.md) สำหรับ workflow ที่ผู้ใช้เห็น และ
+[local-model edition development](../../docs/dev/local-llm-development.md) สำหรับ
+implementation และ synchronization policy
 
 > [!TIP]
-> เพิ่งมาใหม่? **[อ่านคู่มือผู้ใช้ →](../en/README.md)** สำหรับทัวร์ฟีเจอร์แบบเต็ม, ขั้นตอนการติดตั้ง, และเคล็ดลับ ([ภาษาอื่นๆ →](../README.md))
+> ใหม่ที่นี่? **[อ่าน user guide →](../en/README.md)** เพื่อทัวร์เต็มรูปแบบของฟีเจอร์ ขั้นตอนติดตั้ง และเคล็ดลับ. ([ภาษาอื่น →](../README.md))
 
-## ภาพหน้าจอ
+## Screenshots
 
 <div align="center">
   <img src="../assets/pi-web-desktop-screenshot.png" alt="Desktop" width="90%" /><br />
-  <em>เดสก์ท็อป</em>
+  <em>Desktop</em>
   <br /><br />
-  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile PWA" width="90%" /><br />
-  <em>มือถือ PWA</em>
+  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile" width="90%" /><br />
+  <em>Mobile</em>
 </div>
 
-## มันประกอบกันอย่างไร
+## How It Fits Together
 
 ```
- pi (terminal)                 Browser (โทรศัพท์ / แท็บเล็ต / แล็ปท็อป)
+ pi (terminal)                 Browser (phone / tablet / laptop)
       │                                │
-      │  เขียน JSONL                  │  HTTP + SSE
+      │  writes JSONL                  │  HTTP + SSE
       ▼                                ▼
  ~/.pi/agent/sessions/  ←───  pi-web (Go HTTP server)
                                       │
                     ┌─────────────────┼─────────────────┐
                     │                 │                 │
               pi --mode rpc      fsnotify         tailscale serve
-            (ต่อเซสชัน        (โหลดซ้ำสด)      (HTTPS ระยะไกล
-             chat worker)                           ผ่าน MagicDNS)
+            (per‑session       (live reload)      (remote HTTPS
+             chat worker)                           via MagicDNS)
 ```
 
-- **pi** เขียนบทสนทนา JSONL ไปที่ `~/.pi/agent/sessions/` ขณะที่มันทำงาน
-- **pi-web** คือเซิร์ฟเวอร์ Go ที่อ่านไฟล์เหล่านั้น, แสดงผลในเบราว์เซอร์, และสตรีมการอัปเดตสดผ่าน SSE
-- **pi --mode rpc** workers จัดการแชทที่เริ่มจากเบราว์เซอร์ — หนึ่งตัวต่อเซสชัน, ปิดเมื่อว่างเกิน 10 นาที
-- **fsnotify** เฝ้าดูไดเรกทอรีเซสชันเพื่อให้เบราว์เซอร์โหลดซ้ำภายในมิลลิวินาทีเมื่อมีผลลัพธ์ใหม่
-- **Tailscale Serve** เผยแพร่เซิร์ฟเวอร์ localhost เป็นปลายทาง HTTPS บน tailnet ของคุณ
+- **pi** เขียน conversation JSONL ไปที่ `~/.pi/agent/sessions/` ขณะทำงาน
+- **pi-web** เป็น Go server ที่อ่านไฟล์เหล่านั้น แสดงใน browser และส่ง live updates แบบ streaming ผ่าน SSE
+- **pi --mode rpc** workers จัดการ chat ที่ browser เริ่ม — sessionละหนึ่ง แล้วถูกเก็บ (reaped) หลัง idle 10 นาที
+- **fsnotify** ตรวจจับ directory sessions เพื่อที่ browser จะ reload ภายใน milliseconds หลังมี output ใหม่
+- **Tailscale Serve** เผยแพร่ localhost server เป็น endpoint HTTPS บน tailnet ของคุณ
 
-## ติดตั้ง
+## Install
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-แค่นั้นแหละ — มันดาวน์โหลดไบนารีที่ตรงกัน, ตั้งค่าเริ่มอัตโนมัติ, และลงทะเบียนคำสั่ง `/web`, `/pi-web`, `/remote`, และ `/refresh`
+แค่นี้เอง — มันดาวน์โหลด binary ที่ตรงกัน ตั้งค่า auto-start และ register คำสั่ง `/web`, `/pi-web`, `/remote`, และ `/refresh`
 
-เมื่อติดตั้งแล้ว, เปิด `http://127.0.0.1:31415` ในเบราว์เซอร์ของคุณ จาก pi, ใช้ `/web` เพื่อเปิดเซสชันปัจจุบันในเบราว์เซอร์ของคุณทันที ถ้า Tailscale กำลังทำงานบนเครื่องของคุณ, pi-web จะเผยแพร่ปลายทาง HTTPS บน tailnet ของคุณโดยอัตโนมัติ — ใช้ `/remote` จาก pi เพื่อรับ QR code และ URL สำหรับทุกอุปกรณ์บน tailnet ของคุณ
+หลังติดตั้ง เปิด `http://127.0.0.1:31415` ใน browser จาก pi ใช้ `/web` เพื่อเปิด session ปัจจุบันใน browser ทันที ถ้า Tailscale รันอยู่บนเครื่องของคุณ pi-web จะเผยแพร่ endpoint HTTPS บน tailnet ของคุณอัตโนมัติ — ใช้ `/remote` จาก pi เพื่อดู QR code และ URL สำหรับทุกอุปกรณ์บน tailnet ของคุณ
 
-> **การเข้าถึงจากระยะไกลบน macOS:** ติดตั้งและเปิด Tailscale แบบโต้ตอบ อนุมัติข้อความแจ้งสิทธิ์ผู้ดูแลระบบ และลงชื่อเข้าใช้ จากนั้นเรียกใช้ `/pi-web restart` ตามด้วย `/remote`
+> **การเข้าถึงระยะไกลบน macOS:** ติดตั้งและเปิด Tailscale แบบ interactive ยืนยัน administrator prompt และ sign in จากนั้นรัน `/pi-web restart` ตามด้วย `/remote`
 
-สำหรับการติดตั้งด้วยตนเอง, ดาวน์โหลดไบนารี, หรือสร้างจากซอร์ส, ดู [user-docs/install.md](../en/install.md)
+สำหรับการติดตั้ง manual binary downloads หรือการ build จาก source ดู [user-docs/install.md](../en/install.md)
 
-## การผสานกับ Pi
+## Pi Integration
 
-หลังจาก `pi install npm:@timmygod/pi-web-local@beta`, คุณจะได้รับ:
+หลัง `pi install npm:@timmygod/pi-web-local` คุณจะได้:
 
-| คำสั่ง | มันทำอะไร |
+| Command | What it does |
 |---------|--------------|
-| `/web` | เปิดเซสชันปัจจุบันในเบราว์เซอร์ของคุณ (รับรู้ SSH: ข้ามเบราว์เซอร์และแสดงเฉพาะ URL) |
-| `/pi-web` | แสดงสถานะ, เวอร์ชัน, เริ่ม/หยุด/รีสตาร์ทเซิร์ฟเวอร์, หรืออัปเดต |
+| `/web` | เปิด session ปัจจุบันใน browser (รองรับ SSH: ข้าม browser และแสดง URL เท่านั้น) |
+| `/pi-web` | แสดงสถานะ version เริ่มต้น/หยุด/รีสตาร์ท server หรือ update |
 | `/remote` | แสดง QR code และ URL สำหรับการเข้าถึงระยะไกลผ่าน Tailscale |
-| `/refresh` | ดึงข้อความใหม่ที่เขียนจากเบราว์เซอร์ระยะไกลกลับเข้ามาในเซสชัน terminal |
+| `/refresh` | ดึง messages ใหม่ที่เขียนจาก remote browsers กลับเข้า terminal session |
 
-**การตั้งชื่ออัตโนมัติ** ของเซสชันถูกสร้างไว้ใน pi-web เองและกำหนดค่าบนหน้า `/settings` มัน**เปิดโดยค่าเริ่มต้น** และตั้งชื่อเซสชันโดยอัตโนมัติ คุณสามารถเลือก:
+**auto-titling** ของ session ถูก built-in ในตัว pi-web และกำหนดค่าในหน้า `/settings` มัน **เปิดโดย default** และตั้งชื่อ session อัตโนมัติ คุณสามารถเลือก:
 
-- **เมื่อใดที่จะตั้งชื่อ** — หนึ่งครั้งต่อเซสชัน, หรือทุกข้อความใหม่ (ค่าเริ่มต้น)
-- **โมเดลการตั้งชื่อ** — ** heuristic คำในตัวที่ฟรีและรวดเร็ว (ไม่มี AI)** โดยค่าเริ่มต้น, หรือเลือกโมเดล (เช่น ตัวเล็ก/เร็ว) สำหรับชื่อที่เขียนโดยโมเดลที่ฉลาดกว่า
+- **When to title** — ครั้งเดียวต่อ session หรือทุก message ใหม่ (default)
+- **Title model** — **built-in word heuristic (ไม่ใช้ AI)** ฟรีและ immediate โดย default หรือเลือกโมเดล (เช่น โมเดลเล็ก/เร็ว) สำหรับชื่อที่ฉลาดขึ้นเขียนโดยโมเดล
 
-แพ็คเกจยังติดตั้งไบนารี pi-web ไปที่ `~/.pi/agent/bin/pi-web` และตั้งค่าเริ่มอัตโนมัติเมื่อเข้าสู่ระบบ
+package นี้ยังติดตั้ง binary pi-web ที่ `~/.pi/agent/bin/pi-web` และตั้งค่า auto-start ตอน login
 
-## เริ่มอัตโนมัติเมื่อเข้าสู่ระบบ
+## Auto-Start on Login
 
-คำสั่ง `pi install npm:@timmygod/pi-web-local@beta` ตั้งค่านี้โดยอัตโนมัติ:
+คำสั่ง `pi install npm:@timmygod/pi-web-local` ตั้งค่านี้ให้อัตโนมัติ:
 
-| OS | กลไก |
+| OS | Mechanism |
 |----|-----------|
 | macOS | launchd plist ที่ `~/Library/LaunchAgents/com.pi-web.plist` |
 | Linux | systemd user service ที่ `~/.config/systemd/user/pi-web.service` |
+| Windows | `HKCU` Run-key entry ที่ запуска hidden starter ใน `~/.config/pi-web/` |
 
-เพื่อตั้งค่า token สำหรับการเข้าถึงระยะไกล, สร้าง `~/.config/pi-web/env`:
+เพื่อตั้ง token สำหรับการเข้าถึงระยะไกล สร้าง `~/.config/pi-web/env`:
 
 ```
 PI_WEB_TOKEN=your-token-here
 ```
 
-สำหรับรายละเอียดเพิ่มเติม (การตั้งค่าด้วยตนเอง, พอร์ตที่กำหนดเอง, การ bind แบบ non-loopback), ดู [user-docs/install.md](../en/install.md)
+สำหรับรายละเอียดเพิ่มเติม (manual setup, custom ports, non-loopback binds) ดู [user-docs/install.md](../en/install.md)
 
-## การพัฒนา
+## Development
 
 ```bash
-make setup   # ติดตั้ง frontend dependencies และดาวน์โหลดโมดูล Go
+make setup   # install frontend deps and download Go modules
 make check   # frontend test/build + Go test/vet
-make build   # setup ถ้าจำเป็น, build frontend, แล้ว build ./pi-web
+make build   # setup if needed, build frontend, then build ./pi-web
 ```
+
+สำหรับ upstream synchronization local-model testing และ parallel release
+workflow ดู [Local-model edition development](../../docs/dev/local-llm-development.md)

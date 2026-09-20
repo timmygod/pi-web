@@ -1,30 +1,32 @@
-# Mengapa pi-web?
+# Kenapa pi-web?
 
-Saya agak kecanduan Claude Code. Saya selalu menggunakannya. Jika saya tidak sedang duduk di depan komputer, saya memikirkannya. Saya merasa seperti tidak membakar cukup token. Itu adalah masa-masa awal Claude Code. Dan saya berpikir, mengapa saya tidak bisa melanjutkan dari ponsel saya? Saya menyiapkan Termius dan saya tidak terlalu menyukainya.
+Saya cukup kecanduan Claude Code. Saya selalu menggunakannya. Kalau saya tidak duduk di depan komputer, saya memikirkannya. Saya merasa seperti saya tidak membakar cukup token. Itu hari-hari awal Claude Code. Dan saya berpikir, kenapa saya tidak bisa melanjutkan dari ponsel saya? Saya mengatur Termius dan saya tidak benar-benar menyukainya.
 
-Saya mulai membuat milik saya sendiri dan berhenti ketika Claude memperkenalkan aplikasi seluler Claude Code mereka.
+Saya mulai membuat yang milik saya sendiri dan berhenti ketika Claude memperkenalkan aplikasi seluler Claude Code mereka.
 
-Kemudian saya mengalami herniated disc dan saya benar-benar tidak bisa melakukan banyak hal. Waktu berlalu dan saya merasa sedikit pulih dan saya ingin melanjutkan proyek Claude Code via web/pwa saya.
+Lalu saya menderita herniated disc dan saya tidak benar-benar bisa melakukan banyak hal. Waktu berlalu dan saya merasa pulih sedikit dan saya ingin melanjutkan proyek Claude Code via web/pwa saya.
 
 Lalu Claude Code mulai melarang penggunaan di luar harness mereka sendiri. Dan saya merasa itu tidak sepadan.
 
-Kemudian saya menemukan pi.dev dan menjelajah sedikit tetapi belum benar-benar mendalaminya. Saya membaca tentangnya, menonton video tentangnya dan memutuskan untuk mencobanya sepenuhnya dan sekarang saya sepenuhnya menyukai pi.
+Lalu saya menemukan pi.dev dan menjelajah sedikit tetapi belum benar-benar mendalami. Saya membacanya, menonton video tentangnya dan memutuskan untuk mencoba sepenuhnya dan sekarang saya benar-benar menyukai pi.
 
-Karena ini open source, saya merasa ini layak untuk dibangun. Saya juga mendapatkan berbagai pilihan provider. Saya juga merasa bahwa bergantung pada satu provider/model seperti Anthropic/Claude tidaklah berkelanjutan.
+Karena open source, saya merasa itu layak untuk dibangun. Saya juga mendapat pilihan provider yang berbeda. Saya juga merasa seperti mengandalkan satu provider/model seperti Anthropic/Claude tidak berkelanjutan.
 
 Jadi saya membangunnya di sini.
 
-## Mengapa model lokal memerlukan profil operasi yang berbeda
+Checkout ini dipelihara sebagai edisi model lokal dari pi-web. Ini mengikuti proyek upstream untuk peningkatan bersama, sambil menjaga deployment lokal, stabilitas konteks, dan pengujian model lokal di jalur rilis terpisah.
 
-Pengalaman pi-web asli adalah fondasi yang sangat baik, tetapi inferensi lokal memiliki mode kegagalan yang berbeda dari model yang di-hosting secara tipikal. Model lokal dapat melambat secara tajam saat konteks bertambah, berbagi memori terbatas dengan sisa mesin, berhenti setelah hanya menghasilkan penalaran, atau kehilangan proses panjang karena kegagalan transportasi lokal yang sementara. Memperlakukan kasus-kasus tersebut persis seperti kegagalan cloud membuat UI terlihat kompatibel sementara sesi aktual tetap rapuh.
+## Kenapa model lokal memerlukan profil operasi yang berbeda
 
-Edisi ini mendekati masalah secara berlapis:
+Pengalaman pi-web asli adalah fondasi yang sangat baik, tetapi inferensi lokal memiliki mode kegagalan yang berbeda dari model hosted tipikal. Model lokal mungkin melambat tajam seiring konteks tumbuh, berbagi memori terbatas dengan sisa mesin, berhenti setelah hanya menghasilkan reasoning, atau kehilangan jalanan panjang karena kegagalan transport lokal transien. Memperlakukan kasus-kasus tersebut tepat seperti kegagalan cloud membuat UI terlihat kompatibel sementara sesi aktual tetap rapuh.
 
-1. **Pertahankan upstream terlebih dahulu.** UI bersama dan perilaku sesi terus berasal dari pi-web; perubahan lokal diisolasi di balik Local Mode yang efektif.
-2. **Cegah sebelum memulihkan.** Batas konteks 65% berbasis persentase ditegakkan sebelum panggilan penyedia berikutnya, termasuk panggilan di dalam loop alat yang panjang.
-3. **Pulihkan hanya dengan bukti.** Kelanjutan otomatis dibatasi pada insiden konteks, transportasi, dan hanya-pemikiran yang dikenali, bukan kesalahan autentikasi, kuota, atau kesalahan penyedia sembarangan.
-4. **Batasi setiap tindakan otonom.** Insiden pemulihan dideduplikasi, kemajuan diperlukan sebelum penyelamatan lain, dan startup mempertimbangkan paling banyak satu sesi Local yang aktif baru-baru ini.
-5. **Pertahankan jalan keluar manual.** Force Compact merangkum alih-alih menghapus riwayat, sehingga pengguna dapat menyelamatkan sesi tanpa berpura-pura konteks tidak pernah ada.
-6. **Lindungi kompatibilitas cloud.** Cloud Mode mempertahankan semantik dan kontrol upstream; optimasi model lokal tidak secara diam-diam mendefinisikan ulang sesi cloud.
+Edisi ini menangani masalah secara berlapis:
 
-Itulah perbedaan nyata dalam fork ini: ia memperlakukan inferensi lokal sebagai lingkungan operasional yang berbeda, bukan sekadar nama model lain dalam dropdown.
+1. **Jaga upstream terlebih dahulu.** UI bersama dan perilaku sesi terus berasal dari pi-web; perubahan lokal terisolasi di balik Local Mode yang efektif.
+2. **Mencegah sebelum pulih.** Batas konteks berbasis persentase 65% dipaksakan sebelum pemanggilan model berikutnya, termasuk pemanggilan di dalam loop tool yang panjang.
+3. **Pulih hanya dengan bukti.** Lanjutan otomatis dibatasi untuk insiden konteks, transport, dan thinking-only yang dikenali—bukan autentikasi, kuota, atau error provider sewenang-wenang.
+4. **Batasi setiap aksi otonom.** Insiden pemulihan dideduplikasi, kemajuan diperlukan sebelum penyelamatan berikutnya, dan startup mempertimbangkan paling banyak satu sesi Local yang baru saja aktif.
+5. **Simpan jalan keluar manual.** Force Compact merangkum daripada menghapus riwayat, sehingga pengguna dapat menyelamatkan sesi tanpa berpura-pura konteks tidak pernah ada.
+6. **Lindungi kompatibilitas cloud.** Cloud Mode mempertahankan semantik dan kontrol upstream; optimasi model lokal tidak mendefinisikan ulang sesi cloud secara diam-diam.
+
+Itulah perbedaan nyata di fork ini: ia memperlakukan inferensi lokal sebagai lingkungan operasional yang berbeda, bukan sekadar nama model lain di dropdown.

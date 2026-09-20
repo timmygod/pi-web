@@ -3,8 +3,8 @@
 <div align="center">
 
 [![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
-[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![npm downloads](https://img.shields.io/npm/dt/@timmygod/pi-web-local?label=downloads&color=2ea043)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -14,51 +14,57 @@
 
 <div align="center">
 
-I-drive ang iyong [pi](https://pi.dev) coding agent mula sa iyong telepono, tablet, o laptop — kahit saan sa iyong network, o malayuan sa pamamagitan ng Tailscale.
+Gamitin ang iyong [pi](https://pi.dev) coding agent mula sa iyong phone, tablet, o laptop — kahit saan sa iyong network, o nang remote sa pamamagitan ng Tailscale.
 
-Isa itong ganap na PWA, kaya maaari mo itong i-install at gamitin tulad ng isang native app sa anumang device. Isipin mo ito bilang iyong sariling personal na AI workspace — tulad ng Cowork ng Claude, ngunit may iba't ibang modelo — mag-chat sa iba't ibang modelo, mag-code mula sa iyong telepono, o gawin itong isang [personal assistant](../en/personal-assistant.md) na naninirahan sa iyong makina.
+Ito ay isang buong PWA, kaya maaari mo itong i-install at gamitin na parang native app sa anumang device. Isipin mo itong ang iyong sariling personal na AI workspace — gaya ng Claude's Cowork, pero may iba't ibang models — mag-chat sa iba't ibang models, mag-code mula sa phone mo, o ginawan itong [personal assistant](../en/personal-assistant.md) na nakatira sa iyong machine.
 
-Gawin itong sa iyo: magpalit ng mga tema at font, at gamitin ito sa iyong sariling wika — ang pi-web ay may kasamang maraming wika at maaari kang magdagdag ng sarili mo. Marami pang mga feature ang paparating, ngunit hindi ito magiging bloated: anumang hindi mo kailangan ay maaaring i-off sa settings.
+Ginawan mo itong sarili mo: palitan ang themes at fonts, at gamitin sa iyong sariling wika — may dalang maraming wika ang pi-web at maaari mong magdagdag ng sarili mong wika. May mga feature pa na dumarating, pero hindi ito magiging bloated: anumang hindi mo kailangan ay maaaring patayin sa settings.
 
 </div>
 
-## Bakit ang edisyong ito ng local-model?
+## Bakit itong local-model edition?
 
-Ang orihinal na pi-web ay nananatiling pundasyon ng upstream para sa mga katangian at pag-aayos na ibinahagi. Pinapanatili ng edisyong ito ang karanasang iyon, pagkatapos ay nagdadagdag ng layer ng pagiging maaasahan para sa mga modelong tumatakbo sa iyong sariling makina o sa ibang lugar sa iyong LAN—kung saan ang pagbuo ay madalas na mas mabagal, limitado ang memorya, at ang mahabang konteksto ay maaaring huminto sa isang malusog na session.
+Ang orihinal na pi-web ang mananatiling upstream foundation para sa mga shared features at
+fixes. Pinapanatili ng edition na ito ang karanasang iyon, tapos idinagdagan ng isang reliability layer para sa
+mga model na tumatakbo sa iyong sariling machine o sa ibang lugar sa iyong LAN—kung saan ang generation ay
+karaniwang mas mabagal, limitado ang memory, at maaaring huminto ang isang mahabang context na isang nangubos na
+session.
 
-| Larangan | Upstream pi-web | Ang edisyong ito |
+| Area | Upstream pi-web | Ang edition na ito |
 |------|-----------------|--------------|
-| Patakaran ng model/runtime | Karaniwang pag-uugali ng pi-web | **Auto / Local / Cloud** na mode bawat session, na may endpoint-aware na pagtukoy ng local at isang persistent na manual override |
-| Paghawak ng mahabang konteksto | Normal na pag-uugali ng pi compaction | Ang Local Mode ay aktibong nagko-compact sa **65%** at muling tinitingnan sa loob ng mahahabang loop ng tool-call bago ang isa pang kahilingan sa provider |
-| Kaligtasan ng compaction | Karaniwang mga buod | Mga bounded rolling checkpoints, isang mas mahigpit na pagsulat muli para sa hindi wastong/capped na output, at pagtukoy ng walang pag-unlad sa halip na walang katapusang re-compaction |
-| Mga pinutol na pagtakbo | Karaniwang paghawak ng worker at error | Bounded recovery para sa context overflow, thinking-only stops, at mga napiling interrupt ng transport, na may persistent loop breakers |
-| Manual na rescue | Karaniwang detalye ng konteksto | Ang **Force Compact** ay nananatiling available bilang isang malinaw na landas ng pagbangon nang hindi binubura ang usapan |
-| Pagkakatugma at mga release | Orihinal na proyekto at linya ng release | Ang mga safeguard na local-only ay nananatili sa likod ng Local Mode; Pinapanatili ng Cloud Mode ang pag-uugali ng upstream, at ang mga pagbabago ng upstream ay sinusuri at inilalathala dito nang hiwalay |
+| Model/runtime policy | Standard pi-web behavior | Per-session na **Auto / Local / Cloud** mode, may endpoint-aware na local detection at isang persistent manual override |
+| Long-context handling | Karaniwang pi compaction behavior | Ang Local Mode ay proactively nagco-compact sa **65%** at inaalala muli sa loob ng mahabang tool-call loops bago ang susunod na model request |
+| Compaction safety | Standard summaries | May limit na rolling checkpoints, isa pang mas malapit na rewrite para sa invalid/capped output, at no-progress detection imbes na walang hanggang re-compaction |
+| Interrupted runs | Karaniwang worker at error handling | May limit na recovery para sa context overflow, thinking-only stops, at piniling transport interruptions, may persistent loop breakers |
+| Manual rescue | Standard context details | Ang **Force Compact** ay nananatiling available bilang explicit na recovery path na hindi pinalilimot ang conversation |
+| Compatibility at releases | Orihinal na proyekto at release line | Ang local-only na safeguards ay nasa likod ng Local Mode; pinapanatili ng Cloud Mode ang upstream behavior, at ang mga upstream changes ay sinusuri at inilalathala dito nang mag-isa |
 
-Hindi ito isang pagsulat muli o kapalit para sa upstream. Ito ay isang sinasadyang pinapanatiling operating profile para sa mga taong nais ng privacy at kontrol ng local-model nang hindi tinatanggap ang mga fragile na mahahabang tumatakbong session. Tingnan ang [gabay sa user](../en/README.md) para sa daloy ng trabaho na nakatuon sa user at [pag-unlad ng edisyong local-model](../../docs/dev/local-llm-development.md) para sa implementasyon at patakaran sa synchronization.
-
-> [!WARNING]
-> Ang pi-web ay kasalukuyang nasa **beta**. Magbabago at masisira ang mga bagay!
+Ito ay hindi isang rewrite o pambagi ng upstream. Ito ay isang sinadyang
+pinapangalagaan na operating profile para sa mga gustong privacy at kontrol sa local model
+na hindi tanggap ng mahina at mahahabang tumatakbo na sessions. Tingnan ang
+[user guide](../en/README.md) para sa user-facing na workflow at
+[local-model edition development](../../docs/dev/local-llm-development.md) para sa
+implementation at synchronization policy.
 
 > [!TIP]
-> Bago ka ba dito? **[Basahin ang user guide →](../en/README.md)** para sa isang buong tour ng mga feature, mga hakbang sa pag-install, at mga tip. ([Ibang mga wika →](../README.md))
+> Bago ka pa rito? **[Basahin ang user guide →](../en/README.md)** para sa buong takdang-arak ng mga feature, mga hakbang ng install, at tips. ([Iba pang mga wika →](../README.md))
 
-## Mga Screenshot
+## Screenshots
 
 <div align="center">
   <img src="../assets/pi-web-desktop-screenshot.png" alt="Desktop" width="90%" /><br />
   <em>Desktop</em>
   <br /><br />
-  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile PWA" width="90%" /><br />
-  <em>Mobile PWA</em>
+  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile" width="90%" /><br />
+  <em>Mobile</em>
 </div>
 
-## Paano Ito Nagkakasya
+## Paano Ito Nakaigi
 
 ```
- pi (terminal)                 Browser (telepono / tablet / laptop)
+ pi (terminal)                 Browser (phone / tablet / laptop)
       │                                │
-      │  sumusulat ng JSONL           │  HTTP + SSE
+      │  writes JSONL                  │  HTTP + SSE
       ▼                                ▼
  ~/.pi/agent/sessions/  ←───  pi-web (Go HTTP server)
                                       │
@@ -66,69 +72,72 @@ Hindi ito isang pagsulat muli o kapalit para sa upstream. Ito ay isang sinasadya
                     │                 │                 │
               pi --mode rpc      fsnotify         tailscale serve
             (per‑session       (live reload)      (remote HTTPS
-             chat worker)                           sa pamamagitan
-                                                     ng MagicDNS)
+             chat worker)                           via MagicDNS)
 ```
 
-- **pi** ay sumusulat ng conversation JSONL sa `~/.pi/agent/sessions/` habang ito ay gumagana.
-- **pi-web** ay isang Go server na nagbabasa ng mga file na iyon, nire-render ang mga ito sa browser, at nag-stream ng mga live update sa pamamagitan ng SSE.
-- Ang mga **pi --mode rpc** worker ay humahawak ng chat na pinasimulan ng browser — isa bawat session, tinatanggal pagkatapos ng 10 minutong idle.
-- **fsnotify** ay binabantayan ang sessions directory upang ang browser ay mag-reload sa loob ng millisecond ng bagong output.
-- **Tailscale Serve** ay nagpa-publish ng localhost server bilang isang HTTPS endpoint sa iyong tailnet.
+- Ang **pi** ay sumusulat ng conversation JSONL sa `~/.pi/agent/sessions/` habang nagtatrabaho.
+- Ang **pi-web** ay isang Go server na bumabasa ng mga files na iyon, inir-render sa browser, at nag-stream ng live updates sa pamamagitan ng SSE.
+- Ang mga **pi --mode rpc** workers ang nag-aalaga ng browser-initiated na chat — isa bawat session, tinatawag pagkatapos ng 10 min ng idle.
+- Ang **fsnotify** ay nagbabantay sa sessions directory upang ma-reload ng browser sa loob ng ilang milliseconds ng bagong output.
+- Ang **Tailscale Serve** ay inilalathala ang localhost server bilang isang HTTPS endpoint sa iyong tailnet.
 
-## Pag-install
+## Install
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-Iyon na — dina-download nito ang katugmang binary, nagse-set up ng auto‑start, at nirerehistro ang `/web`, `/pi-web`, `/remote`, at `/refresh` na mga command.
+Yan na lang — binabawasan nito ang angkop na binary, inaayos ang auto-start, at tinatala ang `/web`, `/pi-web`, `/remote`, at `/refresh` na mga command.
 
-Kapag na-install na, buksan ang `http://127.0.0.1:31415` sa iyong browser. Mula sa pi, gamitin ang `/web` upang buksan agad ang kasalukuyang session sa iyong browser. Kung tumatakbo ang Tailscale sa iyong makina, awtomatikong nagpa-publish ang pi-web ng isang HTTPS endpoint sa iyong tailnet — gamitin ang `/remote` mula sa pi upang makakuha ng QR code at URL para sa anumang device sa iyong tailnet.
+Pagkatapos itong i-install, buksan ang `http://127.0.0.1:31415` sa iyong browser. Mula sa pi, gamitin ang `/web` upang buksan ang kasalukuyang session sa iyong browser agad. Kung tumatakbo ang Tailscale sa iyong machine, awtomatikong inilalathala ng pi-web ang isang HTTPS endpoint sa iyong tailnet — gamitin ang `/remote` mula sa pi upang makakuha ng QR code at URL para sa anumang device sa iyong tailnet.
 
-> **Malayuang access sa macOS:** I-install at buksan ang Tailscale nang interactive, aprubahan ang administrator prompt, at mag-sign in. Pagkatapos ay patakbuhin ang `/pi-web restart`, na susundan ng `/remote`.
+> **Pag-access ng macOS mula sa malayo:** I-install at buksan ang Tailscale nang interactively, aprubahan ang administrator prompt, at mag-sign in. Tapos i-run ang `/pi-web restart`, na sinundan ng `/remote`.
 
-Para sa mga manu-manong pag-install, pag-download ng binary, o pagbuo mula sa source, tingnan ang [user-docs/install.md](../en/install.md).
+Para sa manual na install, binary downloads, o pagbuo mula sa source, tingnan ang [user-docs/install.md](../en/install.md).
 
-## Integrasyon ng Pi
+## Pi Integration
 
-Pagkatapos ng `pi install npm:@timmygod/pi-web-local@beta`, makukuha mo ang:
+Pagkatapos ng `pi install npm:@timtygod/pi-web-local`, nakakakuha ka ng:
 
-| Command | Kung ano ang ginagawa nito |
-|---------|----------------------------|
-| `/web` | Binubuksan ang kasalukuyang session sa iyong browser (may kamalayan sa SSH: nilalaktawan ang browser at ipinapakita lamang ang URL) |
-| `/pi-web` | Ipinapakita ang katayuan, bersyon, pagsisimula/paghinto/pag-restart ng server, o pag-update |
-| `/remote` | Ipinapakita ang isang QR code at URL para sa malayuang pag-access sa pamamagitan ng Tailscale |
-| `/refresh` | Kinukuha ang mga bagong mensaheng isinulat mula sa mga remote browser pabalik sa terminal session |
+| Command | Ano ang ginagawa nito |
+|---------|--------------|
+| `/web` | Buksan ang kasalukuyang session sa iyong browser (SSH-aware: laktawan ang browser at ipakita ang URL lamang) |
+| `/pi-web` | Ipakita ang status, version, i-start/stop/restart ang server, o i-update |
+| `/remote` | Ipakita ang QR code at URL para sa remote access sa pamamagitan ng Tailscale |
+| `/refresh` | Kunin ang mga bagong mensahe na isinulat mula sa mga remote browser at ibalik sa terminal session |
 
-Ang **auto-titling** ng session ay nakapaloob mismo sa pi-web at naka-configure sa pahina ng `/settings`. Ito ay **naka-on bilang default** at awtomatikong pinapangalanan ang mga session. Maaari kang pumili:
+Ang **auto-titling** ng session ay nakabuti sa mismong pi-web at naka-configure sa `/settings` page. Ito ay **on by default** at awtomatikong nakapangalan ng mga session. Maaari mong pumili:
 
-- **Kailan mag-title** — isang beses bawat session, o sa bawat bagong mensahe (ang default).
-- **Modelo ng titulo** — isang libre, agarang **built-in word heuristic (walang AI)** bilang default, o pumili ng modelo (hal. isang maliit/mabilis) para sa mas matalinong, mga titulong isinulat ng modelo.
+- **Kailan ititle** — isang beses bawat session, o sa bawat bagong mensahe (ang default).
+- **Title model** — isang libre, agad na **built-in word heuristic (walang AI)** by default, o pumili ng model (hal. maliit/mabilis) para sa mas matalino, model-written na mga title.
 
-Ang package ay nag-i-install din ng pi-web binary sa `~/.pi/agent/bin/pi-web` at nagse-set up ng auto-start sa pag-login.
+Ang package ay nangungutang daragdag din ang pi-web binary sa `~/.pi/agent/bin/pi-web` at inaayos ang auto-start sa pag-login.
 
 ## Auto-Start sa Pag-login
 
-Ang command na `pi install npm:@timmygod/pi-web-local@beta` ay awtomatikong nagse-set up nito:
+Ang `pi install npm:@timmygod/pi-web-local` command ay awtomatikong inaayos ito:
 
-| OS | Mekanismo |
+| OS | Mechanism |
 |----|-----------|
 | macOS | launchd plist sa `~/Library/LaunchAgents/com.pi-web.plist` |
 | Linux | systemd user service sa `~/.config/systemd/user/pi-web.service` |
+| Windows | `HKCU` Run-key entry na nagsisimula ng isang hidden starter sa `~/.config/pi-web/` |
 
-Upang magtakda ng token para sa malayuang pag-access, lumikha ng `~/.config/pi-web/env`:
+Upang mag-set ng token para sa remote access, gumawa ng `~/.config/pi-web/env`:
 
 ```
-PI_WEB_TOKEN=ang-iyong-token-dito
+PI_WEB_TOKEN=your-token-here
 ```
 
-Para sa higit pang mga detalye (manu-manong pag-setup, mga custom port, mga non-loopback bind), tingnan ang [user-docs/install.md](../en/install.md).
+Para sa mas maraming detalye (manual setup, custom ports, non-loopback binds), tingnan ang [user-docs/install.md](../en/install.md).
 
 ## Development
 
 ```bash
-make setup   # i-install ang frontend deps at i-download ang Go modules
+make setup   # install frontend deps and download Go modules
 make check   # frontend test/build + Go test/vet
-make build   # setup kung kinakailangan, i-build ang frontend, pagkatapos ay i-build ang ./pi-web
+make build   # setup if needed, build frontend, then build ./pi-web
 ```
+
+Para sa upstream synchronization, local-model testing, at ang parallel na release
+workflow, tingnan ang [Local-model edition development](../../docs/dev/local-llm-development.md).

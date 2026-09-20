@@ -11,9 +11,8 @@ import (
 	"time"
 )
 
-// installChannel matches the dist-tag pi-web is published under and the
-// updater queries (see internal/updater).
-const installPackage = "npm:@timmygod/pi-web-local@beta"
+// installPackage is the independently published package installed by updates.
+const installPackage = "npm:@timmygod/pi-web-local"
 
 // inPlaceUpdateEnv signals install.sh (the package postinstall) that pi-web is
 // updating itself in place. install.sh then skips the service stop/restart:

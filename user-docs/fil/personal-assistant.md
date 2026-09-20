@@ -1,24 +1,27 @@
-# pi-web bilang Iyong Pansariling Katulong
+# pi-web bilang Personal Assistant mo
 
-Ang pi-web ay hindi lang para sa coding — maaari mo itong gawing **personal na AI assistant** na nakatira sa iyong computer, tulad ng pagkakaroon ng sarili mong OpenClaw o Hermes.
+Suporta ng local-model edition ang workflow na ito. Para sa development, synchronization, at release policy ng edition, tingnan ang
+[Local-model edition development](../../docs/dev/local-llm-development.md).
+
+Hindi lang para sa coding ang pi-web — maaari mong gawin itong **personal AI assistant** na nakatira sa computer mo, parang may sarili kang OpenClaw o Hermes.
 
 ## Paano ito gumagana
 
-Gumagawa ka ng dedikadong folder sa iyong makina — doon nakatira ang iyong katulong. Sa loob nito, naglalagay ka ng `APPEND_SYSTEM.md` file na nagtatakda kung sino ang iyong katulong, kung ano ang alam nito, at kung paano ito kumilos. Binibigyan ka ng pi-web ng magandang chat interface para makausap ito mula sa anumang device.
+Gumagawa ka ng dedicated folder sa iyong machine — doon nakatira ang iyong assistant. Loob nito, inilagay ang isang `APPEND_SYSTEM.md` file na nagdedediba kung sino ang iyong assistant, ano ang alam nito, at kung paano ito gumagana. Binibigyan ka ng pi-web ng magandang chat interface para makausap ito mula sa alinmang device.
 
-## Hakbang-hakbang
+## Step by step
 
-### 1. Gawin ang iyong assistant folder
+### 1. Lumikha ng iyong assistant folder
 
-Pumili ng folder sa iyong computer. Tulad ng:
+Pumili ng folder sa iyong computer. Maaaring:
 
 ```
 ~/my-assistant/
 ```
 
-### 2. Itakda ang iyong katulong
+### 2. I-define ang iyong assistant
 
-Gumawa ng `APPEND_SYSTEM.md` file sa loob ng folder na iyon. Dito mo sasabihin kay pi kung sino ang iyong katulong:
+Gumawa ng `APPEND_SYSTEM.md` file sa loob ng folder na iyon. Dito pangsasabi mo sa pi kung sino ang iyong assistant:
 
 ```markdown
 # My Personal Assistant
@@ -45,36 +48,54 @@ You are Jarvis, my personal AI assistant. You help me with:
 - Proactively remind me of things I asked you to track
 ```
 
-Awtomatikong idinadagdag ito ng pi sa system prompt ng bawat pag-uusap, kaya laging alam ng iyong katulong kung sino ka at kung paano tumulong.
+Awtomatikong idinadagdag ng pi ito sa system prompt ng bawat conversation, kaya laging alam ng iyong assistant kung ikaw sino at kung paano makakatulong.
 
-### 3. Magsimula ng session sa folder na iyon
+### 3. I-start ang isang session sa folder na iyon
 
-Sa pi-web, gumawa ng bagong session na nakaturo sa `~/my-assistant/` (o kung anuman ang ipinangalan mo rito). Iyon lang — nakikipag-usap ka na sa iyong pansariling katulong.
+Sa pi-web, gumawa ng bagong session na nakapunta sa `~/my-assistant/` (o ano pa itong nakatawag mo). Tapos na yan — nagsasalita ka na sa iyong personal assistant.
 
-### 4. Gamitin ito kahit saan
+### 4. Gamitin ito sa alinman
 
-I-install ang pi-web bilang PWA sa iyong telepono, tablet, o laptop. Laging nariyan ang iyong katulong — tanungin ito ng kahit ano, kahit kailan.
+I-install ang pi-web bilang PWA sa iyong phone, tablet, o laptop. Laging andiyan ang iyong assistant — itanong ang alinman, anumang oras.
 
-## Mga ideya para sa iyong katulong
+## Mga ideya para sa iyong assistant
 
-| Papel | Kung ano ang ilalagay sa APPEND_SYSTEM.md |
+| Role | Ano ang ilalagay sa APPEND_SYSTEM.md |
 |---|---|
-| 🧠 **Life coach** | Iyong mga layunin, mga gawi na pinagbubuti mo, mga prompt sa journal |
-| 🏠 **Tagapamahala ng tahanan** | Format ng listahan ng grocery, mga kagustuhan ng miyembro ng pamilya, pagpaplano ng pagkain |
-| 💼 **Kasama sa trabaho** | Iyong tungkulin, mga kasalukuyang proyekto, format ng meeting notes, konteksto ng kumpanya |
-| 📚 **Kasama sa pag-aaral** | Kung ano ang iyong pinag-aaralan, gustong istilo ng pagpapaliwanag, quiz mode |
-| ✍️ **Katulong sa pagsusulat** | Iyong istilo ng pagsusulat, mga kagustuhan sa tono, mga karaniwang format na ginagamit mo |
+| 🧠 **Life coach** | Ang mga goals mo, ang mga gawi na tinutulak mo, ang mga prompt para sa journaling |
+| 🏠 **Home manager** | Format ng grocery list, preferences ng mga miyembro ng pamilya, meal planning |
+| 💼 **Work buddy** | Ang role mo, kasalukuyang mga proyekto, format ng meeting note, konteksto ng kompanya |
+| 📚 **Study partner** | Ano ang natututunan mo, paboritong istilo ng paliwanag, quiz me mode |
+| ✍️ **Writing assistant** | Ang istilo ng pagsulat mo, preferences ng tono, karaniwang format na ginagamit mo |
 
-## Magdagdag ng karagdagang konteksto
+## Magdagdag pa ng konteksto
 
-Maaari kang maglagay ng kahit ano sa iyong assistant folder na makakatulong para maging mas kapaki-pakinabang ang pi:
+Maaari mong ilagay sa assistant folder mo ang alinmang bagay na makakatulong upang maging mas makapangyarihan ang pi:
 
-- `notes/` — mga reference file na mababasa ng iyong katulong
-- `context.md` — impormasyon sa background tungkol sa iyong buhay o trabaho
-- `projects.md` — mga kasalukuyang proyekto at ang kanilang estado
+- `notes/` — reference files na mababasa ng iyong assistant
+- `context.md` — impormasyon sa background tungkol sa buhay o trabaho mo
+- `projects.md` — kasalukuyang mga proyekto at ang kanilang status
 
-Nababasa ng pi ang mga file sa folder, kaya kung mas maraming konteksto ang ibibigay mo, lalo itong gumagaling.
+Mababasa ng pi ang mga files sa folder, kaya't ang mas maraming konteksto na ibinibigay mo, mas nasisiyahan ito.
+
+## Hayaan ang pi-web na gawin ang mga bagay
+
+Pagkatapos ng `pi install npm:@timmygod/pi-web-local`, maaari na ng mga session makausap ang pi-web mismo.
+Subukan:
+
+- “Magdagdag ng iskedyul at 2am oras ng Singapore para i-summarize ang inbox ko”
+- “Ilista ang mga pi-web schedules ko”
+- “I-pause ang inbox schedule”
+- “Isulat ito sa notes”
+- “Palitan ang pi-web sa dark mode / itikim ang auto-title”
+
+Ang bundled na **/skill:pi-web-schedule** skill ay nagpapalit nito sa tunay na pi-web
+schedule (parehong mga inii-edit mo sa `/schedules`). Bawat pag-firing ay nagsisimula ng **bagong**
+session, kaya ang mga instructions ay kailangang mag-isa — “i-summarize ang hindi nabasang mail sa
+~/inbox” ay gumagana; “ituloy ang ginagawa natin” ay hindi.
+
+Tumatakbo lamang ang mga schedule habang naka-on ang pi-web.
 
 ---
 
-> 💡 **Tip:** Magsimula nang simple. Ilang linya lang tungkol sa kung sino ka at kung paano mo gustong kumilos ang katulong. Baguhin-baguhin sa paglipas ng panahon habang natututunan mo kung ano ang epektibo.
+> 💡 **Tip:** Magsimula nang simple. Isang ilang linya lang tungkol sa ikaw at kung paano mo gusto na gumana ang assistant. Palayain sa paglipas ng oras habang natututo ka kung ano ang gumagana.

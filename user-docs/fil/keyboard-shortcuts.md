@@ -1,85 +1,87 @@
-# Mga Shortcut sa Keyboard
+# Mga Pindutan sa Keyboard
 
-## Pahina ng Index (`/`)
+Ang mga pindutan na ito ay angkop sa local-model edition ng pi-web. Ang isahan ng runtime na nakabase sa edisyong ito ay nakadokumento sa [Local-model edition development](../../docs/dev/local-llm-development.md).
 
-### Pag-scroll ng pahina (istilong-vim)
+## Index page (`/`)
 
-Gumagana ang parehong mga shortcut na istilong-vim sa lahat ng pahina kapag ang focus ay **wala** sa isang input, textarea, o contenteditable na elemento.
+### Pag-scroll sa pahina (vim-style)
 
-| Shortcut | Ginagawa |
-|----------|----------|
+Ang mga vim-style na pindutang parehong ito ay gumagana sa lahat ng pahina kapag **hindi** ang focus nasa input, textarea, o contenteditable na elemento.
+
+| Pindutan | Gawa |
+|----------|--------|
 | `j` | Mag-scroll pababa ng 300px |
 | `k` | Mag-scroll pataas ng 300px |
-| `g g` | Mag-scroll sa itaas ng pahina |
-| `G` (Shift+G) | Mag-scroll sa ibaba ng pahina |
-| `Escape` | I-blur ang aktibong input para gumana ang j/k navigation |
+| `g g` | Pumunta sa itaas ng pahina |
+| `G` (Shift+G) | Pumunta sa ibaba ng pahina |
+| `Escape` | I-blur ang aktibong input upang gumana ang j/k na pag-navigate |
 
-### Mga utos sa Index
+### Mga command sa index
 
-| Shortcut | Konteksto | Ginagawa |
-|----------|-----------|----------|
-| `⌘K` / `Ctrl+K` | Antas ng pahina | Buksan ang palette ng paghahanap/mga session |
+| Pindutan | Konteksto | Gawa |
+|----------|---------|--------|
+| `⌘K` / `Ctrl+K` | Antas ng pahina | Buksan ang search/sessions palette |
 | `⌘⇧L` / `Ctrl+Shift+L` | Antas ng pahina | I-toggle ang system theme (light/dark) |
 | `Escape` | Antas ng pahina | Isara ang palette, menu, o modal |
-| `Enter` | Input ng path ng bagong session | Gumawa ng bagong session |
+| `Enter` | Input ng bago-sesyon | Lumikha ng bagong sesyon |
 
-> Ang `⌘K` / `Ctrl+K` ay shortcut din ng Chrome para sa "focus address bar". Maaaring i-intercept ito ng browser maliban kung ang focus ay nasa loob ng isang text input.
+> Ang `⌘K` / `Ctrl+K` ay pangalagang shortcut ng Chrome na "focus address bar". Maaaring i-intercept ng browser ang pindutan na ito maliban kapag nasa loob ng text input ang focus.
 
-## Pahina ng detalye ng session (`/session?id=...`)
+## Sesyon-detail na pahina (`/session?id=...`)
 
-### Pag-scroll ng pahina (istilong-vim)
+### Pag-scroll sa pahina (vim-style)
 
-Gumagana ang mga ito sa parehong pahina ng index at session kapag ang focus ay **wala** sa isang input, textarea, o contenteditable na elemento.
+Gumagana ang mga ito sa parehong index at sesyon na pahina kapag **hindi** ang focus nasa input, textarea, o contenteditable na elemento.
 
-| Shortcut | Ginagawa |
-|----------|----------|
+| Pindutan | Gawa |
+|----------|--------|
 | `j` | Mag-scroll pababa ng 300px |
 | `k` | Mag-scroll pataas ng 300px |
-| `g g` | Mag-scroll sa itaas ng pahina |
-| `G` (Shift+G) | Mag-scroll sa ibaba ng pahina |
-| `I` (Shift+I) | I-focus ang textarea ng chat composer |
-| `Escape` | I-blur ang aktibong input para gumana ang j/k navigation |
+| `g g` | Pumunta sa itaas ng pahina |
+| `G` (Shift+G) | Pumunta sa ibaba ng pahina |
+| `I` (Shift+I) | Itaguyod ang focus sa chat composer na textarea |
+| `Escape` | I-blur ang aktibong input upang gumana ang j/k na pag-navigate |
 
-### Sidebar at navigation
+### Sidebar at pag-navigate
 
-| Shortcut | Konteksto | Ginagawa |
-|----------|-----------|----------|
-| `⌘B` / `Ctrl+B` | Antas ng pahina | I-toggle ang visibility ng sidebar |
-| `⌘K` / `Ctrl+K` | Antas ng pahina | Buksan ang palette ng listahan ng mga session |
-| `⌘T` / `Ctrl+T` | Antas ng pahina | Bagong session |
+| Pindutan | Konteksto | Gawa |
+|----------|---------|--------|
+| `⌘B` / `Ctrl+B` | Antas ng pahina | I-toggle ang pagkakita ng sidebar |
+| `⌘K` / `Ctrl+K` | Antas ng pahina | Buksan ang session list palette |
+| `⌘T` / `Ctrl+T` | Antas ng pahina | Bagong sesyon |
 | `⌘⇧L` / `Ctrl+Shift+L` | Antas ng pahina | I-toggle ang system theme (light/dark) |
-| `⌘⇧N` / `Ctrl+Shift+N` | Antas ng pahina | I-toggle ang scratchpad / notes sidebar |
+| `⌘⇧N` / `Ctrl+Shift+N` | Antas ng pahina | I-toggle ang scratchpad / notes na sidebar |
 
-> Ang `⌘K` at `⌘T` ay mga shortcut din ng browser (focus address bar / bagong tab). Maaaring i-intercept ang mga ito ng browser maliban kung ang focus ay nasa loob ng isang text input.
+> Ang `⌘K` at `⌘T` ay pangalagang shortcut ng browser (focus address bar / bagong tab). Maaaring i-intercept ng browser ang mga ito maliban kapag nasa loob ng text input ang focus.
 
 ### Chat composer
 
-| Shortcut | Konteksto | Ginagawa |
-|----------|-----------|----------|
-| `Enter` | Chat textarea | Ipadala ang mensahe |
-| `Shift+Enter` | Chat textarea | Maglagay ng bagong linya |
-| `Shift+Tab` | Chat textarea | Mag-ikot sa susunod na antas ng pag-iisip (`off` → `minimal` → … → `xhigh` → `off`) |
-| `Ctrl+I` / `Ctrl+L` | Chat textarea | Buksan ang popup ng tagapili ng modelo (mag-type para mag-filter, Enter para pumili, babalik ang focus sa textarea) |
+| Pindutan | Konteksto | Gawa |
+|----------|---------|--------|
+| `Enter` | Chat na textarea | I-submit ang mensahe |
+| `Shift+Enter` | Chat na textarea | Ilagay ang newline |
+| `Shift+Tab` | Chat na textarea | Lumipat sa susunod na antas ng pag-iisip (`off` → `minimal` → … → `xhigh` → `off`) |
+| `Ctrl+I` / `Ctrl+L` | Chat na textarea | Buksan ang model selector na popup (tangiin ang pagsulat, piliin sa pamamagitan ng Enter, lilitaw ang focus sa textarea) |
 
-### Mga toggle ng visibility ng entry
+### Mga toggle sa pagkakita ng entry
 
-| Shortcut | Konteksto | Ginagawa |
-|----------|-----------|----------|
-| `t` | Kapag ang focus ay **wala** sa isang input/textarea | I-toggle ang visibility ng pag-iisip |
-| `o` | Kapag ang focus ay **wala** sa isang input/textarea | I-toggle ang visibility ng mga tool |
-| `p` | Kapag ang focus ay **wala** sa isang input/textarea | I-toggle ang mga output ng tool |
+| Pindutan | Konteksto | Gawa |
+|----------|---------|--------|
+| `t` | Kapag **hindi** nasa input/textarea ang focus | I-toggle ang pagkakita ng pag-iisip |
+| `o` | Kapag **hindi** nasa input/textarea ang focus | I-toggle ang pagkakita ng mga tool |
+| `p` | Kapag **hindi** nasa input/textarea ang focus | I-toggle ang mga output ng tool |
 
-### Mga palette, menu at sheet
+### Palettes, mga menu at sheet
 
-| Shortcut | Konteksto | Ginagawa |
-|----------|-----------|----------|
-| `Escape` | Antas ng pahina | Isara ang anumang nakabukas na palette, menu, o sheet |
-| `⌘K` / `Ctrl+K` | Antas ng pahina | Buksan ang palette ng listahan ng mga session |
-| `ArrowUp` / `ArrowDown` | Palette ng listahan ng mga session | Mag-navigate sa mga resulta ng session |
-| `Enter` | Palette ng listahan ng mga session | Buksan ang napiling (o unang) session |
-| `ArrowUp` / `ArrowDown` | Popup ng tagapili ng modelo | Mag-navigate sa listahan ng mga modelo |
-| `Enter` | Popup ng tagapili ng modelo | Pumili ng naka-highlight na modelo |
-| `ArrowUp` / `ArrowDown` | Fork modal | Mag-navigate sa mga mensahe |
-| `Enter` | Fork modal | Mag-fork mula sa naka-highlight na mensahe |
-| `Tab` | Full-screen sheet | Mag-ikot ng focus sa loob ng sheet |
-| `Escape` | Full-screen sheet | Isara ang sheet |
+| Pindutan | Konteksto | Gawa |
+|----------|---------|--------|
+| `Escape` | Antas ng pahina | Isara ang anumang bukas na palette, menu, o sheet |
+| `⌘K` / `Ctrl+K` | Antas ng pahina | Buksan ang session list palette |
+| `ArrowUp` / `ArrowDown` | Session list palette | Lumipat sa mga resulta ng sesyon |
+| `Enter` | Session list palette | Buksan ang napiling (o unang) sesyon |
+| `ArrowUp` / `ArrowDown` | Model selector na popup | Lumipat sa listahan ng model |
+| `Enter` | Model selector na popup | Pumili ng naka-highlight na model |
+| `ArrowUp` / `ArrowDown` | Fork na modal | Lumipat sa mga mensahe |
+| `Enter` | Fork na modal | Gumawa ng fork mula sa naka-highlight na mensahe |
+| `Tab` | Full-screen na sheet | Lumipat ang focus sa loob ng sheet |
+| `Escape` | Full-screen na sheet | Isara ang sheet |

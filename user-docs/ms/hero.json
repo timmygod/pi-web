@@ -1,6 +1,6 @@
 {
-  "text": "Kawal ejen pengekodan pi anda dari jauh",
-  "tagline": "UI web dan PWA yang cantik untuk pi — semak imbas, baca, dan sambung sesi pengekodan AI anda dari mana-mana pelayar, pada mana-mana peranti.",
+  "text": "Kawal jauh ejen pemrograman pi anda",
+  "tagline": "Antaramuka web dan PWA yang indah untuk pi — semak, baca, dan teruskan sesi pemrograman AI anda daripada mana-mana pelayar, pada mana-mana peranti.",
   "actions": [
     {
       "theme": "brand",
@@ -21,33 +21,33 @@
   "features": [
     {
       "icon": "📱",
-      "title": "Sambung dari mana-mana",
-      "details": "Sambung sesi dari telefon, tablet, atau komputer lain anda. Tiada SSH, tiada Termius — hanya buka pelayar anda."
+      "title": "Teruskan daripada mana-mana tempat",
+      "details": "Teruskan sesi dari telefon, tablet, atau komputer lain. Tiada SSH, tiada Termius — hanya buka pelayar anda."
     },
     {
       "icon": "🗂️",
-      "title": "Papan pemuka pelbagai sesi",
-      "details": "Mulakan kerja dalam satu sesi sambil menonton strim sesi lain. Cari merentas projek, tapis mengikut cawangan, cari apa yang anda perlukan dengan pantas."
+      "title": "Papan pemuka multisesi",
+      "details": "Mulakan kerja dalam satu sesi sambil melihat strim sesi lain. Cari merentas projek, tapis berdasarkan cawangan, cari apa yang anda perlu dengan cepat."
     },
     {
       "icon": "🔓",
-      "title": "Sumber terbuka & agnostik model",
-      "details": "pi adalah sumber terbuka sepenuhnya dan agnostik pembekal. Pilih mana-mana model, tukar bila-bila masa — anda tidak terikat kepada satu vendor."
+      "title": "Kod terbuka & tidak bergantung pada model",
+      "details": "pi sepenuhnya kod terbuka dan tidak bergantung pada pembekal. Pilih mana-mana model, tukar bila-bila masa — anda tidak dikunci kepada pembekal tertentu."
     },
     {
       "icon": "🔒",
       "title": "Akses jauh yang selamat",
-      "details": "Pengesahan token terbina dalam supaya anda boleh mendedahkannya pada LAN anda atau melalui Tailscale tanpa risau."
+      "details": "Pengesahan token terbina dalam supaya anda boleh menampilkannya pada LAN atau melalui Tailscale tanpa bimbang."
     },
     {
       "icon": "📤",
       "title": "Kongsi kerja anda",
-      "details": "Eksport sesi sebagai syot kilat statik atau GitHub Gists rahsia dalam satu klik."
+      "details": "Eksport sesi sebagai快照 statik atau GitHub Gist rahsia dalam satu klik."
     },
     {
       "icon": "🏠",
       "title": "Ruang kerja AI peribadi anda",
-      "details": "Pasangnya seperti PWA asli dan jadikannya pembantu peribadi yang tinggal di mesin anda."
+      "details": "Pasang seperti PWA asli dan jadikan ia pembantu peribadi yang terdapat dalam mesin anda."
     }
   ]
 }

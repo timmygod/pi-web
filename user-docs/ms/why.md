@@ -1,30 +1,40 @@
 # Kenapa pi-web?
 
-Saya agak ketagih dengan Claude Code. Saya sentiasa menggunakannya. Jika saya tidak duduk di hadapan komputer, saya memikirkannya. Saya rasa seperti tidak membakar token yang mencukupi. Ia adalah hari-hari awal Claude Code. Dan saya berfikir, kenapa saya tidak boleh menyambung dari telefon saya? Saya sediakan Termius dan saya tidak begitu menyukainya.
+Saya agak ketagih dengan Claude Code. Saya selalu menggunakannya. Kalau saya tidak duduk di hadapan komputer, saya pun berfikir tentangnya. Saya rasa saya tidak membakar token yang mencukupi. Ini adalah zaman awal Claude Code. Dan saya berfikir, kenapa saya tidak dapat menyambung semakan dari telefon saya? Saya menetapkan Termius dan saya tidak begitu menyukainya.
 
-Saya mula mencipta sendiri dan berhenti apabila Claude memperkenalkan aplikasi mudah alih Claude Code mereka.
+Saya mula mencipta aplikasi saya sendiri dan berhenti apabila Claude memperkenalkan aplikasi mudah alih Claude Code mereka.
 
-Kemudian saya mendapat cakera hernia dan saya tidak boleh melakukan apa-apa sangat. Masa berlalu dan saya berasa pulih sedikit dan saya mahu meneruskan projek Claude Code melalui web/pwa saya.
+Kemudian saya mendapat sumbingan cakera dan saya tidak benar-benar dapat membuat apa yang banyak. Masa berlalu dan saya rasa pulih sedikit dan saya mahu meneruskan projek Claude Code saya melalui web/pwa.
 
-Kemudian Claude Code mula melarang penggunaan di luar harness mereka sendiri. Dan saya rasa ia tidak berbaloi.
+Kemudian Claude Code mula mengharamkan penggunaan di luar harness mereka sendiri. Dan saya rasa ia tidak berbaloi.
 
-Kemudian saya menemui pi.dev dan meneroka sedikit tetapi belum benar-benar mendalaminya. Saya membaca tentangnya, menonton video tentangnya dan memutuskan untuk mencuba sepenuhnya dan sekarang saya benar-benar minat dengan pi.
+Kemudian saya menemui pi.dev dan menerangkanya sedikit tetapi belum benar-benar mendalami. Saya membaca tentangnya, menonton video tentangnya dan memutuskan untuk mencuba sepenuhnya dan kini saya benar-benar tenggelam dalam pi.
 
-Oleh kerana ia sumber terbuka, saya rasa ia berbaloi untuk dibangunkan. Saya mendapat pilihan pembekal yang berbeza juga. Saya juga rasa bergantung kepada satu pembekal/model seperti Anthropic/Claude adalah tidak mampan.
+Memandangkan ia sumber terbuka, saya rasa ia berbaloi untuk dibina. Saya juga mendapat pilihan pembekal yang berbeza. Saya juga merasakan bergantung kepada satu pembekal/model seperti Anthropic/Claude adalah tidak mampan.
 
-Jadi saya membinanya di sini.
+Jadi saya membina ia di sini.
+
+Semakan keluaran ini dikekalkan sebagai edisi model tempatan bagi pi-web. Ia mengikuti projek hulu untuk penambahbaikan bersama, pada masa yang sama mengekalkan penebangan tempatan, kestabilan konteks, dan pengujian model tempatan pada jalan relak yang dikeluarkan secara berasingan.
 
 ## Mengapa model tempatan memerlukan profil operasi yang berbeza
 
-Pengalaman pi-web asal adalah asas yang sangat baik, tetapi inferens tempatan mempunyai mod kegagalan yang berbeza daripada model hos yang tipikal. Model tempatan mungkin menjadi perlahan dengan ketara apabila konteks berkembang, berkongsi memori terhad dengan bahagian lain mesin, berhenti selepas hanya menghasilkan penaakulan, atau kehilangan larian panjang akibat kegagalan pengangkutan tempatan sementara. Melayan kes-kes tersebut tepat seperti kegagalan cloud menjadikan UI kelihatan serasi sementara sesi sebenar kekal rapuh.
+Pengalaman pi-web asal adalah tapak asas yang ممتاز, tetapi inferens tempatan mempunyai mod kegagalan yang berbeza daripada model berhos tipikal. Model tempatan mungkin melambat dengan ketara apabila konteks membesar, berkongsi memori terhad dengan bahagian lain mesin, berhenti selepas menghasilkan penalaran sahaja, atau hilang satu larian panjang akibat kegagalan pengangkutan tempatan yang sementara. Memperlakukan kes-kes tersebut tepat seperti kegagalan awan menjadikan UI kelihatan serasi walaupun sesi sebenar kekal rapuh.
 
-Edisi ini menghampiri masalah secara berlapis:
+Edisi ini mendekati masalah tersebut secara berlapis:
 
-1. **Kekalkan upstream dahulu.** UI bersama dan tingkah laku sesi terus datang dari pi-web; perubahan tempatan diasingkan di belakang Local Mode yang berkesan.
-2. **Cegah sebelum pulih.** Sempadan konteks 65% berasaskan peratusan dikuatkuasakan sebelum panggilan pembekal seterusnya, termasuk panggilan dalam gelung alat yang panjang.
-3. **Pulih hanya dengan bukti.** Sambungan automatik terhad kepada insiden konteks, pengangkutan, dan fikiran-sahaja yang diiktiraf, bukan ralat pengesahan, kuota, atau ralat pembekal sewenang-wenangnya.
-4. **Hadkan setiap tindakan autonomi.** Insiden pemulihan dideduplikasi, kemajuan diperlukan sebelum penyelamatan lain, dan permulaan mempertimbangkan paling banyak satu sesi Local yang aktif baru-baru ini.
-5. **Kekalkan keluar manual.** Force Compact merumuskan dan bukan memadam sejarah, supaya pengguna boleh menyelamatkan sesi tanpa berpura-pura konteks tidak pernah wujud.
-6. **Lindungi keserasian cloud.** Cloud Mode mengekalkan semantik dan kawalan upstream; pengoptimuman model tempatan tidak secara senyap mendefinisikan semula sesi cloud.
+1. **Preserve upstream first.** UI bersama dan kelakuan sesi terus datang
+   dari pi-web; perubahan tempatan diasingkan di sebalik Local Mode yang berkesan.
+2. **Prevent before recovering.** Sempadan konteks berdasarkan peratusan 65% dikenakan
+   sebelum panggilan model susulan, termasuk panggilan di dalam gelung alat yang panjang.
+3. **Recover only with evidence.** Pentyambung automatik dihadkan kepada insiden konteks,
+   pengangkutan, dan penalaran sahaja yang dikenali—bukan pengesahan, kuota, atau
+   ralat pembekal yang sewenang-wenangnya.
+4. **Bound every autonomous action.** Insiden pulih digem-bin,
+   kemajuan diperlukan sebelum penyelamatan lain, dan permulaan mempertimbangkan satu
+   sesi Local yang baru-baru ini aktif pada paling banyak.
+5. **Keep a manual exit.** Force Compact meringkaskan dan bukan menghapus sejarh, jadi
+   pengguna dapat menyelamatkan sesi tanpa berpura-pura konteks itu tidak pernah wujud.
+6. **Protect cloud compatibility.** Cloud Mode mengekalkan semantik dan kawalan
+   upstream; pengoptimuman model tempatan tidak mensila-mentakrifkan semula sesi awan secara senyap.
 
-Itulah perbezaan sebenar dalam fork ini: ia melayan inferens tempatan sebagai persekitaran operasi yang berbeza, bukan sekadar satu lagi nama model dalam senarai jatuh.
+Itulah perbezaan sebenar dalam forka ini: ia memperlakukan inferens tempatan sebagai persekitaran operasi yang berasingan, dan bukan sekadar nama model lain dalam senarai turun.

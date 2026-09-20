@@ -1,5 +1,5 @@
 # pi-web uninstaller for Windows — removes binary, auto-start, and runtime
-# state. Triggered as npm preuninstall hook when `pi remove npm:@timmygod/pi-web-local@beta`
+# state. Triggered as npm preuninstall hook when `pi remove npm:@timmygod/pi-web-local`
 # is run. The npm package directory itself is removed by npm after this script.
 #
 # Kept intact (survives uninstall — preserves data for reinstall):

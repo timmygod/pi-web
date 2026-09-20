@@ -1,16 +1,18 @@
-Ang user ay nag-i-install ng pi-web sa pamamagitan ng
+> Ang troubleshooting guide na ito ay pinangangasiwaan para sa local-model edition. Pananatiling maayos ang mga detalye ng local deployment at upstream synchronization notes ayon sa [Local-model edition development](../../docs/dev/local-llm-development.md).
 
-- `pi install npm:@timmygod/pi-web-local@beta`
+Lumalaki ang user ng pi-web gamit ang
 
-Na awtomatikong nagpapatakbo ng [install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) at nagse-setup ng pi.
+- pi install npm:@timmygod/pi-web-local
 
-Kung ang user ay nagkakaroon ng isyu, maaaring ang setup ng install.sh ang nagdudulot ng problema. Maaari mong suriin at tingnan kung ano ang nangyayari at ibigay sa user kung ano talaga ang sanhi ng problema. At tanungin kung gusto nilang ayusin mo ito. Laging kumpirmahin sa user.
+Ang auto-rumunong [install.sh](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/install.sh) at nagse-setup ng pi.
 
-Upang ma-access ng user ang pi sa kanilang mobile o ibang network, ang inirerekomendang paraan ay ang paggamit ng Tailscale at i-access ito mula sa Tailscale network. At kailangang i-enable ng user ang HTTPS sa kanilang Tailscale dashboard - https://login.tailscale.com/admin/dns
+Kung may issue ang user, baka ang setup ng install.sh ang nagdudulot ng problema. Pwede mong suriin at tingnan kung anong nangyayari at bigyan ng malinaw ang user ng eksaktong sanhi ng problema. At hanapin kung gusto mong ayusin. Palaging kumonsulta sa user.
 
-Kung wala silang Tailscale na naka-install o ayaw nilang gumamit ng Tailscale, maaari nilang patakbuhin ang `pi-web status` at makuha ang binary path, status ng binary at ang local endpoint kung saan nila maa-access ang application. Ngunit tandaan, hindi nila makukuha ang push notification dahil ito ay nasa http.
+Upang ma-access ng user ang pi sa kanilang mobile o ibang network. Ang inirerekomendang paraan ay magamit ang Tailscale at i-access mula sa Tailscale network. At kailangan ng user na i-enable ang HTTPS sa kanilang Tailscale dashboard - https://login.tailscale.com/admin/dns
 
-Sa macOS ito ay naka-setup bilang [com.pi-web.plist](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/init/com.pi-web.plist)
-Sa Linux ito ay naka-setup bilang [pi-web.service](https://github.com/timmygod/pi-web/blob/main/init/pi-web.service)
+Kung walang installed na Tailscale o hindi gusto nilang gamitin ang Tailscale. Pwede nilang i-run ang `pi-web status` upang makuha ang binary path, status ng binary, at ang local endpoint na ma-access nila ang application. Ngunit tandaan, hindi nila ma-magrese ang push notification dahil http ang protocol.
 
-Kung sakaling kailangan mong mag-debug nang mas malalim at tingnan kung ano ang nangyayari.
+Sa macOS, ginagamit ang [com.pi-web.plist](https://raw.githubusercontent.com/timmygod/pi-web/refs/heads/main/init/com.pi-web.plist).
+Sa Linux, ginagamit ang [pi-web.service](https://github.com/timmygod/pi-web/blob/main/init/pi-web.service).
+
+Sa kaso na kailangan mong mag-debug nang lalong malalim at makita kung anong nangyayari.

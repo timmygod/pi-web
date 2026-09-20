@@ -1,50 +1,58 @@
 # Roadmap
 
-pi-web wird für zwei Zielgruppen entwickelt:
+Dieses Roadmap-Dokument gehört zur Local-Model-Edition von pi-web. Upstream-Funktionen
+werden regelmäßig synchronisiert, während die Arbeit an lokaler Bereitstellung und Zuverlässigkeit
+auf dieser Linie validiert und veröffentlicht wird; siehe [Entwicklung der Local-Model-Edition](../../docs/dev/local-llm-development.md).
 
-- **Für Entwickler** — die im Terminal leben, aber Sitzungen vom Handy aus fortsetzen, an einen Remote-Server übergeben oder lang laufende Aufgaben von überall im Blick behalten möchten.
-- **Für Nicht-Entwickler** — die einfach eine schöne KI-App wollen, die funktioniert. Öffnen, tippen, loslegen. Kein Terminal, kein SSH, keine Verwirrung. Wie die benutzerfreundlichsten KI-Tools, aber mit Modellwahl und Open-Source-Freiheit.
+pi-web ist für zwei Zielgruppen konzipiert:
+
+- **Für Entwickler** — die in der Terminal-Umgebung leben, aber Sessions vom Mobilgerät aus fortsetzen, an einen Remote-Server übergeben oder laufende Aufgaben von überall im Auge behalten möchten.
+- **Für Nicht-Entwickler** — die einfach eine schöne KI-App wollen, die funktioniert. Aufmachen, tippen, viben. Keine Terminal, kein SSH, keine Verwirrung. Wie die nutzerfreundlichsten KI-Tools, aber mit Modellwahl und Open-Source-Freiheit.
 
 Hier ist, was kommt.
 
+Diese Edition folgt dem Upstream pi-web auf einer separaten Release-Linie. Upstream-Funktionen
+werden regelmäßig importiert; die Arbeit an der Zuverlässigkeit der Local-Model wird hier priorisiert
+und validiert, ohne die Upstream-Release-Geschichte zu verändern.
+
 ---
 
-## Jetzt (ausgeliefert)
+## Jetzt (bereits verfügbar)
 
-Alles, was in der [Feature-Tabelle](README.md#what-you-can-do-with-pi-web) aufgeführt ist, ist heute live.
+Alles, was in [der Funktions-Übersicht](README.md#what-you-can-do-with-pi-web) aufgeführt ist, ist heute live.
 
 ---
 
 ## Als Nächstes
 
-| # | Feature | Beschreibung |
+| # | Funktion | Was es bewirkt |
 |---|---|---|
-| [#50](https://github.com/timmygod/pi-web/issues/50) | **Telegram- & Discord-Bots** | Chatte mit pi über Telegram oder Discord — perfekt für persönliche Assistenten-Workflows unterwegs. |
-| [#49](https://github.com/timmygod/pi-web/issues/49) | **Nutzungseinblicke** | Token-Tracking, Kostenschätzung, Sitzungsanalyse — erfahre, wie du pi nutzt. |
-| [#48](https://github.com/timmygod/pi-web/issues/48) | **Konfigurierbare Standards** | Lege deine bevorzugte Sichtbarkeit für Thinking, Tools und Tool-Ausgaben für alle Sitzungen fest. |
-| [#46](https://github.com/timmygod/pi-web/issues/46) | **Steering / Warteschlange** | Sende Folgeanweisungen, während pi noch läuft — lenke es mitten im Flug. |
-| [#41](https://github.com/timmygod/pi-web/issues/41) | **`/compact`-Befehl** | Komprimiere lange Konversationen direkt aus der Web-UI, kein Terminal nötig. |
+| [#50](https://github.com/timmygod/pi-web/issues/50) | **Telegram- und Discord-Bots** | Mit pi über Telegram oder Discord chatten — perfekt für persönliche Assistenten-Workflows unterwegs. |
+| [#49](https://github.com/timmygod/pi-web/issues/49) | **Nutzungseinsichten** | Token-Tracking, Kostenabschätzung, Session-Analysen — erfahre, wie du pi nutzt. |
+| [#48](https://github.com/timmygod/pi-web/issues/48) | **Konfigurierbare Standards** | Lege deine bevorzugte Sichtbarkeit für Denken, Tools und Tool-Ausgaben über alle Sessions fest. |
+| [#46](https://github.com/timmygod/pi-web/issues/46) | **Steuerung / Warteschlange** | Sende Folgeanweisungen, während pi noch läuft — leite es auf dem Weg. |
+| [#41](https://github.com/timmygod/pi-web/issues/41) | **`/compact`-Befehl** | Kompactiere lange Konversationen direkt aus der Web-UI, ohne Terminal. |
 
 ---
 
 ## Geplant
 
-| # | Feature | Beschreibung |
+| # | Funktion | Was es bewirkt |
 |---|---|---|
-| [#47](https://github.com/timmygod/pi-web/issues/47) | **Datei-Explorer & Git Diff** | Durchsuche den Projekt-Dateibaum und sieh Git-Änderungen direkt in pi-web. Opt-in, damit es dir nicht im Weg steht. |
-| [#44](https://github.com/timmygod/pi-web/issues/44) | **Scheduler** | Plane Prompts zur automatischen Ausführung — tägliche Standups, morgendliche Zusammenfassungen, wiederkehrende Aufgaben. Admin-geschützt zur Sicherheit. |
-| [#43](https://github.com/timmygod/pi-web/issues/43) | **Anpassbare Tastenkürzel** | Belege jedes Tastenkürzel neu, passend zu deinem Muskelgedächtnis. |
+| [#47](https://github.com/timmygod/pi-web/issues/47) | **Datei-Explorer und Git-Diff** | Durchsuche den Projektdateibaum und sieh Git-Änderungen direkt in pi-web. Opt-in, damit es aus dem Weg bleibt. |
+| [#44](https://github.com/timmygod/pi-web/issues/44) | **Scheduler** | Plane Prompts, die automatisch ausgeführt werden — tägliche Standups, Morgen-Zusammenfassungen, wiederkehrende Aufgaben. Aus Sicherheitsgründen durch Admins geschützt. |
+| [#43](https://github.com/timmygod/pi-web/issues/43) | **Anpassbare Shortcuts** | Ordne jede Tastenkombination neu zu, um deiner Muskel记忆 zu entsprechen. |
 
 ---
 
 ## Vision
 
-Das langfristige Ziel: pi-web soll **das Interface für pi** sein — für alle.
+Das Langzeitziel: pi-web sollte **die Oberfläche für pi** sein — für alle.
 
-- **Nicht-Entwickler** öffnen es wie jede andere App. Modell wählen. Tippen. Fertig. Niemals eine Kommandozeile.
-- **Entwickler** erhalten tiefe Integration — Remote-Übergabe, Multi-Session-Dashboards, Git-bewusstes Browsen, Messaging-Bots.
-- **Alle** bekommen Modellfreiheit, Open-Source-Transparenz und eine Benutzeroberfläche, die sich an jeder Stelle durchdacht anfühlt.
+- **Nicht-Entwickler** öffnen es wie jede andere App. Modell wählen. Tippen. Fertig. Keine Kommandozeile jemals.
+- **Entwickler** erhalten tiefe Integration — Remote-Handoff, Multi-Session-Dashboards, Git-bewusste Durchsuchung, Messaging-Bots.
+- **Alle** erhalten Modellfreiheit, Open-Source-Transparenz und eine UI, die an jeder Stelle durchdacht wirkt.
 
 ---
 
-> 💡 Hast du eine Idee? [Eröffne ein Issue](https://github.com/timmygod/pi-web/issues/new) oder beteilige dich an der Diskussion.
+> 💡 Hast du eine Idee? [Eröffne ein Issue](https://github.com/timmygod/pi-web/issues/new) oder schließe dich der Diskussion an.

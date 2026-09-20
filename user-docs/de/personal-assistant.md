@@ -1,24 +1,28 @@
-# pi-web als dein persönlicher Assistent
+# pi-web als Ihr persönlicher Assistent
 
-pi-web ist nicht nur zum Programmieren da — du kannst es in einen **persönlichen KI-Assistenten** verwandeln, der auf deinem Computer lebt, wie dein eigener OpenClaw oder Hermes.
+Dieser Workflow wird von der Local-Model-Edition unterstützt. Für die
+Entwicklung, Synchronisation und das Release-Verfahren dieser Edition siehe
+[Local-Model-Edition-Entwicklung](../../docs/dev/local-llm-development.md).
 
-## So funktioniert's
+pi-web eignet sich nicht nur für das Programmieren – Sie können es zu einem **persönlichen KI-Assistenten** machen, der auf Ihrem Computer lebt, wie Ihre eigene OpenClaw- oder Hermes-Instanz.
 
-Du erstellst einen eigenen Ordner auf deinem Rechner — dort lebt dein Assistent. Darin legst du eine `APPEND_SYSTEM.md`-Datei ab, die festlegt, wer dein Assistent ist, was er weiß und wie er sich verhält. pi-web bietet dir eine schöne Chat-Oberfläche, um von jedem Gerät aus mit ihm zu sprechen.
+## So funktioniert es
+
+Sie erstellen einen dedizierten Ordner auf Ihrem Computer – dort lebt Ihr Assistent. Darin legen Sie eine `APPEND_SYSTEM.md`-Datei ab, die definiert, wer Ihr Assistent ist, was er weiß und wie er sich verhält. pi-web bietet Ihnen eine schöne Chat-Oberfläche, um von jedem Gerät mit ihm zu sprechen.
 
 ## Schritt für Schritt
 
-### 1. Erstelle deinen Assistent-Ordner
+### 1. Ihren Assistenten-Ordner erstellen
 
-Wähle einen Ordner auf deinem Computer. Zum Beispiel:
+Wählen Sie einen Ordner auf Ihrem Computer. Etwas wie:
 
 ```
 ~/my-assistant/
 ```
 
-### 2. Definiere deinen Assistenten
+### 2. Ihren Assistenten definieren
 
-Erstelle eine `APPEND_SYSTEM.md`-Datei in diesem Ordner. Hier sagst du pi, wer dein Assistent ist:
+Erstellen Sie in diesem Ordner eine `APPEND_SYSTEM.md`-Datei. Hier geben Sie pi an, wer Ihr Assistent ist:
 
 ```markdown
 # My Personal Assistant
@@ -45,36 +49,54 @@ You are Jarvis, my personal AI assistant. You help me with:
 - Proactively remind me of things I asked you to track
 ```
 
-pi hängt dies automatisch an den System-Prompt jeder Unterhaltung an, sodass dein Assistent immer weiß, wer du bist und wie er helfen kann.
+pi hängt diese Datei automatisch an den System-Prompt jedes Gesprächs an, sodass Ihr Assistent immer weiß, wer Sie sind und wie er helfen kann.
 
-### 3. Starte eine Sitzung in diesem Ordner
+### 3. Eine Sitzung in diesem Ordner starten
 
-Erstelle in pi-web eine neue Sitzung, die auf `~/my-assistant/` (oder wie auch immer du sie genannt hast) verweist. Das war's — du sprichst mit deinem persönlichen Assistenten.
+Erstellen Sie in pi-web eine neue Sitzung, die auf `~/my-assistant/` zeigt (oder auf welchen Namen Sie ihn auch immer benannt haben). Und das war's – Sie sprechen mit Ihrem persönlichen Assistenten.
 
-### 4. Nutze ihn von überall
+### 4. Von überall aus nutzen
 
-Installiere pi-web als PWA auf deinem Handy, Tablet oder Laptop. Dein Assistent ist immer da — frag ihn alles, jederzeit.
+Installieren Sie pi-web als PWA auf Ihrem Smartphone, Tablet oder Laptop. Ihr Assistent ist immer dort – stellen Sie ihm jederzeit alles, was Sie möchten.
 
-## Ideen für deinen Assistenten
+## Ideen für Ihren Assistenten
 
-| Rolle | Was in die APPEND_SYSTEM.md gehört |
+| Rolle | Was in APPEND_SYSTEM.md stehen soll |
 |---|---|
-| 🧠 **Life-Coach** | Deine Ziele, Gewohnheiten, an denen du arbeitest, Anregungen zum Tagebuchschreiben |
-| 🏠 **Haushaltsmanager** | Einkaufslisten-Format, Vorlieben der Familienmitglieder, Essensplanung |
-| 💼 **Arbeits-Buddy** | Deine Rolle, aktuelle Projekte, Format für Besprechungsnotizen, Unternehmenskontext |
-| 📚 **Lernpartner** | Was du lernst, bevorzugter Erklärstil, Prüf-mich-Modus |
-| ✍️ **Schreibassistent** | Dein Schreibstil, bevorzugter Ton, häufig genutzte Formate |
+| 🧠 **Life Coach** | Ihre Ziele, Gewohnheiten, an denen Sie arbeiten, Journaling-Prompts |
+| 🏠 **Hausmanager** | Format der Einkaufsliste, Vorlieben der Familienmitglieder, Essensplanung |
+| 💼 **Arbeitspartner** | Ihre Rolle, aktuelle Projekte, Format der Meeting-Notizen, Unternehmenskontext |
+| 📚 **Lernpartner** | Was Sie lernen, bevorzugter Erklärungsstil, Quiz-me-Modus |
+| ✍️ **Schreibassistent** | Ihr Schreibstil, Tonfall-Vorlieben, häufig verwendete Formate |
 
-## Füge mehr Kontext hinzu
+## Mehr Kontext hinzufügen
 
-Du kannst alles in deinen Assistent-Ordner legen, was pi nützlicher macht:
+Sie können alles in Ihren Assistenten-Ordner legen, was pi nützlicher macht:
 
-- `notes/` — Referenzdateien, die dein Assistent lesen kann
-- `context.md` — Hintergrundinformationen über dein Leben oder deine Arbeit
-- `projects.md` — aktuelle Projekte und deren Status
+- `notes/` – Referenzdateien, die Ihr Assistent lesen kann
+- `context.md` – Hintergrundinformationen über Ihr Leben oder Ihre Arbeit
+- `projects.md` – aktuelle Projekte und deren Status
 
-pi kann Dateien im Ordner lesen. Je mehr Kontext du gibst, desto besser wird es.
+pi kann Dateien im Ordner lesen, je mehr Kontext Sie ihm geben, desto besser wird er.
+
+## pi-web Aufgaben delegieren
+
+Nach `pi install npm:@timmygod/pi-web-local` können Sitzungen mit pi-web selbst sprechen.
+Provozieren Sie Folgendes:
+
+- „Füge einen Zeitplan für 2 Uhr morgens Singapur-Zeit hinzu, um mein Postfach zusammenzufassen"
+- „Liste meine pi-web-Zeitpläne auf"
+- „Setze den Postfach-Zeitplan auf Pause"
+- „Schreibe das in die Notizen"
+- „Wechsle pi-web in den dunklen Modus / schalte Auto-Titel aus"
+
+Die mitgelieferte **/skill:pi-web-schedule**-Skill macht daraus einen echten pi-web
+Zeitplan (dieselben, die Sie unter `/schedules` bearbeiten). Jeder Lauf startet eine **neue**
+Sitzung, daher müssen die Anweisungen für sich allein stehen – „ungelesene Mails in
+~/inbox zusammenfassen" funktioniert; „setz das fort, was wir taten" nicht.
+
+Zeitpläne laufen nur, wenn pi-web läuft.
 
 ---
 
-> 💡 **Tipp:** Fang einfach an. Nur ein paar Zeilen darüber, wer du bist und wie sich der Assistent verhalten soll. Entwickle es mit der Zeit weiter, wenn du herausfindest, was funktioniert.
+> 💡 **Tipp:** Fangen Sie einfach an. Nur ein paar Zeilen darüber, wer Sie sind und wie der Assistent sich verhalten soll. Iterieren Sie mit der Zeit, wenn Sie herausfinden, was funktioniert.

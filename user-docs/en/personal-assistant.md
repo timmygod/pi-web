@@ -81,7 +81,7 @@ pi can read files in the folder, so the more context you give it, the better it 
 
 ## Ask pi-web to do things
 
-After `pi install npm:@ygncode/pi-web@beta`, sessions can talk to pi-web itself.
+After `pi install npm:@timmygod/pi-web-local`, sessions can talk to pi-web itself.
 Try:
 
 - “Add a schedule at 2am Singapore time to summarize my inbox”

@@ -1,85 +1,87 @@
-# ကီးဘုတ် ဖြတ်လမ်းများ
+# Keyboard Shortcuts
 
-## အညွှန်း စာမျက်နှာ (`/`)
+pi-web ၏ local-model edition အတွက် shortcut များသည် အောက်ပါအတိုင်း ဖြစ်သည်။ Edition အလိုက် ကွဲပြားသော runtime ဝန်ဆောင်မှုများအကြောင်း [Local-model edition development](../../docs/dev/local-llm-development.md) တွင် ဖော်ပြထားသည်။
 
-### စာမျက်နှာ ရွှေ့လျားခြင်း (vim-စတိုင်)
+## Index page (`/`)
 
-vim-စတိုင် ဖြတ်လမ်းများသည် အင်ပူ့၊ စာသားဧရိယာ သို့မဟုတ် contenteditable အဲလီမင့်တွင် ဖိုးကပ်စ် **မရှိသည့်**အခါ စာမျက်နှာအားလုံးတွင် အလုပ်လုပ်ပါသည်။
+### Page scrolling (vim-style)
 
-| ဖြတ်လမ်း | လုပ်ဆောင်ချက် |
+Focus သည် input, textarea, သို့မဟုတ် contenteditable element ထဲတွင် **မ**ရှိပါက j/k နှင့်တူညီသော vim-style shortcut များသည် pages များအားလုံးတွင် အလုပ်လုပ်သည်။
+
+| Shortcut | Action |
 |----------|--------|
-| `j` | ၃၀၀px အောက်သို့ ရွှေ့ပါ |
-| `k` | ၃၀၀px အထက်သို့ ရွှေ့ပါ |
-| `g g` | စာမျက်နှာထိပ်သို့ ရွှေ့ပါ |
-| `G` (Shift+G) | စာမျက်နှာအောက်ဆုံးသို့ ရွှေ့ပါ |
-| `Escape` | j/k ရွှေ့လျားမှု အလုပ်လုပ်စေရန် လက်ရှိ အင်ပူ့ကို ဖြုတ်ပါ |
+| `j` | Scroll down 300px |
+| `k` | Scroll up 300px |
+| `g g` | Scroll to top of page |
+| `G` (Shift+G) | Scroll to bottom of page |
+| `Escape` | j/k navigation အလုပ်လုပ်ရန် active input ကို blur သွင်းစေသည် |
 
-### အညွှန်း ကွန်မန့်များ
+### Index commands
 
-| ဖြတ်လမ်း | အခြေအနေ | လုပ်ဆောင်ချက် |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `⌘K` / `Ctrl+K` | စာမျက်နှာအဆင့် | ရှာဖွေရေး/ဆက်ရှင် ပယ်လက် ဖွင့်ပါ |
-| `⌘⇧L` / `Ctrl+Shift+L` | စာမျက်နှာအဆင့် | စနစ်အပြင်အဆင် (အလင်း/အမှောင်) ပြောင်းပါ |
-| `Escape` | စာမျက်နှာအဆင့် | ပယ်လက်၊ မီနူး သို့မဟုတ် မော်ဒယ်လ် ပိတ်ပါ |
-| `Enter` | ဆက်ရှင်အသစ် လမ်းကြောင်း အင်ပူ့ | ဆက်ရှင်အသစ် ဖန်တီးပါ |
+| `⌘K` / `Ctrl+K` | Page-level | Open search/sessions palette |
+| `⌘⇧L` / `Ctrl+Shift+L` | Page-level | Toggle system theme (light/dark) |
+| `Escape` | Page-level | Close palette, menu, or modal |
+| `Enter` | New-session path input | Create new session |
 
-> `⌘K` / `Ctrl+K` သည် Chrome ၏ "လိပ်စာဘားကို ဖိုးကပ်စ်လုပ်ရန်" ဖြတ်လမ်းလည်းဖြစ်သည်။ ဖိုးကပ်စ်သည် စာသားအင်ပူ့အတွင်း မရှိပါက ဘရောက်ဆာက ၎င်းကို ကြားဖြတ်ဖမ်းယူနိုင်ပါသည်။
+> `⌘K` / `Ctrl+K` သည် Chrome ၏ "focus address bar" shortcut နှင့်လည်း တူသည်။ Focus သည် text input ထဲတွင် မပါဝင်ပါက browser က အကွက်ပြုလုပ်နိုင်သည်။
 
-## ဆက်ရှင် အသေးစိတ် စာမျက်နှာ (`/session?id=...`)
+## Session detail page (`/session?id=...`)
 
-### စာမျက်နှာ ရွှေ့လျားခြင်း (vim-စတိုင်)
+### Page scrolling (vim-style)
 
-၎င်းတို့သည် အင်ပူ့၊ စာသားဧရိယာ သို့မဟုတ် contenteditable အဲလီမင့်တွင် ဖိုးကပ်စ် **မရှိသည့်**အခါ အညွှန်းနှင့် ဆက်ရှင် စာမျက်နှာနှစ်ခုလုံးတွင် အလုပ်လုပ်ပါသည်။
+Focus သည် input, textarea, သို့မဟုတ် contenteditable element ထဲတွင် **မ**ရှိပါက index နှင့် session pages နှစ်ခုလုံးတွင် အလုပ်လုပ်သည်။
 
-| ဖြတ်လမ်း | လုပ်ဆောင်ချက် |
+| Shortcut | Action |
 |----------|--------|
-| `j` | ၃၀၀px အောက်သို့ ရွှေ့ပါ |
-| `k` | ၃၀၀px အထက်သို့ ရွှေ့ပါ |
-| `g g` | စာမျက်နှာထိပ်သို့ ရွှေ့ပါ |
-| `G` (Shift+G) | စာမျက်နှာအောက်ဆုံးသို့ ရွှေ့ပါ |
-| `I` (Shift+I) | ချက်တ် ရေးသားရန် စာသားဧရိယာကို ဖိုးကပ်စ်လုပ်ပါ |
-| `Escape` | j/k ရွှေ့လျားမှု အလုပ်လုပ်စေရန် လက်ရှိ အင်ပူ့ကို ဖြုတ်ပါ |
+| `j` | Scroll down 300px |
+| `k` | Scroll up 300px |
+| `g g` | Scroll to top of page |
+| `G` (Shift+G) | Scroll to bottom of page |
+| `I` (Shift+I) | Focus the chat composer textarea |
+| `Escape` | j/k navigation အလုပ်လုပ်ရန် active input ကို blur သွင်းစေသည် |
 
-### ဘေးဘား နှင့် လမ်းကြောင်းပြောင်းခြင်း
+### Sidebar & navigation
 
-| ဖြတ်လမ်း | အခြေအနေ | လုပ်ဆောင်ချက် |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `⌘B` / `Ctrl+B` | စာမျက်နှာအဆင့် | ဘေးဘား မြင်နိုင်မှု ပြောင်းပါ |
-| `⌘K` / `Ctrl+K` | စာမျက်နှာအဆင့် | ဆက်ရှင်စာရင်း ပယ်လက် ဖွင့်ပါ |
-| `⌘T` / `Ctrl+T` | စာမျက်နှာအဆင့် | ဆက်ရှင်အသစ် |
-| `⌘⇧L` / `Ctrl+Shift+L` | စာမျက်နှာအဆင့် | စနစ်အပြင်အဆင် (အလင်း/အမှောင်) ပြောင်းပါ |
-| `⌘⇧N` / `Ctrl+Shift+N` | စာမျက်နှာအဆင့် | မှတ်စုစာအုပ် / မှတ်စုများ ဘေးဘား ပြောင်းပါ |
+| `⌘B` / `Ctrl+B` | Page-level | Toggle sidebar visibility |
+| `⌘K` / `Ctrl+K` | Page-level | Open session list palette |
+| `⌘T` / `Ctrl+T` | Page-level | New session |
+| `⌘⇧L` / `Ctrl+Shift+L` | Page-level | Toggle system theme (light/dark) |
+| `⌘⇧N` / `Ctrl+Shift+N` | Page-level | Toggle scratchpad / notes sidebar |
 
-> `⌘K` နှင့် `⌘T` တို့သည် ဘရောက်ဆာ ဖြတ်လမ်းများ (လိပ်စာဘား ဖိုးကပ်စ်လုပ်ရန် / တက်ဘ်အသစ်) လည်းဖြစ်သည်။ ဖိုးကပ်စ်သည် စာသားအင်ပူ့အတွင်း မရှိပါက ဘရောက်ဆာက ၎င်းတို့ကို ကြားဖြတ်ဖမ်းယူနိုင်ပါသည်။
+> `⌘K` နှင့် `⌘T` သည် browser shortcuts နှင့်လည်း တူသည် (focus address bar / new tab)။ Focus သည် text input ထဲတွင် မပါဝင်ပါက browser က အကွက်ပြုလုပ်နိုင်သည်။
 
-### ချက်တ် ရေးသားသည့်နေရာ
+### Chat composer
 
-| ဖြတ်လမ်း | အခြေအနေ | လုပ်ဆောင်ချက် |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `Enter` | ချက်တ် စာသားဧရိယာ | မက်ဆေ့ချ် ပို့ပါ |
-| `Shift+Enter` | ချက်တ် စာသားဧရိယာ | စာကြောင်းသစ် ထည့်ပါ |
-| `Shift+Tab` | ချက်တ် စာသားဧရိယာ | နောက်တွေးခေါ်မှုအဆင့်သို့ လှည့်ပြောင်းပါ (`off` → `minimal` → … → `xhigh` → `off`) |
-| `Ctrl+I` / `Ctrl+L` | ချက်တ် စာသားဧရိယာ | မော်ဒယ်ရွေးချယ်ရန် ပေါ့ပ်အပ် ဖွင့်ပါ (ရိုက်၍ စစ်ထုတ်ပါ၊ Enter ဖြင့် ရွေးပါ၊ ဖိုးကပ်စ်သည် စာသားဧရိယာသို့ ပြန်ရောက်ပါမည်) |
+| `Enter` | Chat textarea | Submit message |
+| `Shift+Enter` | Chat textarea | Insert newline |
+| `Shift+Tab` | Chat textarea | Cycle to next thinking level (`off` → `minimal` → … → `xhigh` → `off`) |
+| `Ctrl+I` / `Ctrl+L` | Chat textarea | Open model selector popup (type to filter, Enter to select, focus returns to textarea) |
 
-### အကြောင်းအရာ မြင်နိုင်မှု ပြောင်းလဲခြင်း
+### Entry visibility toggles
 
-| ဖြတ်လမ်း | အခြေအနေ | လုပ်ဆောင်ချက် |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `t` | အင်ပူ့/စာသားဧရိယာတွင် ဖိုးကပ်စ် **မရှိသည့်**အခါ | တွေးခေါ်မှု မြင်နိုင်မှု ပြောင်းပါ |
-| `o` | အင်ပူ့/စာသားဧရိယာတွင် ဖိုးကပ်စ် **မရှိသည့်**အခါ | တူးလ် မြင်နိုင်မှု ပြောင်းပါ |
-| `p` | အင်ပူ့/စာသားဧရိယာတွင် ဖိုးကပ်စ် **မရှိသည့်**အခါ | တူးလ်ရလဒ် မြင်နိုင်မှု ပြောင်းပါ |
+| `t` | Focus သည် input/textarea ထဲတွင် **မ**ရှိချိန် | Toggle thinking visibility |
+| `o` | Focus သည် input/textarea ထဲတွင် **မ**ရှိချိန် | Toggle tools visibility |
+| `p` | Focus သည် input/textarea ထဲတွင် **မ**ရှိချိန် | Toggle tool outputs |
 
-### ပယ်လက်များ၊ မီနူးများ နှင့် ရှိတ်များ
+### Palettes, menus & sheets
 
-| ဖြတ်လမ်း | အခြေအနေ | လုပ်ဆောင်ချက် |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `Escape` | စာမျက်နှာအဆင့် | ဖွင့်ထားသော ပယ်လက်၊ မီနူး သို့မဟုတ် ရှိတ်ကို ပိတ်ပါ |
-| `⌘K` / `Ctrl+K` | စာမျက်နှာအဆင့် | ဆက်ရှင်စာရင်း ပယ်လက် ဖွင့်ပါ |
-| `ArrowUp` / `ArrowDown` | ဆက်ရှင်စာရင်း ပယ်လက် | ဆက်ရှင်ရလဒ်များကို လမ်းကြောင်းပြောင်းပါ |
-| `Enter` | ဆက်ရှင်စာရင်း ပယ်လက် | ရွေးထားသော (သို့မဟုတ် ပထမ) ဆက်ရှင်ကို ဖွင့်ပါ |
-| `ArrowUp` / `ArrowDown` | မော်ဒယ်ရွေးချယ်ရန် ပေါ့ပ်အပ် | မော်ဒယ်စာရင်းကို လမ်းကြောင်းပြောင်းပါ |
-| `Enter` | မော်ဒယ်ရွေးချယ်ရန် ပေါ့ပ်အပ် | အသားပေးထားသော မော်ဒယ်ကို ရွေးပါ |
-| `ArrowUp` / `ArrowDown` | ဖော့ခ် မော်ဒယ်လ် | မက်ဆေ့ချ်များကို လမ်းကြောင်းပြောင်းပါ |
-| `Enter` | ဖော့ခ် မော်ဒယ်လ် | အသားပေးထားသော မက်ဆေ့ချ်မှ ဖော့ခ်လုပ်ပါ |
-| `Tab` | စခရင်အပြည့် ရှိတ် | ရှိတ်အတွင်း ဖိုးကပ်စ် လှည့်ပြောင်းပါ |
-| `Escape` | စခရင်အပြည့် ရှိတ် | ရှိတ်ကို ပိတ်ပါ |
+| `Escape` | Page-level | Close any open palette, menu, or sheet |
+| `⌘K` / `Ctrl+K` | Page-level | Open session list palette |
+| `ArrowUp` / `ArrowDown` | Session list palette | Navigate session results |
+| `Enter` | Session list palette | Open the selected (or first) session |
+| `ArrowUp` / `ArrowDown` | Model selector popup | Navigate model list |
+| `Enter` | Model selector popup | Select highlighted model |
+| `ArrowUp` / `ArrowDown` | Fork modal | Navigate messages |
+| `Enter` | Fork modal | Fork from highlighted message |
+| `Tab` | Full-screen sheet | Cycle focus within the sheet |
+| `Escape` | Full-screen sheet | Close the sheet |

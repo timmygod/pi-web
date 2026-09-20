@@ -6,56 +6,56 @@
 
 </div>
 
-**Đang cân nhắc dùng thử pi-web? Cứ thử đi — bạn sẽ thích mê.**
+**Đang cân nhắc thử pi-web? Cứ thử đi — bạn sẽ yêu thích nó.**
 
-pi-web là giao diện web và PWA đẹp mắt dành cho [pi](https://pi.dev) — trợ lý lập trình AI mã nguồn mở. Nó cho phép bạn duyệt, đọc và tiếp tục các phiên pi từ bất kỳ trình duyệt nào, trên bất kỳ thiết bị nào, với những tính năng được chăm chút ở mọi ngóc ngách.
+pi-web là giao diện web và PWA đẹp mắt dành cho [pi](https://pi.dev) — agent mã nguồn mở về AI coding. Nó cho phép bạn duyệt, đọc và tiếp tục các phiên pi của mình từ bất kỳ trình duyệt nào, trên bất kỳ thiết bị nào, với những tính năng đầy tâm huyết ở từng bước.
 
-## Điều gì khác biệt trong phiên bản này?
+## Điều gì khác biệt ở phiên bản này?
 
-Kho lưu trữ này giữ nguyên giao diện pi-web và các tính năng chia sẻ từ upstream, nhưng thay đổi cách bảo vệ các phiên khi mô hình được chọn chạy cục bộ hoặc trên LAN của bạn.
+Kho mã này giữ lại giao diện và các tính năng dùng chung của pi-web phía upstream, nhưng thay đổi cách bảo vệ các phiên khi model được chọn chạy cục bộ hoặc trên LAN của bạn.
 
-- **Chọn chính sách thời gian chạy cho mỗi phiên.** Auto phát hiện các điểm cuối cục bộ/LAN khi siêu dữ liệu của nhà cung cấp rõ ràng; Local và Cloud là các ghi đè thủ công bền vững.
-- **Ngăn ngừa lỗi ngữ cảnh sớm.** Local Mode nén ở mức sử dụng 65% và kiểm tra lại giữa các lần gọi công cụ, trước yêu cầu tiếp theo của nhà cung cấp.
-- **Giữ các bản tóm tắt có giới hạn.** Các điểm kiểm tra cuộn tránh việc bản tóm tắt cũ phát triển vô hạn, thử lại một lần với ngân sách chặt chẽ hơn và dừng an toàn khi việc nén không đạt được tiến bộ có ý nghĩa.
-- **Phục hồi một cách thận trọng.** Tràn ngữ cảnh, gián đoạn truyền tải được chọn và các lần dừng sớm chỉ liên quan đến suy luận có thể tự động tiếp tục, nhưng việc loại bỏ trùng lặp sự cố và cầu chì nhận thức tiến độ ngăn chặn các vòng lặp phục hồi.
-- **Để người dùng kiểm soát.** Force Compact luôn là con đường cứu hộ thủ công có thể nhìn thấy, trong khi Cloud Mode giữ nguyên quy trình làm việc và các điều khiển của upstream.
+- **Chọn chính sách runtime cho từng phiên.** Tự động phát hiện các endpoint cục bộ/LAN khi metadata của provider rõ ràng; Local và Cloud là các ghi đè thủ công được lưu trữ.
+- **Ngăn chặn các lỗi context sớm.** Local Mode thực hiện compaction khi đạt 65% mức sử dụng và kiểm tra lại giữa các cuộc gọi tool, trước yêu cầu model tiếp theo.
+- **Giữ các tóm tắt nằm trong giới hạn.** Các checkpoint luân phiên tránh việc một tóm tắt cũ lớn lên vô hạn, thử lại một lần với ngân sách chặt hơn, và dừng một cách an toàn khi compaction không mang lại tiến bộ ý nghĩa.
+- **Khôi phục một cách thận trọng.** Lỗi tràn context, các gián đoạn của transport được chọn, và các dừng sớm chỉ liên quan đến reasoning có thể tự động tiếp tục, nhưng deduplication sự cố và circuit breaker nhận biết tiến độ sẽ ngăn chặn các vòng lặp khôi phục.
+- **Giữ cho người dùng quyền kiểm soát.** Force Compact luôn là đường lối cứu trợ thủ công rõ ràng, trong khi Cloud Mode giữ lại quy trình và điều khiển từ upstream.
 
-Kết quả thực tế rất đơn giản: một tác vụ dài với mô hình cục bộ nên nén trước khi nó gặp sự cố, phục hồi một lần khi việc phục hồi là an toàn và dừng sạch sẽ thay vì lặp lại khi nó không an toàn.
+Kết quả thực tiễn rất đơn giản: một tác vụ dài với model cục bộ nên được compaction trước khi sụp đổ, khôi phục một lần khi việc khôi phục là an toàn, và dừng gọn gàng thay vì lặp đi lặp lại khi nó không an toàn.
 
-**pi-web được xây dựng cho hai kiểu người dùng:**
+**pi-web được xây dựng dành cho hai loại người:**
 
-- 🧑‍💻 **Dành cho lập trình viên** — những người sống trong terminal nhưng muốn tiếp tục phiên làm việc từ điện thoại, chuyển sang máy chủ từ xa, hoặc theo dõi các tác vụ chạy dài từ bất kỳ đâu.
-- ✨ **Dành cho người không chuyên** — những người chỉ muốn một ứng dụng AI đẹp và hoạt động trơn tru. Mở lên, gõ, tận hưởng. Không terminal, không SSH, không rắc rối. Giống như những công cụ AI thân thiện nhất, nhưng có tự do chọn model và mã nguồn mở.
+- 🧑‍💻 **Dành cho lập trình viên** — những người sống trong terminal nhưng muốn tiếp tục phiên từ điện thoại, chuyển sang một máy chủ từ xa, hoặc theo dõi các tác vụ dài từ bất kỳ đâu.
+- ✨ **Dành cho người không phải lập trình viên** — những người chỉ muốn một ứng dụng AI đẹp và hoạt động tốt. Mở ra, gõ, vào lúc vibe. Không có terminal, không có SSH, không có sự bối rối. Giống như các công cụ AI thân thiện nhất, nhưng với sự lựa chọn model và sự tự do mã nguồn mở.
 
 ---
 
-## Tại sao chọn pi-web?
+## Tại sao là pi-web?
 
-Bạn đang say mê làm việc với pi trong terminal. pi-web giúp bạn duy trì đà làm việc đó khi bạn rời khỏi bàn:
+Bạn đã đang đắm chìm trong luồng tập trung với pi trong terminal của bạn. pi-web giữ cho động lượng đó tiếp tục khi bạn rời khỏi bàn làm việc:
 
-- **Tiếp tục từ bất kỳ đâu** — tiếp tục phiên làm việc từ điện thoại, máy tính bảng, hoặc máy tính khác. Không cần SSH, không cần Termius — chỉ cần mở trình duyệt.
-- **Bảng điều khiển đa phiên** — khởi động công việc trong một phiên trong khi theo dõi phiên khác đang chạy. Tìm kiếm xuyên suốt các dự án, lọc theo nhánh, tìm thứ bạn cần một cách nhanh chóng.
-- **Nền tảng mã nguồn mở** — pi hoàn toàn là mã nguồn mở và không phụ thuộc nhà cung cấp. Bạn không bị khóa vào một model hay nhà cung cấp duy nhất. pi-web cũng là mã nguồn mở.
-- **Truy cập từ xa an toàn** — xác thực token tích hợp sẵn để bạn có thể mở nó trên mạng LAN hoặc Tailscale mà không lo lắng.
-- **Chia sẻ công việc** — xuất phiên làm việc dưới dạng ảnh chụp tĩnh hoặc GitHub Gist bí mật chỉ với một cú nhấp chuột.
+- **Tiếp tục từ mọi nơi** — tiếp tục một phiên từ điện thoại, máy tính bảng, hoặc máy tính khác của bạn. Không cần SSH, không cần Termius — chỉ cần mở trình duyệt.
+- **Bảng điều khiển đa phiên** — bắt đầu công việc trong một phiên trong khi theo dõi một phiên khác đang stream. Tìm kiếm xuyên suốt các dự án, lọc theo branch, tìm điều bạn cần nhanh chóng.
+- **Nền tảng mã nguồn mở** — pi hoàn toàn mã nguồn mở và không phụ thuộc provider. Bạn không bị khóa vào một model hay vendor duy nhất. pi-web cũng là mã nguồn mở.
+- **Truy cập từ xa an toàn** — xác thực token tích hợp sẵn để bạn có thể phơi bày nó trên LAN hoặc Tailscale của mình mà không lo lắng.
+- **Chia sẻ công việc của bạn** — xuất các phiên dưới dạng các snapshot tĩnh hoặc GitHub Gist bí mật chỉ với một cú nhấp chuột.
 
-> Tò mò về câu chuyện đằng sau? [Đọc lý do chúng tôi xây dựng nó →](why.md)
+> Tò mò về câu chuyện đằng sau? [Đọc tại sao chúng tôi xây dựng nó →](why.md)
 
 ---
 
 ## pi-web như không gian làm việc AI cá nhân của bạn 🏠
 
-pi-web là một PWA (Progressive Web App — Ứng dụng Web Tiến bộ), vì vậy bạn có thể **cài đặt nó như một ứng dụng gốc** trên máy tính để bàn, laptop, điện thoại hoặc máy tính bảng — không cần cửa hàng ứng dụng. Trên máy tính để bàn, nó mở trong cửa sổ riêng không có thanh trình duyệt, trông và cảm nhận như một ứng dụng desktop thực thụ.
+pi-web là một PWA (Progressive Web App), vì vậy bạn có thể **cài đặt nó như một ứng dụng native** trên máy để bàn, laptop, điện thoại hoặc máy tính bảng của bạn — không cần app store. Trên desktop nó mở trong cửa sổ riêng không có chrome của trình duyệt, nên nó trông và cảm giác như một ứng dụng desktop thực sự.
 
-Hãy nghĩ về nó như **Claude Cowork của riêng bạn** — một không gian làm việc AI cá nhân sống trên máy của bạn — ngoại trừ việc nó là mã nguồn mở và không phụ thuộc model:
+Hãy nghĩ về nó như **Claude Cowork của riêng bạn** — một không gian làm việc AI cá nhân sống trên máy của bạn — ngoại trừ việc nó mã nguồn mở và không phụ thuộc model:
 
-- **Bạn làm chủ toàn bộ hệ thống.** Chọn bất kỳ model nào, chuyển đổi bất cứ lúc nào. Chạy model cục bộ và dữ liệu của bạn không bao giờ rời khỏi máy.
-- **Người không chuyên cũng dùng được.** Cài đặt pi-web trên máy của họ, hướng dẫn họ dùng một lần, thế là xong. Bố mẹ bạn, người yêu bạn, bạn bè không chuyên về công nghệ — không terminal, không SSH, chỉ là giao diện trò chuyện quen thuộc.
-- **Một lần cài đặt, nhiều người dùng.** Cài đặt trên máy desktop của bạn và chia sẻ màn hình, hoặc mở nó trên mạng gia đình và để các thành viên trong nhà mở trên thiết bị riêng của họ.
+- **Bạn sở hữu toàn bộ stack.** Chọn bất kỳ model nào, chuyển đổi bất cứ khi nào bạn thích. Chạy một model cục bộ và dữ liệu của bạn sẽ không bao giờ rời khỏi máy của bạn.
+- **Người không chuyên kỹ thuật cũng có thể sử dụng.** Cài đặt pi-web trên máy của họ, chỉ cho họ cách sử dụng một lần, và họ sẽ ổn. Cha mẹ bạn, bạn đời của bạn, những người bạn không rành công nghệ của bạn — không có terminal, không có SSH, chỉ có một giao diện chat quen thuộc.
+- **Một lần cài đặt, nhiều người dùng.** Cài đặt nó trên máy để bàn của bạn và chia sẻ màn hình, hoặc phơi bày nó trên mạng gia đình và để các thành viên gia đình mở nó trên thiết bị riêng của họ.
 
-Muốn nhiều hơn là lập trình? Biến nó thành một [trợ lý cá nhân](personal-assistant.md) chuyên dụng hiểu bạn là ai và sống trên máy của bạn — giống như OpenClaw hoặc Hermes của riêng bạn.
+Muốn nhiều hơn mã hóa? Biến nó thành một [trợ lý cá nhân](personal-assistant.md) chuyên dụng biết bạn là ai và sống trên máy của bạn — giống như OpenClaw hay Hermes của riêng bạn.
 
-> 💡 **Mẹo chuyên nghiệp:** Cài đặt pi-web dưới dạng PWA từ Chrome/Edge (nhấp biểu tượng cài đặt trên thanh địa chỉ) hoặc Safari (Chia sẻ → Thêm vào Dock). Nó trở nên không thể phân biệt được với ứng dụng gốc.
+> 💡 **Mẹo hay:** Cài đặt pi-web như một PWA từ Chrome/Edge (nhấp vào biểu tượng cài đặt trên thanh địa chỉ) hoặc Safari (Share → Add to Dock). Nó trở nên không thể phân biệt với một ứng dụng native.
 
 ---
 
@@ -63,61 +63,63 @@ Muốn nhiều hơn là lập trình? Biến nó thành một [trợ lý cá nh�
 
 | | |
 |---|---|
-| 📱 **PWA** | Cài đặt pi-web dưới dạng Progressive Web App trên desktop, điện thoại hoặc máy tính bảng để có trải nghiệm như ứng dụng gốc. |
-| 🔄 **Tiếp tục phiên** | Tiếp tục bất kỳ cuộc trò chuyện nào ngay tại chỗ bạn dừng lại — văn bản, hình ảnh, chuyển đổi model, tất cả từ trình duyệt. |
-| 🆕 **Bắt đầu phiên mới** | Tạo phiên mới với bất kỳ đường dẫn dự án nào, trực tiếp từ giao diện web. |
-| 📡 **Phát trực tiếp** | Xem phản hồi của pi chạy theo thời gian thực với độ trễ ~ms. Chế độ theo dõi giúp bạn luôn ở dòng mới nhất. |
-| 🌲 **Xem dạng cây** | Điều hướng cây tin nhắn gốc của pi — xem toàn bộ cấu trúc cuộc trò chuyện, nhảy đến bất kỳ nhánh nào và rẽ nhánh từ bất kỳ điểm nào. |
-| 🔀 **Rẽ nhánh phiên** | Rẽ nhánh một phiên từ bất kỳ tin nhắn nào hoặc thậm chí từ một lệnh gọi công cụ cụ thể — khám phá các hướng khác nhau mà không mất vị trí hiện tại. |
-| 🔍 **Duyệt & tìm kiếm** | Lọc phiên theo dự án, tìm kiếm theo tên, điều hướng nhánh — toàn bộ lịch sử phiên trong tầm mắt. |
-| 🌿 **Tích hợp Git** | Xem nhánh hiện tại và mở GitHub PR trực tiếp từ trình xem phiên. |
-| 📝 **Sổ tay** | Ghi nhanh ghi chú, việc cần làm, hoặc suy nghĩ bên cạnh các phiên làm việc mà không cần chuyển ứng dụng. |
-| 💬 **Chú thích** | Đánh dấu và bình luận trên bất kỳ phần nào của phiên — tuyệt vời cho việc xem xét mã, phản hồi, hoặc đánh dấu những khoảnh khắc quan trọng. |
-| 🎨 **Chủ đề & tùy chỉnh** | Chuyển đổi giữa chế độ tối và sáng, tinh chỉnh giao diện theo ý thích — khiến pi-web thực sự là *của bạn*. |
-| 🌐 **Đa ngôn ngữ** | 14 ngôn ngữ tích hợp sẵn (English, Español, Français, Deutsch, 中文, 日本語, Bahasa Indonesia, Bahasa Melayu, Tiếng Việt, ไทย, Filipino, မြန်မာ, ភាសាខ្មែរ, ລາວ). Thêm ngôn ngữ tùy chỉnh của riêng bạn từ Cài đặt. |
-| 🐱 **Sức khỏe & pomodoro** | Quá nhiều vibe coding không tốt cho sức khỏe. Bộ hẹn giờ pomodoro tích hợp với bạn mèo đồng hành và nhắc nhở đi ngủ để giữ bạn cân bằng. |
-| 📤 **Chia sẻ & xuất** | Tải xuống JSONL, xuất ảnh chụp tĩnh được hiển thị với giao diện `pi.dev` gốc của pi, hoặc chia sẻ dưới dạng GitHub Gist bí mật — tất cả được xử lý phía máy khách. |
-| 🔔 **Âm thanh thông báo** | Âm thanh thông báo tùy chỉnh cho các sự kiện phiên — luôn cập nhật ngay cả khi pi-web đang ở tab khác. |
-| ⌨️ **Phím tắt** | Điều hướng kiểu Vim, thao tác nhanh — [tham khảo đầy đủ →](keyboard-shortcuts.md) |
-| 🤖 **Trợ lý cá nhân** | Biến pi-web thành trợ lý AI của riêng bạn sống trên máy tính — giống như OpenClaw hoặc Hermes. [Thiết lập ngay →](personal-assistant.md) |
+| 📱 **PWA** | Cài đặt pi-web như một Progressive Web App trên desktop, điện thoại hoặc máy tính bảng cho cảm giác native. |
+| 🔄 **Tiếp tục phiên** | Tiếp nhận bất kỳ cuộc trò chuyện nào ngay ở nơi bạn đã dừng — văn bản, hình ảnh, chuyển đổi model, tất cả từ trình duyệt. |
+| 🆕 **Bắt đầu phiên mới** | Tạo các phiên mới cho bất kỳ đường dẫn dự án nào, ngay từ giao diện web. |
+| 📡 **Streaming trực tiếp** | Xem các phản hồi của pi được stream theo thời gian thực với độ trễ ~ms. Chế độ Follow giữ bạn bám theo nội dung mới nhất. |
+| 🌲 **Góc nhìn cây** | Điều hướng cây message native của pi — xem cấu trúc cuộc trò chuyện đầy đủ, nhảy đến bất kỳ branch nào và fork từ bất kỳ điểm nào. |
+| 🔀 **Fork phiên** | Fork một phiên từ bất kỳ message nào hoặc thậm chí từ một cuộc gọi tool cụ thể — khám phá các hướng khác nhau mà không mất vị trí của bạn. |
+| 🔍 **Duyệt & tìm kiếm** | Lọc các phiên xuyên suốt các dự án, tìm kiếm theo tên, điều hướng các branch — toàn bộ lịch sử phiên của bạn trong một cái nhìn. |
+| 🌿 **Tích hợp Git** | Xem branch hiện tại và mở một GitHub PR ngay từ trình xem phiên. |
+| 📝 **Scratchpad** | Ghi lại các ghi chú, todos, hoặc ý tưởng nhanh bên cạnh các phiên của bạn mà không cần chuyển đổi ứng dụng. |
+| 💬 **Ghi chú** | Tô sáng và bình luận bất kỳ phần nào của một phiên — tuyệt vời cho code review, phản hồi, hoặc đánh dấu các khoảnh khắc quan trọng. |
+| 🎨 **Themes & tùy chỉnh** | Chuyển đổi giữa chế độ tối và sáng, chỉnh sửa UI theo ý bạn — khiến pi-web cảm giác giống như *của riêng bạn*. |
+| 🌐 **Đa ngôn ngữ** | 14 ngôn ngữ tích hợp sẵn (English, Español, Français, Deutsch, 中文, 日本語, Bahasa Indonesia, Bahasa Melayu, Tiếng Việt, ไทย, Filipino, မြန်မာ, ភាសាខ្មែរ, ລາວ). Thêm ngôn ngữ tùy chỉnh của bạn từ Settings. |
+| 🐱 **Wellness & pomodoro** | Quá nhiều vibe coding không tốt cho sức khỏe. Bộ đếm thời gian pomodoro tích hợp với một người bạn đồng hành mèo và các nhắc nhở ngủ để giữ bạn cân bằng. |
+| 📤 **Chia sẻ & xuất** | Tải xuống JSONL, xuất các snapshot tĩnh được render với diện mạo native `pi.dev` của pi, hoặc chia sẻ dưới dạng GitHub Gist riêng tư — tất cả đều được render phía client. |
+| 🔔 **Âm thanh thông báo** | Chuông thông báo tùy chỉnh cho các sự kiện phiên — giữ liên lạc ngay cả khi pi-web ở một tab khác. |
+| ⌨️ **Phím tắt** | Điều hướng phong cách Vim, các hành động nhanh — [tham khảo đầy đủ →](keyboard-shortcuts.md) |
+| 🤖 **Trợ lý cá nhân** | Biến pi-web thành trợ lý AI của riêng bạn sống trên máy tính của bạn — như OpenClaw hay Hermes. [Cài đặt nó →](personal-assistant.md) |
+| 🗓️ **Nói chuyện với lịch trình** | Từ một phiên pi, nói "thêm một lịch trình lúc 2 giờ sáng giờ Singapore để …" — `/skill:pi-web-schedule`. |
+| 📝 **Nói chuyện với ghi chú & cài đặt** | "Viết điều này vào ghi chú" (`/skill:pi-web-notes`) hoặc "chuyển sang chế độ tối" (`/skill:pi-web-settings`). |
 
 ---
 
 ## Điều hướng nhanh
 
-| Nếu bạn đang tìm… | Đọc |
+| Nếu bạn đang tìm kiếm… | Đọc |
 |---|---|
 | Cách cài đặt, cấu hình và sử dụng pi-web | [install.md](install.md) |
-| Dùng pi-web như trợ lý cá nhân | [personal-assistant.md](personal-assistant.md) |
+| Sử dụng pi-web như một trợ lý cá nhân | [personal-assistant.md](personal-assistant.md) |
 | Tham khảo phím tắt | [keyboard-shortcuts.md](keyboard-shortcuts.md) |
 | Tại sao pi-web tồn tại | [why.md](why.md) |
-| Những gì sắp ra mắt | [roadmap.md](roadmap.md) |
-| Gặp vấn đề khi cài đặt? Hãy để LLM của bạn sửa nó — dán liên kết llm-debug.md cho họ | [llm-debug.md](llm-debug.md) |
-| ghi chú phát triển | [ghi chú phát triển](../../docs/dev/local-llm-development.md) |
+| Điều gì sắp đến tiếp theo | [roadmap.md](roadmap.md) |
+| Gặp sự cố khi cài đặt? Để LLM của bạn sửa — dán liên kết llm-debug.md cho họ | [llm-debug.md](llm-debug.md) |
+| Bảo trì phiên bản model cục bộ này | [development notes](../../docs/dev/local-llm-development.md) |
 
 ---
 
 ## Ảnh chụp màn hình
 
-| Desktop | PWA trên điện thoại |
+| Desktop | Mobile |
 |---|---|
-| ![Desktop](../assets/pi-web-desktop-screenshot.png) | ![PWA trên điện thoại](../assets/pi-web-mobile-screenshot.png) |
+| ![Desktop](../assets/pi-web-desktop-screenshot.png) | ![Mobile](../assets/pi-web-mobile-screenshot.png) |
 
 ---
 
-## 💛 Tài trợ
+## 💛 Nhà tài trợ
 
-pi-web được xây dựng bằng tình yêu và rất nhiều đêm thức khuya. Tôi tự trả tiền cho các gói lập trình (Claude Code, OpenCode, v.v.) để duy trì dự án này. Nếu pi-web đã hữu ích với bạn, sự ủng hộ của bạn sẽ có ý nghĩa rất lớn.
+pi-web được xây dựng bằng tình yêu và rất nhiều đêm khuya. Tôi tự trả tiền cho các gói coding (Claude Code, OpenCode, v.v.) để giữ cho dự án này tiến lên phía trước. Nếu pi-web đã hữu ích cho bạn, sự hỗ trợ của bạn sẽ có ý nghĩa vô cùng lớn.
 
-**Các cách giúp đỡ:**
+**Cách giúp đỡ:**
 
-- 💰 **[Tài trợ trên GitHub](https://github.com/sponsors/setkyar)** — giúp trang trải các công cụ làm nên dự án này
-- ☕ **[Mua cho tôi ly cà phê](https://buymeacoffee.com/setkyar)** — mỗi chút đều đáng quý
-- ⭐ **Thả sao cho repo** — không tốn gì và giúp nhiều người khám phá pi-web hơn
-- 📢 **Chia sẻ với bạn bè & gia đình** — nếu bạn biết ai đó sẽ thích pi-web, hãy gửi cho họ
+- 💰 **[Tài trợ trên GitHub](https://github.com/sponsors/setkyar)** — giúp trang trải các công cụ giúp điều này trở thành hiện thực
+- ☕ **[Mua cho tôi một ly cà phê](https://buymeacoffee.com/setkyar)** — mỗi chút đều hữu ích
+- ⭐ **Sao lưu kho** — chi phí bằng không và giúp nhiều người hơn khám phá pi-web
+- 📢 **Chia sẻ với bạn bè & gia đình** — nếu bạn biết ai đó sẽ yêu thích pi-web, hãy gửi cho họ
 
-Không thể tài trợ? Không sao cả — một ngôi sao và một lượt chia sẻ cũng đi được một chặng đường dài. Cảm ơn bạn đã ở đây. 🙏
+Không thể tài trợ? Hoàn toàn không sao — một lượt sao và một lần chia sẻ cũng rất có giá trị. Cảm ơn bạn đã ở đây. 🙏
 
 ---
 
-Chúc bạn lập trình vui vẻ! 🚀
+Chúc bạn coding vui vẻ! 🚀

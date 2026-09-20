@@ -1,16 +1,18 @@
 # pi-web sebagai Pembantu Peribadi Anda
 
-pi-web bukan sekadar untuk pengekodan — anda boleh mengubahnya menjadi **pembantu AI peribadi** yang berada di komputer anda, seperti memiliki OpenClaw atau Hermes anda sendiri.
+Aliran kerja ini disokong oleh edisi model-tempatan. Untuk pembangunan, penyegerakan, dan dasar pelepasan edisi tersebut, lihat [Pemaju edisi model-tempatan](../../docs/dev/local-llm-development.md).
+
+pi-web bukan hanya untuk penulisan kod — anda boleh menjadikannya **pembantu AI peribadi** yang mendiami komputer anda, seperti memiliki OpenClaw atau Hermes anda sendiri.
 
 ## Cara ia berfungsi
 
-Anda mencipta folder khusus pada mesin anda — di situlah pembantu anda tinggal. Di dalamnya, anda letakkan fail `APPEND_SYSTEM.md` yang mentakrifkan siapa pembantu anda, apa yang diketahuinya, dan bagaimana ia bertindak. pi-web memberikan anda antara muka sembang yang cantik untuk bercakap dengannya dari mana-mana peranti.
+Anda mewujudkan sebuah folder khusus pada mesin anda — itulah tempat pembantu anda berada. Di dalamnya, anda meletakkan fail `APPEND_SYSTEM.md` yang mentakrifkan siapa pembantu anda, apa yang diketahuinya, dan bagaimana ia berkelakuan. pi-web memberikan anda antara muka perbualan yang kemas untuk bercakap dengannya daripada mana-mana peranti.
 
 ## Langkah demi langkah
 
 ### 1. Cipta folder pembantu anda
 
-Pilih folder pada komputer anda. Contohnya:
+Pilih sebuah folder pada komputer anda. Sesetengah seperti:
 
 ```
 ~/my-assistant/
@@ -18,7 +20,7 @@ Pilih folder pada komputer anda. Contohnya:
 
 ### 2. Takrifkan pembantu anda
 
-Cipta fail `APPEND_SYSTEM.md` di dalam folder itu. Di sinilah anda memberitahu pi siapa pembantu anda:
+Cipta fail `APPEND_SYSTEM.md` di dalam folder tersebut. Ini adalah tempat anda memberitahu pi siapa pembantu anda:
 
 ```markdown
 # My Personal Assistant
@@ -45,36 +47,51 @@ You are Jarvis, my personal AI assistant. You help me with:
 - Proactively remind me of things I asked you to track
 ```
 
-pi secara automatik menambahkan ini ke dalam system prompt setiap perbualan, jadi pembantu anda sentiasa tahu siapa anda dan bagaimana untuk membantu.
+pi secara automatik menambah ini ke setiap prompt sistem perbualan, jadi pembantu anda sentiasa tahu siapa anda dan bagaimana untuk membantu.
 
-### 3. Mulakan sesi dalam folder itu
+### 3. Mula sesi di dalam folder tersebut
 
-Dalam pi-web, cipta sesi baharu yang ditujukan ke `~/my-assistant/` (atau apa sahaja yang anda namakan). Itu sahaja — anda sedang bercakap dengan pembantu peribadi anda.
+Dalam pi-web, cipta sesi baharu yang diarahkan ke `~/my-assistant/` (atau apa jua nama yang anda berikan). Itupun cukup — anda sedang bercakap dengan pembantu peribadi anda.
 
-### 4. Gunakannya dari mana-mana
+### 4. Gunakan daripada mana-mana tempat
 
-Pasang pi-web sebagai PWA pada telefon, tablet, atau komputer riba anda. Pembantu anda sentiasa ada — tanya apa sahaja, bila-bila masa.
+Pasang pi-web sebagai PWA pada telefon, tablet, atau komputer riba anda. Pembantu anda sentiasa di situ — tanya apa sahaja, bila-bila masa.
 
 ## Idea untuk pembantu anda
 
-| Peranan | Apa yang perlu diletakkan dalam APPEND_SYSTEM.md |
+| Peranan | Apa hendak diletakkan dalam APPEND_SYSTEM.md |
 |---|---|
-| 🧠 **Jurulatih hidup** | Matlamat anda, tabiat yang sedang anda usahakan, panduan penjurnalan |
-| 🏠 **Pengurus rumah** | Format senarai barangan runcit, keutamaan ahli keluarga, perancangan makanan |
-| 💼 **Rakan kerja** | Peranan anda, projek semasa, format nota mesyuarat, konteks syarikat |
-| 📚 **Rakan belajar** | Apa yang anda sedang pelajari, gaya penerangan pilihan, mod kuiz saya |
+| 🧠 **Pentunjuk kehidupan** | Matlamat anda, tabiat yang sedang anda usahakan, prompt penjurnalan |
+| 🏠 **Pengurus rumah** | Format senarai bahan mentah, pilihan ahli keluarga, perancangan hidangan |
+| 💼 **Rakan sekerja** | Peranan anda, projek semasa, format nota mesyuarat, konteks syarikat |
+| 📚 **Rakan belajar** | Apa yang anda sedang belajar, gaya penjelasan yang dipinati, mod uji saya |
 | ✍️ **Pembantu penulisan** | Gaya penulisan anda, pilihan nada, format biasa yang anda gunakan |
 
 ## Tambah lebih banyak konteks
 
-Anda boleh letakkan apa sahaja dalam folder pembantu anda yang membantu pi menjadi lebih berguna:
+Anda boleh meletakkan apa sahaja dalam folder pembantu anda yang membantu pi menjadi lebih berguna:
 
 - `notes/` — fail rujukan yang boleh dibaca oleh pembantu anda
 - `context.md` — maklumat latar belakang tentang kehidupan atau kerja anda
 - `projects.md` — projek semasa dan statusnya
 
-pi boleh membaca fail dalam folder itu, jadi semakin banyak konteks yang anda berikan, semakin baik ia menjadi.
+pi boleh membaca fail dalam folder, jadi semakin banyak konteks yang anda beri, semakin bagus ia menjadi.
+
+## Minta pi-web melakukan perkara
+
+Selepas `pi install npm:@timmygod/pi-web-local`, sesi boleh bercakap dengan pi-web itu sendiri.
+Cuba:
+
+- “Tambah jadual pada jam 2 petang waktu Singapura untuk merumuskan peti masuk saya”
+- “Senaraikan jadual pi-web saya”
+- “Jeda jadual peti masuk”
+- “Tuliskan ini dalam nota”
+- “Tukar pi-web ke mod gelap / matikan tajuk automatik”
+
+Kemahiran **/skill:pi-web-schedule** yang disertakan menukarkannya kepada jadual pi-web sebenar (sama yang anda edit pada `/schedules`). Setiap pelancaran memulakan sesi **baharu**, jadi arahan mesti berdiri sendiri — “ringkaskan e-mel tidak dibaca dalam ~/inbox” berfungsi; “teruskan apa yang kami sedang lakukan” tidak.
+
+Jadual hanya dilaksanakan semasa pi-web berjalan.
 
 ---
 
-> 💡 **Tip:** Mulakan dengan ringkas. Hanya beberapa baris tentang siapa anda dan bagaimana anda mahu pembantu itu bertindak. Perbaiki dari semasa ke semasa apabila anda belajar apa yang berkesan.
+> 💡 **Petua:** Mula dengan yang ringkas. Hanya beberapa baris tentang siapa anda dan bagaimana anda mahu pembantu berkelakuan. Perbaiki sedikit demi sedikit seiring waktu apabila anda belajar apa yang berfungsi.

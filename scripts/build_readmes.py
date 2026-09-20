@@ -118,22 +118,35 @@ Here is the Markdown to translate:
 
 def translate(body: str, code: str) -> str:
     prompt = PROMPT.format(target=TRANSLATE_TARGET[code], body=body)
-    result = subprocess.run(
-        pi_translation_command(prompt),
-        capture_output=True,
-        text=True,
-        timeout=600,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"pi failed for {code}: {result.stderr}")
-    out = result.stdout.strip()
-    if not out:
-        raise RuntimeError(f"pi returned empty output for {code}")
-    # Strip an accidental wrapping code fence if present.
-    if out.startswith("```"):
-        out = re.sub(r"^```[a-zA-Z]*\n", "", out)
-        out = re.sub(r"\n```$", "", out)
-    return out.strip()
+    errors = []
+    for attempt in range(1, 4):
+        result = subprocess.run(
+            pi_translation_command(prompt),
+            capture_output=True,
+            text=True,
+            timeout=600,
+        )
+        if result.returncode != 0:
+            errors.append(f"attempt {attempt}: {result.stderr.strip()}")
+            continue
+        out = result.stdout.strip()
+        # Strip an accidental wrapping code fence if present.
+        if out.startswith("```"):
+            out = re.sub(r"^```[a-zA-Z]*\n", "", out)
+            out = re.sub(r"\n```$", "", out)
+        out = out.strip()
+        invalid_markers = ("<tool_call>", "<function=", "<parameter=")
+        if any(marker in out for marker in invalid_markers):
+            errors.append(f"attempt {attempt}: model emitted a tool call")
+            continue
+        if len(out) < max(3000, int(len(body) * 0.35)):
+            errors.append(f"attempt {attempt}: output was unexpectedly short")
+            continue
+        if "pi install npm:@timmygod/pi-web-local" not in out:
+            errors.append(f"attempt {attempt}: installation command was not preserved")
+            continue
+        return out
+    raise RuntimeError(f"invalid translation for {code}: {'; '.join(errors)}")
 
 
 def main():

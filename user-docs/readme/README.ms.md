@@ -3,8 +3,8 @@
 <div align="center">
 
 [![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
-[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![npm downloads](https://img.shields.io/npm/dt/@timmygod/pi-web-local?label=downloads&color=2ea043)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -12,34 +12,36 @@
 
 </div>
 
----
 <div align="center">
 
-Pandu ejen pengekodan [pi](https://pi.dev) anda dari telefon, tablet, atau komputer riba — di mana-mana sahaja dalam rangkaian anda, atau dari jauh melalui Tailscale.
+Jalankan ejen kod [pi](https://pi.dev) anda daripada telefon, tablet, atau laptop — di mana sahaja pada rangkaian anda, atau secara jarak jauh melalui Tailscale.
 
-Ia adalah PWA penuh, jadi anda boleh memasangnya dan menggunakannya seperti aplikasi asli pada mana-mana peranti. Anggaplah ia sebagai ruang kerja AI peribadi anda sendiri — seperti Cowork Claude, tetapi dengan pelbagai model — berbual merentas model, mengekod dari telefon anda, atau jadikannya sebagai [pembantu peribadi](../en/personal-assistant.md) yang hidup pada mesin anda.
+Ia adalah PWA penuh, jadi anda boleh memasangnya dan menggunakannya seperti aplikasi asli pada sebarang peranti. Anggap ia sebagai ruang kerja AI peribadi anda sendiri — seperti Claude's Cowork, tetapi dengan model yang berbeza — berchat merentas model, menulis kod daripada telefon anda, atau jadikan ia [penolong peribadi](../en/personal-assistant.md) yang kekal pada mesin anda.
 
-Jadikannya milik anda: tukar tema dan fon, dan gunakannya dalam bahasa anda sendiri — pi-web disertakan dengan pelbagai bahasa dan anda boleh menambah bahasa anda sendiri. Lebih banyak ciri akan datang, tetapi ia tidak akan menjadi gemuk: apa-apa yang anda tidak perlukan boleh dimatikan dalam tetapan.
+Jadikan ia milik anda: tukar tema dan fon, serta gunakan dalam bahasa anda sendiri — pi-web dibekalkan dengan beberapa bahasa dan anda boleh menambah bahasa anda sendiri. Lebih banyak ciri sedang dalam perjalanan, tetapi ia tidak akan menjadi kumbung: apa-apa yang anda tidak perlukan boleh dimatikan dalam tetapan.
 
 </div>
 
 ## Mengapa edisi model tempatan ini?
 
-pi-web asal kekal sebagai asas upstream untuk ciri dan pembetulan yang dikongsi. Edisi ini mengekalkan pengalaman tersebut, kemudian menambah lapisan kebolehpercayaan untuk model yang berjalan pada mesin anda sendiri atau di tempat lain pada LAN anda—di mana penjanaan sering lebih perlahan, memori adalah terhad, dan konteks yang panjang boleh menghentikan sesi yang sihat.
+pi-web asal kekal sebagai asas hulu (upstream) untuk ciri dan
+pembaikan bersama. Edisi ini mengekalkan pengalaman tersebut, kemudian menambah lapisan kebolehandalan untuk
+model yang berjalan pada mesin anda sendiri atau di tempat lain pada LAN anda — di mana penjanaan
+biasanya lebih perlahan, memori adalah terhad, dan konteks yang panjang boleh menjgentilkan sesi yang sihat.
 
-| Kawasan | pi-web upstream | Edisi ini |
+| Bidang | pi-web Hulu (Upstream) | Edisi ini |
 |------|-----------------|--------------|
-| Dasar model/runtime | Kelakuan pi-web standard | Mod **Auto / Local / Cloud** setiap sesi, dengan pengesanan tempatan sedar hujung dan ganti tangan manual yang kekal |
-| Pengendalian konteks panjang | Kelakuan pemampatan pi biasa | Local Mode memampat secara proaktif pada **65%** dan menyemak semula dalam gelung panggilan alat yang panjang sebelum permintaan pembekal lain |
-| Keselamatan pemampatan | Ringkasan standard | Titik pemeriksaan bergolek terhad, satu penulisan semula yang lebih ketat untuk output tidak sah/terhad, dan pengesanan tiada kemajuan dan bukannya pemampatan semula tanpa henti |
-| Larian terganggu | Pengendalian pekerja dan ralat biasa | Pemulihan terhad untuk limpahan konteks, penghentian hanya-pemikiran, dan gangguan pengangkutan terpilih, dengan pemutus gelung yang kekal |
-| Penyelamatan manual | Butiran konteks standard | **Force Compact** kekal tersedia sebagai laluan pemulihan eksplisit tanpa memadam perbualan |
-| Keserasian dan keluaran | Projek asal dan baris keluaran | Langkah keselamatan tempatan sahaja kekal di belakang Local Mode; Cloud Mode mengekalkan kelakuan upstream, dan perubahan upstream disemak dan dikeluarkan di sini secara bebas |
+| Dasar model/_RUNTIME | Kelakuan pi-web standard | Mod **Auto / Local / Cloud** per-sesi, dengan pengesanan tempatan yang peka terhadap endpoint dan penyahpalingan manual yang kekal |
+| Pengendalian konteks panjang | Kelakuan pemampatan pi normal | Mod Tempatan memampat secara proaktif pada **65%** dan memeriksa semula di dalam gelung panggilan alat yang panjang sebelum permintaan model seterusnya |
+| Keselamatan pemampatan | Ringkasan standard | Sekatan titik semak bergulung, satu penulisan semula yang lebih ketat untuk keluaran yang tidak sah/dibataskan, dan pengesanan tanpa kemajuan sebagai ganti pemampatan semula tanpa akhir |
+| Larian yang terganggu | Pengendalian pekerja dan ralat normal | Pemulihan terhad untuk limpahan konteks, berhenti-terfikir sahaja, dan gangguan penghantaran yang dipilih, dengan pemecah gelung yang kekal |
+| Penyelamatan manual | Butiran konteks standard | **Force Compact** kekal tersedia sebagai laluan pemulihan ekspisit tanpa memadamkan perbualan |
+| Keupayaan serasi dan pelepasan | Projek dan baris pelepasan asal | Jagaan tempatan sahaja kekal di sebalik Mod Tempatan; Mod Awan mengekalkan kelakuan hulu, dan perubahan hulu diteliti dan dilepaskan di sini secara bebas |
 
-Ini bukan penulisan semula atau pengganti untuk upstream. Ia adalah profil operasi yang diselenggara secara sengaja untuk orang yang menginginkan privasi dan kawalan model tempatan tanpa menerima sesi berjalan lama yang rapuh. Lihat [panduan pengguna](../en/README.md) untuk aliran kerja berorientasikan pengguna dan [pembangunan edisi model tempatan](../../docs/dev/local-llm-development.md) untuk pelaksanaan dan dasar penyegerakan.
-
-> [!WARNING]
-> pi-web kini dalam **beta**. Perkara akan berubah dan rosak!
+Ini bukan penulisan semula atau pengganti untuk hulu. Ia adalah profil pengendalian yang dikekalkan secara sengaja untuk orang yang mahukan privasi dan kawalan model tempatan tanpa menerima sesi larian panjang yang rapuh. Lihat
+[panduan pengguna](../en/README.md) untuk aliran kerja berhadapan pengguna dan
+[pembangunan edisi model tempatan](../../docs/dev/local-llm-development.md) untuk
+penggunaannya dan dasar penyegerakan.
 
 > [!TIP]
 > Baru di sini? **[Baca panduan pengguna →](../en/README.md)** untuk lawatan penuh ciri, langkah pemasangan, dan petua. ([Bahasa lain →](../README.md))
@@ -48,87 +50,91 @@ Ini bukan penulisan semula atau pengganti untuk upstream. Ia adalah profil opera
 
 <div align="center">
   <img src="../assets/pi-web-desktop-screenshot.png" alt="Desktop" width="90%" /><br />
-  <em>Desktop</em>
+  <em>Meja (Desktop)</em>
   <br /><br />
-  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile PWA" width="90%" /><br />
-  <em>Mobile PWA</em>
+  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile" width="90%" /><br />
+  <em>Mobile</em>
 </div>
 
-## Bagaimana Ia Saling Melengkapi
+## Bagaimana Ia Bekerja Bersama
 
 ```
- pi (terminal)                 Pelayar (telefon / tablet / komputer riba)
+ pi (terminal)                 Browser (phone / tablet / laptop)
       │                                │
-      │  menulis JSONL                 │  HTTP + SSE
+      │  writes JSONL                  │  HTTP + SSE
       ▼                                ▼
- ~/.pi/agent/sessions/  ←───  pi-web (pelayan HTTP Go)
+ ~/.pi/agent/sessions/  ←───  pi-web (Go HTTP server)
                                       │
                     ┌─────────────────┼─────────────────┐
                     │                 │                 │
               pi --mode rpc      fsnotify         tailscale serve
-            (pekerja sembang    (muat semula     (HTTPS jauh
-             per-sesi)           langsung)        melalui MagicDNS)
+            (per‑session       (live reload)      (remote HTTPS
+             chat worker)                           via MagicDNS)
 ```
 
 - **pi** menulis JSONL perbualan ke `~/.pi/agent/sessions/` semasa ia bekerja.
-- **pi-web** ialah pelayan Go yang membaca fail tersebut, memaparkannya dalam pelayar, dan menstrim kemas kini langsung melalui SSE.
-- Pekerja **pi --mode rpc** mengendalikan sembang yang dimulakan oleh pelayar — satu per sesi, dihapuskan selepas 10 minit melahu.
-- **fsnotify** memantau direktori sesi supaya pelayar memuat semula dalam milisaat selepas output baharu.
+- **pi-web** ialah pelayan Go yang membaca fail-fail tersebut, merentaknya dalam pelayar, dan menghantar kemas kini langsung melalui SSE.
+- Pekerja **pi --mode rpc** mengendalikan chat yang dimulakan dari pelayar — satu per sesi, diendapkan selepas 10 minit tidak aktif.
+- **fsnotify** memantau direktori sesi supaya pelayar memuat semula dalam masa beberapa milisaat selepas keluaran baharu.
 - **Tailscale Serve** menerbitkan pelayan localhost sebagai titik akhir HTTPS pada tailnet anda.
 
-## Pasang
+## Pemasangan
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-Itu sahaja — ia memuat turun binari yang sepadan, menyediakan permulaan automatik, dan mendaftarkan perintah `/web`, `/pi-web`, `/remote`, dan `/refresh`.
+Itu sahaja — ia memuat turun binari yang sepadan, menyediakan auto-pemulaan, dan mendaftarkan arahan `/web`, `/pi-web`, `/remote`, dan `/refresh`.
 
-Setelah dipasang, buka `http://127.0.0.1:31415` dalam pelayar anda. Dari pi, gunakan `/web` untuk membuka sesi semasa dalam pelayar anda dengan serta-merta. Jika Tailscale sedang berjalan pada mesin anda, pi-web secara automatik menerbitkan titik akhir HTTPS pada tailnet anda — gunakan `/remote` dari pi untuk mendapatkan kod QR dan URL untuk mana-mana peranti pada tailnet anda.
+Setelah dipasang, buka `http://127.0.0.1:31415` dalam pelayar anda. Daripada pi, gunakan `/web` untuk membuka sesi semasa dalam pelayar anda serta-merta. Jika Tailscale sedang berjalan pada mesin anda, pi-web secara automatik menerbitkan titik akhir HTTPS pada tailnet anda — gunakan `/remote` daripada pi untuk mendapatkan kod QR dan URL untuk sebarang peranti pada tailnet anda.
 
-> **Akses jauh macOS:** Pasang dan buka Tailscale secara interaktif, luluskan gesaan pentadbir dan log masuk. Kemudian jalankan `/pi-web restart`, diikuti dengan `/remote`.
+> **Akses jarak jauh macOS:** Pasang dan buka Tailscale secara interaktif, sahkan petikan pengarah, dan log masuk. Kemudian jalankan `/pi-web restart`, diikuti dengan `/remote`.
 
-Untuk pemasangan manual, muat turun binari, atau binaan dari sumber, lihat [user-docs/install.md](../en/install.md).
+Untuk pemasangan manual, muat turun binari, atau pembinaan dari sumber, lihat [user-docs/install.md](../en/install.md).
 
 ## Integrasi Pi
 
-Selepas `pi install npm:@timmygod/pi-web-local@beta`, anda mendapat:
+Setelah `pi install npm:@timmygod/pi-web-local`, anda memperoleh:
 
-| Perintah | Fungsinya |
-|----------|-----------|
-| `/web` | Buka sesi semasa dalam pelayar anda (sedar SSH: langkau pelayar dan tunjukkan URL sahaja) |
-| `/pi-web` | Tunjukkan status, versi, mula/henti/mula semula pelayan, atau kemas kini |
-| `/remote` | Tunjukkan kod QR dan URL untuk akses jauh melalui Tailscale |
-| `/refresh` | Tarik mesej baharu yang ditulis dari pelayar jauh kembali ke sesi terminal |
+| Arahan | Apa yang dilakukannya |
+|---------|--------------|
+| `/web` | Buka sesi semasa dalam pelayar anda (sedar SSH: langkau pelayar dan tunjuk URL sahaja) |
+| `/pi-web` | Tunjuk status, versi, mula/hentikan/mula semula pelayan, atau kemas kini |
+| `/remote` | Tunjuk kod QR dan URL untuk akses jarak jauh melalui Tailscale |
+| `/refresh` | Tarik pesan baharu yang ditulis dari pelayar jarak jauh kembali ke sesi terminal |
 
-**Penajukan automatik** sesi dibina ke dalam pi-web sendiri dan dikonfigurasikan pada halaman `/settings`. Ia **dihidupkan secara lalai** dan menamakan sesi secara automatik. Anda boleh memilih:
+**Pentajutan automatik** sesi terbina ke dalam pi-web sendiri dan dikonfigurasi pada halaman `/settings`. Ia **hidup secara lalai** dan menamakan sesi secara automatik. Anda boleh memilih:
 
-- **Bila untuk menajuk** — sekali setiap sesi, atau pada setiap mesej baharu (lalai).
-- **Model tajuk** — **heuristik perkataan terbina dalam percuma dan pantas (tiada AI)** secara lalai, atau pilih model (cth. yang kecil/pantas) untuk tajuk yang lebih pintar, ditulis oleh model.
+- **Bila tajukan** — sekali per sesi, atau pada setiap pesan baharu (lalai).
+- **Model tajuk** — secara lalai, **heuristik perkataan terbina-dalam (tanpa AI) yang percuma dan serta-merta**, atau pilih model (cth. yang kecil/pantas) untuk tajuk yang lebih bijak, ditulis oleh model.
 
-Pakej ini juga memasang binari pi-web ke `~/.pi/agent/bin/pi-web` dan menyediakan permulaan automatik semasa log masuk.
+Pakej ini juga memasang binari pi-web ke `~/.pi/agent/bin/pi-web` dan menyediakan auto-pemulaan pada log masuk.
 
-## Permulaan Automatik Semasa Log Masuk
+## Auto-Pemulaan pada Log Masuk
 
-Perintah `pi install npm:@timmygod/pi-web-local@beta` menyediakan ini secara automatik:
+Arahan `pi install npm:@timmygod/pi-web-local` menyetel ini secara automatik:
 
-| OS | Mekanisme |
+| Sistem Operasi | Mekanisme |
 |----|-----------|
-| macOS | launchd plist di `~/Library/LaunchAgents/com.pi-web.plist` |
-| Linux | systemd user service di `~/.config/systemd/user/pi-web.service` |
+| macOS | plist launchd pada `~/Library/LaunchAgents/com.pi-web.plist` |
+| Linux | perkhidmatan pengguna systemd pada `~/.config/systemd/user/pi-web.service` |
+| Windows | item kunci-Run `HKCU` yang melancarkan per Pemula tersembunyi dalam `~/.config/pi-web/` |
 
-Untuk menetapkan token untuk akses jauh, cipta `~/.config/pi-web/env`:
+Untuk menetapkan token untuk akses jarak jauh, cipta `~/.config/pi-web/env`:
 
 ```
-PI_WEB_TOKEN=token-anda-di-sini
+PI_WEB_TOKEN=your-token-here
 ```
 
-Untuk butiran lanjut (persediaan manual, port tersuai, ikatan bukan loopback), lihat [user-docs/install.md](../en/install.md).
+Untuk butiran lanjut (penyediaan manual, port tersuai, pengikatan bukan loopback), lihat [user-docs/install.md](../en/install.md).
 
 ## Pembangunan
 
 ```bash
-make setup   # pasang kebergantungan frontend dan muat turun modul Go
-make check   # ujian/pembinaan frontend + ujian/vet Go
-make build   # setup jika perlu, bina frontend, kemudian bina ./pi-web
+make setup   # install frontend deps and download Go modules
+make check   # frontend test/build + Go test/vet
+make build   # setup if needed, build frontend, then build ./pi-web
 ```
+
+Untuk penyegerakan hulu, ujian model tempatan, dan aliran kerja
+pelepasan selari, lihat [Pembangunan edisi model tempatan](../../docs/dev/local-llm-development.md).

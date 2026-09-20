@@ -7,7 +7,7 @@ set -euo pipefail
 #   curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 #
 # Via pi package (also registers /remote, /refresh commands):
-#   pi install npm:@timmygod/pi-web-local@beta
+#   pi install npm:@timmygod/pi-web-local
 #
 # Updates are handled by re-running the same command.
 
@@ -62,7 +62,7 @@ detect_platform() {
 package_tag() {
   # When install.sh runs as an npm lifecycle script, install the binary that
   # matches the npm package version. This keeps pinned installs such as
-  # `pi install npm:@timmygod/pi-web-local@0.0.1-beta.25` pins both the extension
+  # `pi install npm:@timmygod/pi-web-local@1.2.3` pins both the extension
   # package and the downloaded pi-web binary.
   if [[ "${npm_package_name:-}" == "@timmygod/pi-web-local" && -n "${npm_package_version:-}" ]]; then
     echo "v${npm_package_version#v}"

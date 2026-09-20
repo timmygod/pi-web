@@ -4,88 +4,101 @@
 
 ### Fernsteuerung
 
-- Jede Sitzung vom Browser aus mit Text- oder Bildanhängen fortsetzen
-- Eine brandneue Sitzung für einen beliebigen Projektpfad direkt aus der Web-UI starten
-- Modellauswahl und Thinking-Level-Auswahl im Browser, pro Sitzung
-- Worker-Status pro Sitzung (idle / running / error) mit automatischer Wiederherstellung bei Absturz
-- Mehrere Sitzungen parallel ausführen — Arbeit in einer starten, einer anderen beim Streamen zusehen
-- `PI_WEB_TOKEN` für sichere LAN-Freigabe — standardmäßig erforderlich für jede explizite Nicht-Loopback-Bindung
+- Setze jede Sitzung aus dem Browser mit Text- oder Bildanhängen fort
+- Starte eine brandneue Sitzung für jeden Projektpfad, direkt aus der Web-Oberfläche
+- Modellschalter und Denkstufe-Selektor im Browser, pro Sitzung
+- Worker-Status pro Sitzung (idle / running / error) mit automatischer Wiederherstellung bei Abstürzen
+- Mehrere Sitzungen laufen parallel — starte Arbeit in einer, beobachte wie eine andere streamt
+- `PI_WEB_TOKEN` für sichere LAN-Exposition — standardmäßig erforderlich für jede explizite Nicht-Loopback-Bindung
 
 ### Sitzungen lesen
 
-- Sitzungen projektübergreifend durchsuchen mit Filtern, Suche und vollständiger Branch-Navigation
-- Live-inkrementelle Aktualisierungen, während pi noch läuft (via fsnotify; ~ms Latenz)
+- Durchsuche Sitzungen über Projekte hinweg mit Filtern, Suche und vollständiger Branch-Navigation
+- Live-Inkrementelle Aktualisierungen, während pi noch läuft (via fsnotify; ~ms Latenz)
 - Follow-Modus zum Verfolgen aktiver Sitzungen
-- Deeplinks zu einzelnen Nachrichten
-- Eine Sitzung als JSONL herunterladen
-- Statische Snapshots als geheime GitHub Gists teilen
-- `/web`, `/remote`, `/refresh`, `/pi-web token` und `/pi-web set-token` pi-Erweiterungen zum Öffnen von Sitzungen, Remote-QR, Sitzungssynchronisation und Token-Verwaltung
+- Deep Links zu einzelnen Nachrichten
+- Lade eine Sitzung als JSONL herunter
+- Teile statische Snapshots als geheime GitHub Gists
+- `/web`, `/remote`, `/refresh`, `/pi-web token` und `/pi-web set-token` pi-Erweiterungen zum Öffnen von Sitzungen, Remote QR, Session-Sync und Token-Verwaltung
+- `/skill:pi-web-schedule`, `/skill:pi-web-notes`, `/skill:pi-web-settings` (`pi-web-ctl`), damit eine Sitzung Pläne, das Projekt-Skriptblock (scratchpad) und Einstellungen in natürlicher Sprache verwalten kann
 
-## Sitzungsmodus auswählen
+## Wähle den Sitzungsmodus
 
-Diese Ausgabe verwendet die in pi bereits konfigurierten Anbieter und Modelle; der Local Mode ist eine Laufzeitrichtlinie, kein separates Modellinstallationsprogramm oder ein zweiter API-Schlüssel-Bildschirm.
-Wählen Sie einen Modus beim Erstellen einer Sitzung aus, oder ändern Sie ihn, nachdem der aktuelle Durchlauf abgeschlossen ist:
+Diese Edition verwendet die in pi bereits konfigurierten Provider und Modelle; Local Mode
+ist eine Laufzeit-Richtlinie, kein separater Modell-Installer und kein zweiter API-Key-Screen.
+Wähle beim Erstellen einer Sitzung einen Modus, oder ändere ihn, nachdem der aktuelle Lauf abgeschlossen ist:
 
-| Modus | Verwenden Sie ihn, wenn | Verhalten |
+| Modus | Wähle ihn, wenn | Verhalten |
 |------|-------------|----------|
-| **Auto** | Sie möchten, dass pi-web entscheidet | Löst lokale/LAN-Endpunkte aus den Anbieter-Metadaten auf, wenn möglich; andernfalls wird der normale Pfad beibehalten |
-| **Local** | Das Modell läuft auf diesem Rechner oder in Ihrem LAN | Aktiviert die 65%-Kompaktierungsgrenze, begrenzte Checkpoints, Force Compact und gesicherte automatische Wiederherstellung |
-| **Cloud** | Das ausgewählte Modell ist gehostet und sollte dem Upstream-Verhalten folgen | Hält die lokale Kompaktierungs- und Wiederherstellungsrichtlinie aus der Sitzung heraus |
+| **Auto** | Du willst, dass pi-web entscheidet | Löst lokale/LAN-Endpunkte aus den Provider-Metadaten auf, wo möglich; andernfalls behält den normalen Weg bei |
+| **Local** | Das Modell läuft auf dieser Maschine oder in deinem LAN | Aktiviert die 65 %-Kompaktierungsgrenze, begrenzte Checkpoints, Force Compact und geschützte automatische Wiederherstellung |
+| **Cloud** | Das gewählte Modell gehostet ist und das Upstream-Verhalten beibehalten sollte | Behält lokale Kompaktierungs- und Wiederherstellungspolitik außerhalb der Sitzung |
 
-Die manuelle Auswahl von Local oder Cloud hat Vorrang vor der automatischen Erkennung und bleibt nach Neuladen und Neustart erhalten. Eine laufende Sitzung lehnt Modusänderungen ab, bis ihr Worker abgeschlossen ist, sodass der in der Benutzeroberfläche angezeigte Modus immer mit der tatsächlich verwendeten Richtlinie übereinstimmt.
+Manuelle Local- oder Cloud-Auswahl schlägt die automatische Erkennung und bleibt über
+Reloads und Neustarts hinweg erhalten. Eine laufende Sitzung lehnt Modusänderungen ab, bis ihr
+Worker abgeschlossen ist, sodass der in der UI angezeigte Modus immer mit der tatsächlich verwendeten Politik übereinstimmt.
 
 ## Voraussetzungen
 
-- [Go](https://go.dev) 1.25+
-- `pi` im `PATH` für Browser-Chat/Modellwechsel
+- [Go](https://go.dev) 1.25+ (nur für den Build aus dem Quellcode)
+- `pi` in deinem `PATH` für Browser-Chat/Modellschaltung
 - Optional: `gh` zum Teilen
+- Unter Windows: pi benötigt eine bash-Shell für sein Shell-Tool — [Git for Windows](https://git-scm.com/download/win) genügt (siehe pi's Windows-Dokumentation)
 
 ## Installation
 
 ### Pi-Paket (empfohlen)
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-Dieser einzelne Befehl:
-- Installiert das npm-Paket im Paketverzeichnis von pi
-- Führt das `postinstall`-Skript des Pakets aus (`bash install.sh`)
-- Lädt die passende pi-web-Binärdatei für deine Paketversion und Plattform von GitHub Releases herunter
-- Installiert sie nach `~/.pi/agent/bin/pi-web`
-- Richtet den automatischen Start bei der Anmeldung ein (launchd auf macOS, systemd auf Linux)
-- Registriert die pi-Befehle `/web`, `/remote`, `/refresh`, `/pi-web token` und `/pi-web set-token`
+Dieser einzige Befehl:
+- Installiert das npm pi-Paket unter pi's Paketverzeichnis
+- Führt das Paket-`postinstall`-Skript aus (`install.sh` oder `install.ps1` unter Windows)
+- Lädt das passende pi-web-Binary für deine Paketversion und Plattform von GitHub Releases herunter
+- Installiert es nach `~/.pi/agent/bin/pi-web` (`pi-web.exe` unter Windows)
+- Richtet Auto-Start beim Login ein (launchd unter macOS, systemd unter Linux, einen Run-Key-Launcher unter Windows)
+- Registriert die `/web`, `/remote`, `/refresh`, `/pi-web token` und `/pi-web set-token` pi-Befehle
 
-Die automatische Sitzungsbetitelung ist in pi-web integriert (nicht in der Erweiterung) und wird auf der `/settings`-Seite konfiguriert. Sie ist standardmäßig aktiviert: pi-web benennt Sitzungen automatisch mit einer kostenlosen integrierten Wortheuristik (keine KI) und betitelt bei jeder neuen Nachricht neu. Du kannst auf einmalige Betitelung pro Sitzung umschalten und/oder ein Modell auswählen, das intelligentere Titel anstelle der Heuristik schreibt.
+Das automatische Benennen von Sitzungen ist in pi-web eingebaut (nicht in der Erweiterung) und wird auf der `/settings`-Seite konfiguriert. Es ist standardmäßig aktiv: pi-web benennt Sitzungen automatisch mit einer eingebauten, kostenlosen Wort-Heuristik (ohne KI) und benennt sie bei jeder neuen Nachricht neu. Du kannst auf einmaliges Benennen pro Sitzung umschalten und/oder ein Modell auswählen, das intelligentere Titel statt der Heuristik schreibt.
 
-Auf Linux wird der automatische Start als systemd-Benutzerdienst unter `~/.config/systemd/user/pi-web.service` konfiguriert. Das Installationsprogramm schreibt dessen `ExecStart` auf den tatsächlichen installierten Binärpfad um. Wenn Tailscale zur Laufzeit verfügbar ist, veröffentlicht pi-web den localhost-Server mit Tailscale Serve HTTPS. Falls systemd-Benutzerdienste nicht verfügbar sind, führe es manuell mit `~/.pi/agent/bin/pi-web -o` aus.
+Unter Linux wird Auto-Start als Benutzer-systemd-Service unter `~/.config/systemd/user/pi-web.service` konfiguriert. Der Installer schreibt dessen `ExecStart` mit dem tatsächlichen installierten Binary-Pfad neu. Wenn Tailscale zur Laufzeit verfügbar ist, publiziert pi-web den localhost-Server über Tailscale Serve HTTPS. Wenn Benutzer-systemd nicht verfügbar ist, führe es manuell aus: `~/.pi/agent/bin/pi-web -o`.
 
-Um nur für ein bestimmtes Projekt zu installieren (geteilt mit deinem Team über `.pi/settings.json`):
+Um nur für ein bestimmtes Projekt zu installieren (mit deinem Team über `.pi/settings.json` geteilt):
 
 ```bash
-pi install -l npm:@timmygod/pi-web-local@beta
+pi install -l npm:@timmygod/pi-web-local
 ```
 
-Starte dann pi neu (oder führe `/reload` aus) und verwende `/web`, `/pi-web`, `/remote`, `/refresh`. Verwalte dein Zugriffstoken mit `/pi-web token` und `/pi-web set-token`.
+Dann starte pi neu (oder führe `/reload` aus) und benutze `/web`, `/pi-web`, `/remote`, `/refresh`. Verwalte dein Zugangs-Token mit `/pi-web token` und `/pi-web set-token`.
 
-Falls npm mit `ENOTEMPTY` beim Umbenennen von `@timmygod/pi-web-local` abbricht, entferne die veralteten versteckten npm-Sicherungsverzeichnisse und installiere den Beta-Kanal erneut:
+Falls npm beim Umbenennen von `@timmygod/pi-web-local` mit `ENOTEMPTY` abbricht, entferne npm's veraltete versteckte Backup-Verzeichnisse und installiere das Paket erneut:
 
 ```bash
-rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@timmygod/pi-web-local@beta
+rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-*
+pi install npm:@timmygod/pi-web-local
 ```
 
-### Schnellinstallation (keine Build-Werkzeuge nötig)
+### Schnelle Installation (keine Build-Tools erforderlich)
+
+macOS / Linux:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
-Dies lädt die neueste pi-web-Binärdatei herunter, installiert sie nach `/usr/local/bin` und richtet den automatischen Start bei der Anmeldung ein. Kein Go, Node oder pi erforderlich.
+Windows (PowerShell):
 
-### Binärdatei herunterladen
+```powershell
+irm https://raw.githubusercontent.com/timmygod/pi-web/main/install.ps1 | iex
+```
 
-Vorkompilierte Binärdateien sind jedem [GitHub Release](https://github.com/timmygod/pi-web/releases) beigefügt.
+Dies lädt das neueste pi-web-Binary herunter, installiert es nach `/usr/local/bin` (`~/.pi/agent/bin` unter Windows) und richtet Auto-Start beim Login ein. Kein Go, Node oder pi erforderlich.
+
+### Binary herunterladen
+
+Fertig kompilierte Binaries sind an jedem [GitHub Release](https://github.com/timmygod/pi-web/releases) angehängt.
 
 ```bash
 # macOS (Apple Silicon)
@@ -105,7 +118,15 @@ curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi
 chmod +x pi-web
 ```
 
-Verschiebe sie dann in deinen PATH:
+```powershell
+# Windows (x64)
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-amd64.exe
+
+# Windows (ARM64)
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-arm64.exe
+```
+
+Dann verschiebe es in deinen PATH:
 
 ```bash
 cp pi-web ~/.pi/agent/bin/
@@ -115,37 +136,73 @@ sudo cp pi-web /usr/local/bin/
 
 ### Aus dem Quellcode bauen
 
+Diese Checkout ist die lokalmodellierte Edition von pi-web. Der normale Build erzeugt
+die Web-Anwendung und den Backend zusammen; die Sicherheitsmaßnahmen für lokale Modelle werden
+zur Laufzeit durch den effektiven Local Mode der Sitzung aktiviert, nicht durch ein separates Binary.
+
 ```bash
 git clone https://github.com/timmygod/pi-web.git
 cd pi-web
-make build   # baut das Vite-Bundle, bettet es dann in die Go-Binärdatei ein
+make build   # baut das Vite-Bundle und bindet es dann in das Go-Binary ein
 
 # optional: in den PATH legen
 cp pi-web ~/.pi/agent/bin/
 ```
 
-Das Frontend-Bundle wird von `web/assets_embed.go` eingebettet, daher benötigt `go build`,
-dass `web/dist` zuerst existiert. `make build` führt beide Schritte nacheinander aus; wenn du
-von Hand baust, führe `npm --prefix web install && npm --prefix web run build` vor
-`go build ./cmd/pi-web` aus.
+Das Frontend-Bundle wird von `web/assets_embed.go` eingebettet, daher benötigt `go build`
+zunächst `web/dist`. `make build` führt beide Schritte nacheinander aus; wenn du manuell
+baust, führe vor `go build ./cmd/pi-web` aus: `npm --prefix web install && npm --prefix web run build`.
+
+Für den gepflegten Fork-Workflow, die Upstream-Synchronisierung und die Local Mode
+Verifikations-Checkliste, siehe [die lokalmodellen Entwickler-Notizen](../../docs/dev/local-llm-development.md).
+
+### Neben einer installierten Instanz entwickeln
+
+Lass die installierte Instanz auf Port `31415` laufen und starte dann die
+Quellcode-Checkout im Entwicklungsmodus:
+
+```bash
+make dev
+```
+
+Öffne `http://127.0.0.1:31416`. `make dev` setzt die interne `PI_WEB_DEV=1`
+Entwicklungsumgebung, sodass die Quellcode-Checkout Sitzungen, Einstellungen und
+SQLite-Daten mit der installierten Instanz teilt, während sie eine separate Entwicklungs-
+Laufzeit-Sperre und Statusdatei beibehält. Regelmäßig installierte und manuell gestartete
+Instanzen bleiben unverändert und behalten das ursprüngliche Einzelinstanz-Verhalten bei.
+
+Um doppelte autonome Arbeit zu verhindern, führt der Entwicklungsmodus die
+Pläne-Schleife, Chat-Queue-Drainer, automatisches Benennen oder Push-Benachrichtigungen nicht aus.
+Direkte Anfragen über die Entwickler-Oberfläche funktionieren weiterhin. Steuere dieselbe
+Chat-Sitzung nicht gleichzeitig von beiden Instanzen; jeder Prozess hat seinen eigenen RPC Worker
+Manager.
+
+`make dev` benötigt [Air](https://github.com/air-verse/air) für Go-Hot-Reload:
+
+```bash
+go install github.com/air-verse/air@latest
+```
+
+`PI_WEB_DEV` ist Entwicklungs-Harness-Verdrahtung, kein unterstützter Produktions-
+Multi-Instanz-Modus.
 
 ## Deinstallation
 
 ```bash
-pi remove npm:@timmygod/pi-web-local@beta
+pi remove npm:@timmygod/pi-web-local
 ```
 
-Dies führt das `preuninstall`-Skript des Pakets aus (`bash uninstall.sh`), das die
-laufende Instanz stoppt und Folgendes entfernt:
+Dies führt das Paket-`preuninstall`-Skript aus (`uninstall.sh` oder `uninstall.ps1`
+unter Windows), welches die laufende Instanz stoppt und entfernt:
 
-- die pi-web-Binärdatei (`~/.pi/agent/bin/pi-web` oder `/usr/local/bin/pi-web` bei eigenständigen Installationen)
+- das pi-web-Binary (`~/.pi/agent/bin/pi-web` oder `/usr/local/bin/pi-web` für eigenständige Installationen)
 - die Versionsdatei (`~/.pi/agent/pi-web-version`)
-- die Laufzeit-Zustandsdatei (`~/.pi/agent/pi-web/pi-web-state.json`)
-- die Autostart-Konfiguration (launchd-plist auf macOS, systemd-Benutzerdienst auf Linux)
+- die Laufzeit-Statusdatei (`~/.pi/agent/pi-web/pi-web-state.json`)
+- die Auto-Start-Konfiguration (launchd-Plist unter macOS, systemd-Benutzerservice unter Linux, Run-Key-Eintrag + Launcher-Skripte unter Windows)
 
-Deine Daten bleiben erhalten, sodass eine spätere Neuinstallation dort weitermacht, wo du aufgehört hast:
-`~/.pi/agent/pi-web.sqlite`, `~/.pi/agent/pi-web-memory.sqlite`, deine Sitzungsdateien
-unter `~/.pi/agent/sessions/` und `~/.config/pi-web/env` (einschließlich
+Deine Daten werden beibehalten, damit eine spätere Neuinstallation dort weitermacht, wo du aufgehört hast:
+`~/.pi/agent/pi-web.sqlite`, `~/.pi/agent/pi-web-memory.sqlite`, deine
+Sitzungsdateien unter `~/.pi/agent/sessions/` und `~/.config/pi-web/env` (einschließlich
 `PI_WEB_TOKEN`). Entferne diese manuell, wenn du einen sauberen Neustart möchtest.
 
 ## Nutzung
@@ -157,54 +214,54 @@ pi-web
 # Starten und einen Browser öffnen
 pi-web -o
 
-# Benutzerdefinierter Port
+# Custom Port
 pi-web -p 8080
 
-# Bind-Host überschreiben (Loopback ist standardmäßig unauthentifiziert)
+# Bind-Host überschreiben (Loopback ist standardmäßig nicht authentifiziert)
 pi-web --host 127.0.0.1
 
 # Nicht-Loopback-Bindung erfordert ein Token — pi-web verweigert sonst den Start
 PI_WEB_TOKEN=$(openssl rand -hex 16) pi-web --host 192.168.1.50
 ```
 
-Standardmäßig bindet pi-web an `127.0.0.1`. Wenn Tailscale mit MagicDNS läuft, führt pi-web auch `tailscale serve --bg --https=<port> http://127.0.0.1:<port>` aus und gibt die HTTPS-Tailnet-URL aus. Jede explizite Nicht-Loopback-Bindung erfordert, dass `PI_WEB_TOKEN` gesetzt ist; übergib `--insecure`, um dies für lokale Tests zu umgehen.
+Standardmäßig bindet pi-web an `127.0.0.1`. Wenn Tailscale mit MagicDNS läuft **und `PI_WEB_TOKEN` gesetzt ist**, führt pi-web zusätzlich `tailscale serve --bg --https=<port> http://127.0.0.1:<port>` aus und zeigt die HTTPS-Tailnet-URL an. Ohne Token bleibt pi-web nur auf Loopback und überspringt Tailscale Serve, sodass Tailnet-Peers den Agenten nicht unauthentifiziert erreichen können. Jede explizite Nicht-Loopback-Bindung erfordert ebenfalls `PI_WEB_TOKEN` gesetzt; übergebe `--insecure`, um dies für lokale Tests zu überschreiben.
 
 ## Fernzugriff
 
-Lasse pi-web lokal lauschen und verwende dann die ausgegebene Tailscale-HTTPS-URL von deinem Telefon oder Laptop im Tailnet.
+Lass pi-web lokal lauschen und verwende die angezeigte Tailscale-HTTPS-URL von deinem Telefon oder Laptop im Tailnet.
 
-Installiere und öffne Tailscale unter macOS interaktiv, bestätige die Administratorabfrage und melde dich an. Führe anschließend `/pi-web restart` und danach `/remote` aus.
+Unter macOS installiere und öffne Tailscale interaktiv, bestätige den Administrator-Hinweis und melde dich an. Führe dann `/pi-web restart` aus, gefolgt von `/remote`.
 
-Erlaube deinem Benutzer auf Linux, Tailscale zu verwalten, bevor du pi-web installierst/ausführst, andernfalls könnte `tailscale serve` sudo erfordern und der Autostart fehlschlagen:
+Unter Linux erlaube deinem Benutzer, Tailscale zu verwalten, bevor du pi-web installierst/aufstartest, andernfalls kann `tailscale serve` sudo erfordern und Auto-Start fehlschlagen:
 
 ```bash
 sudo tailscale set --operator=$USER
 ```
 
 ```bash
-# 1. pi-web starten
-pi-web
+# 1. Starte pi-web mit einem Token, damit es den Tailscale-HTTPS-Endpunkt publiziert
+PI_WEB_TOKEN=$(openssl rand -hex 16) pi-web
 
-# 2. Von jedem anderen Tailscale-verbundenen Gerät aus die ausgegebene
-#    "Tailscale HTTPS"-URL öffnen.
+# 2. Von einem anderen Tailscale-verbindeten Gerät aus die angezeigte
+#    "Tailscale HTTPS" URL öffnen und das Token einmalig eingeben.
 ```
 
-> Standardmäßig verweigert pi-web die Bindung an eine Nicht-Loopback-Adresse, es sei denn, `PI_WEB_TOKEN` ist gesetzt — jeder, der die gebundene Adresse erreichen kann, könnte sonst Sitzungen einsehen und Anweisungen an pi senden. Um diese Sicherung für Tests im lokalen Netzwerk zu umgehen, übergib `--insecure`. **Verwende `--insecure` nicht mit Tailscale oder einer Adresse, die von außerhalb deines Rechners erreichbar ist.**
+> Standardmäßig verweigert pi-web die Bindung an eine Nicht-Loopback-Adresse, wenn `PI_WEB_TOKEN` nicht gesetzt ist — jeder, der die gebundene Adresse erreichen kann, könnte andernfalls Sitzungen ansehen und Anweisungen an pi senden. Um diese Schutzmaßnahme für lokale Netzwerktests zu überschreiben, übergebe `--insecure`. **Nutze `--insecure` nicht auf Tailscale oder jeder Adresse, die von außerhalb deiner Maschine erreichbar ist.**
 >
-> Clients können das Token über den `Authorization: Bearer <token>`-Header, den `X-Pi-Token`-Header oder einmalig via `?token=<token>` übergeben (was ein `pi_token`-Cookie für nachfolgende Anfragen setzt). Tokens, die via `?token=` übergeben werden, landen im Browserverlauf, in Server-Zugriffslogs und in `Referer`-Headern von Links auf der Seite — bevorzuge die Header-Form für alles außer dem initialen Lesezeichen.
+> Clients können das Token über den `Authorization: Bearer <token>`-Header, den `X-Pi-Token`-Header oder einmalig über `?token=<token>` (setzt ein `pi_token`-Cookie für nachfolgende Anfragen) übergeben. Tokens, die über `?token=` übergeben werden, landen im Browserverlauf, in Server-Access-Logs und in `Referer`-Headern von allen Links auf der Seite — bevorzuge die Header-Form für alles außer dem initialen Lesezeichen.
 
 ## Browser-Chat
 
-Öffne eine Sitzungsseite und verwende den Composer unten, um genau diese Sitzung fortzusetzen.
+Öffne eine Sitzungsseite und benutze die Composer unten, um genau diese Sitzung fortzusetzen.
 
 - `Enter` sendet, `Shift+Enter` fügt einen Zeilenumbruch ein
-- Ziehe Bilder per Drag-and-Drop oder füge sie direkt in den Composer ein
-- Die Modellauswahl und der Thinking-Level-Selektor befinden sich im Header — Änderungen werden sofort auf den zugrunde liegenden pi-Worker angewendet
-- Jede aktive Sitzung erhält ihren eigenen dedizierten `pi --mode rpc`-Worker, sodass sich verschiedene Sitzungen nicht gegenseitig blockieren
+- Ziehe und lasse Bilder fallen oder füge sie direkt in die Composer ein
+- Die Modellauswahl und die Denkstufe-Auswahl befinden sich im Header — Änderungen wirken sich sofort auf den zugrunde liegenden pi-Worker aus
+- Jede aktive Sitzung erhält einen eigenen dedizierten `pi --mode rpc`-Worker, sodass verschiedene Sitzungen sich gegenseitig nicht blockieren
 
 ## Sitzungen teilen
 
-Klicke auf **Share** auf einer Sitzungsseite, um einen geheimen GitHub Gist zu erstellen.
+Klicke auf einer Sitzungsseite auf **Share**, um einen geheimen GitHub Gist zu erstellen.
 
 Voraussetzungen:
 - `gh` installiert
@@ -212,11 +269,11 @@ Voraussetzungen:
 
 Das Teilen liefert:
 - die geheime Gist-URL
-- eine Vorschau-URL unter `https://pi.dev/session/#<gistId>`
+- eine Preview-URL unter `https://pi.dev/session/#<gistId>`
 
 Geteilte Gists sind Snapshots und aktualisieren sich nicht live.
 
-## Autostart bei der Anmeldung
+## Auto-Start beim Login
 
 ### macOS
 
@@ -228,12 +285,12 @@ launchctl load ~/Library/LaunchAgents/com.pi-web.plist
 ### Linux (systemd)
 
 ```bash
-# Den systemd-Benutzerdienst installieren
+# Installiere den systemd-Benutzerservice
 mkdir -p ~/.config/systemd/user
 cp init/pi-web.service ~/.config/systemd/user/
 
-# Optional: PI_WEB_TOKEN für Nicht-Loopback-Bindungen setzen
-# (oder /pi-web set-token <token> innerhalb von pi verwenden)
+# Optional: setze dein PI_WEB_TOKEN für Nicht-Loopback-Bindungen
+# (oder benutze /pi-web set-token <token> aus pi heraus)
 mkdir -p ~/.config/pi-web
 echo 'PI_WEB_TOKEN=your-token-here' > ~/.config/pi-web/env
 
@@ -248,5 +305,28 @@ systemctl --user status pi-web.service
 journalctl --user -u pi-web.service -f
 ```
 
-> Damit der Dienst beim Booten startet (vor der Anmeldung), verwende stattdessen einen Systemdienst:
-> kopiere `init/pi-web.service` nach `/etc/systemd/system/` und verwende `sudo systemctl`.
+> Damit der Service beim Boot startet (vor dem Login), benutze stattdessen einen Systemservice:
+> kopiere `init/pi-web.service` nach `/etc/systemd/system/` und benutze `sudo systemctl`.
+
+### Windows
+
+Der Installer richtet dies automatisch ein, ohne Administratorrechte zu benötigen: ein
+`pi-web`-Eintrag unter `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`
+startet `~/.config/pi-web/pi-web-start.vbs` beim Login, welches das Binary
+versteckt startet (kein Konsolenfenster), nachdem es `~/.config/pi-web/env`
+(`PI_WEB_TOKEN`, `PATH`, ...) geladen hat.
+
+Um es manuell zu verwalten:
+
+```powershell
+# Starten / stoppen
+wscript.exe "$HOME\.config\pi-web\pi-web-start.vbs"
+taskkill /IM pi-web.exe /F
+
+# Auto-Start entfernen
+Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'pi-web'
+```
+
+Es gibt keine Service-Aufsicht unter Windows: Wenn pi-web abstürzt, bleibt es aus,
+bis zum nächsten Login (launchd/systemd starten es auf den anderen
+Plattformen automatisch neu).

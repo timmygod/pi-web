@@ -4,7 +4,7 @@
 #   irm https://raw.githubusercontent.com/timmygod/pi-web/main/install.ps1 | iex
 #
 # Via pi package (also registers /web, /remote commands):
-#   pi install npm:@timmygod/pi-web-local@beta
+#   pi install npm:@timmygod/pi-web-local
 #
 # Updates are handled by re-running the same command.
 #

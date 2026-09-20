@@ -1,30 +1,45 @@
 # ເປັນຫຍັງ pi-web?
 
-ຂ້ອຍຕິດ Claude Code ຫຼາຍແທ້ໆ. ຂ້ອຍໃຊ້ມັນຕະຫຼອດເວລາ. ຖ້າຂ້ອຍບໍ່ໄດ້ນັ່ງຢູ່ໜ້າຄອມພິວເຕີ, ຂ້ອຍກໍຄິດກ່ຽວກັບມັນ. ຂ້ອຍຮູ້ສຶກວ່າຂ້ອຍບໍ່ໄດ້ໃຊ້ tokens ພຽງພໍ. ມັນແມ່ນຊ່ວງຕົ້ນໆຂອງ Claude Code. ແລະຂ້ອຍກໍຄິດວ່າ, ເປັນຫຍັງຂ້ອຍຈຶ່ງບໍ່ສາມາດສືບຕໍ່ຈາກໂທລະສັບຂອງຂ້ອຍ? ຂ້ອຍໄດ້ຕັ້ງ Termius ແລະຂ້ອຍບໍ່ມັກມັນປານໃດ.
+ຂ້ອຍມັກ Claude Code ຈົນເກືອບຢາເກົ່າ. ຂ້ອຍໃຊ້ມັນສະໝ່ຮ່ວມຢ່າງຕັດຂວາຍ. ເວົ້າມັນຢູ່ໜ້າຄອມພິວເຕີກໍ່ຄິດເຖິງມັນ. ຂ້ອຍຄິດວ່າຕົນເອງໃຊ້ tokens ບໍ່ພໍພໍ. ມັນຍັງເປັນມື້ຕົ້ນຕ້ອງໂອກຂອງ Claude Code. ແລະ ຂ້ອຍກໍ່ຄິດວ່າ ເປັນຫຍັງຂ້ອຍຈຶ່ງຕໍ່ເນື່ອງຈາກໂທລະສັບບໍ່ໄດ້? ຂ້ອຍຕັ້ງ Termius ແຕ່ກໍ່ບໍ່ໄດ້ມັກມັນຢ່າງຈຳເປັນ.
 
-ຂ້ອຍເລີ່ມສ້າງຂອງຕົວເອງ ແລະຢຸດເມື່ອ Claude ແນະນຳແອັບມືຖື Claude Code ຂອງພວກເຂົາ.
+ຂ້ອຍເລີ່ມສ້າງຂອງຂ້ອຍເອງ ແຕ່ຕັດການອອກແບບຖ້າ Claude ໄດ້ນຳພາມື່ອ app ໂທລະສັບຂອງ Claude Code ຂອງເຂົາເຈົ້າ.
 
-ຈາກນັ້ນຂ້ອຍກໍເປັນໂຣກໝອນຮອງກະດູກເຄື່ອນ ແລະຂ້ອຍກໍບໍ່ສາມາດເຮັດຫຍັງໄດ້ຫຼາຍ. ເວລາຜ່ານໄປ ແລະຂ້ອຍຮູ້ສຶກວ່າດີຂຶ້ນໜ້ອຍໜຶ່ງ ແລະຂ້ອຍຢາກສືບຕໍ່ໂຄງການ Claude Code ຜ່ານເວັບ/PWA ຂອງຂ້ອຍ.
+ຕໍ່ມາຂ້ອຍໄດ້ປວດທາງຖັງປິດເປັດ ແລະ ອອກຈາກສະພາບການບໍ່ໄດ້ເຮັດຫຼາຍປັດ. ລາຍປະຫວັນເປັນກະທ້າຍ ແລະ ຂ້ອຍສະທ້ອນວ່າຕົນເອງເບີ່ງມາ ແລະ ຕ້ອງການຕໍ່ສືບສາທິດຄືນຮອງໃຫ້ Claude Code ຜ່ານໂປຣເຈັກ web/pwa ຂອງຕົນເອງ.
 
-ຈາກນັ້ນ Claude Code ກໍເລີ່ມຫ້າມການໃຊ້ງານນອກເໜືອຈາກ harness ຂອງພວກເຂົາເອງ. ແລະຂ້ອຍຮູ້ສຶກວ່າມັນບໍ່ຄຸ້ມຄ່າ.
+ຕໍ່ມາ Claude Code ໄດ້ຢ້ານຂ້າມຄວາມປ່ອງຂອງຜູ້ໃຊ້ນອກມາດຕາມການ of their own harness. ແລະ ຂ້ອຍຄິດວ່າມັນບໍ່ສະທ້ອນມີຈຳເປັນສະເພາະອັນໃຊ້ຢູ່.
 
-ຈາກນັ້ນຂ້ອຍພົບ pi.dev ແລະໄດ້ສຳຫຼວດເລັກນ້ອຍ ແຕ່ຍັງບໍ່ໄດ້ລົງເລິກແທ້ໆ. ຂ້ອຍອ່ານກ່ຽວກັບມັນ, ເບິ່ງວິດີໂອກ່ຽວກັບມັນ ແລະຕັດສິນໃຈລອງໃຊ້ເຕັມທີ່ ແລະຕອນນີ້ຂ້ອຍຫຼົງໄຫຼ pi ໝົດໃຈ.
+ຕໍ່ມາຂ້ອຍພົບ pi.dev ແລະ ໄດ້ພົບພ້າງຄືນສ່ວນຫນຶ່ງ ແຕ່ຍັງບໍ່ໄດ້ຈັດຖ້າຈາກເຂົ້າໄປ. ຂ້ອຍອ່ານກ່ຽວກັບມັນ, ກິດສະພາບວິດີໂອກ່ຽວກັບມັນ ແລະ ຕັດສິນໃຈຈະໃຫ້ຍິນຄືນ ແລະ ຂອຍຍິ້ງສະຕ້ອນມັກ pi ແລ້ວ.
 
-ເນື່ອງຈາກມັນເປັນ open source ຂ້ອຍຮູ້ສຶກວ່າມັນຄຸ້ມຄ່າທີ່ຈະສ້າງໃຫ້. ຂ້ອຍຍັງໄດ້ທາງເລືອກ provider ທີ່ແຕກຕ່າງກັນນຳ. ຂ້ອຍຍັງຮູ້ສຶກວ່າການເພິ່ງພາ provider/model ດຽວ ເຊັ່ນ Anthropic/Claude ແມ່ນບໍ່ຍືນຍົງ.
+ເພາະວ່າມັນເປັນ open source ຂ້ອຍຄິດວ່າມັນມີຄ່າທີ່ຈະສ້າງສຳລັບ. ຂ້ອຍຍັງໄດ້ເລືອກ provider ອື່ນກົງກໍ. ຂ້ອຍຍັງຄິດວ່າຂອງຢືນຢາງເພາະສາທິດຊຸດຜ່ອນແລະຜ່ອນຈາກໜຶ່ງ provider/model ເຊັ່ນ Claude ບໍ່ສາມາດອອກຜະໂມຊັດໄດ້ສະເໝີໄປ.
 
-ສະນັ້ນຂ້ອຍຈຶ່ງສ້າງມັນຢູ່ທີ່ນີ້.
+ດັ່ງນັ້ນ ຂ້ອຍກຳລັງສ້າງມັນຢູ່ນີ້.
 
-## ເປັນຫຍັງແບບຈຳລອງທ້ອງຖິ່ນຈຶ່ງຕ້ອງການໂປຣໄຟລ໌ການດຳເນີນງານທີ່ແຕກຕ່າງກັນ
+This checkout is maintained as a local-model edition of pi-web. It follows the
+upstream project for shared improvements, while keeping local deployment,
+context stability, and local-model testing on a separately released track.
 
-ປະສົບການ pi-web ຕົ້ນສະບັບແມ່ນພື້ນຖານທີ່ດີເລີດ, ແຕ່ການສະຫຼຸບຜົນທ້ອງຖິ່ນມີຮູບແບບຄວາມລົ້ມເຫຼວທີ່ແຕກຕ່າງຈາກແບບຈຳລອງທີ່ຖືກເຊົ່າເຮືອນທົ່ວໄປ. ແບບຈຳລອງທ້ອງຖິ່ນອາດຈະຊ້າລົງຢ່າງຮຸນແຮງເມື່ອບໍລິບົດເພີ່ມຂຶ້ນ, ແບ່ງປັນຄວາມຈຳທີ່ຈຳກັດກັບສ່ວນທີ່ເຫຼືອຂອງເຄື່ອງ, ຢຸດຫຼັງຈາກຜະລິດສະເພາະການໃຫ້ເຫດຜົນ, ຫຼືສູນເສຍການແລ່ນທີ່ຍາວນານເນື່ອງຈາກຄວາມລົ້ມເຫຼວຂອງການຂົນສົ່ງທ້ອງຖິ່ນຊົ່ວຄາວ. ການປະຕິບັດກໍລະນີເຫຼົ່ານັ້ນແບບດຽວກັນກັບຄວາມລົ້ມເຫຼວຂອງ cloud ເຮັດໃຫ້ UI ດູເໝາະສົມ ໃນຂະນະທີ່ session ທີ່ແທ້ຈິງຍັງຄົງບາງບາດ.
+## ເປັນຫຍັງ local model ຈຳເປັນໂມດການທົດສະໝ່ຮ່ວມທີ່ແຕກຕ່າງ
 
-ການແກ້ໄຂນີ້ເຂົ້າເຖິງບັນຫາເປັນຊັ້ນໆ:
+ການປະສົບການແຕ່ງອິສລັມຂອງ pi-web ແມ່ນພື້ນຖານທີ່ດີ, ແຕ່ local inference
+ມີຮອຍລາຍທີ່ແຕກຕ່າງຈາກ a typical hosted model. A local model may
+ມີຊ້າລົງຢ່າງໄວເພື່ອ context ເຕີບ ແລະ ແລະ ແລະ ແລະ ແລະ ແລະ ແລະ ແລະ
 
-1. **ຮັກສາ upstream ກ່ອນ.** ພຶດຕິກຳ UI ແລະ session ທີ່ແບ່ງປັນຍັງຄົງມາຈາກ pi-web; ການປ່ຽນແປງທ້ອງຖິ່ນຖືກແຍກໄວ້ຫຼັງຈາກ Local Mode ທີ່ມີປະສິດທິພາບ.
-2. **ປ້ອງກັນກ່ອນການຟື້ນຟູ.** ຂອບເຂດບໍລິບົດ 65% ອີງຕາມເປີເຊັນຖືກບັງຄັບໃຊ້ກ່ອນການເອີ້ນຜູ້ໃຫ້ບໍລິການຕໍ່ໄປ, ລວມທັງການເອີ້ນພາຍໃນວົງຈອນເຄື່ອງມືທີ່ຍາວ.
-3. **ຟື້ນຟູໂດຍມີຫຼັກຖານເທົ່ານັ້ນ.** ການດຳເນີນຕໍ່ອັດຕະໂນມັດຖືກຈຳກັດໄວ້ສະເພາະເຫດການບໍລິບົດ, ການຂົນສົ່ງ, ແລະການຄິດເທົ່ານັ້ນທີ່ຮັບຮູ້, ບໍ່ແມ່ນຂໍ້ຜິດພາດການຢືນຢັນຕົວຕົນ, ໂຄຕ້າ, ຫຼືຂໍ້ຜິດພາດຂອງຜູ້ໃຫ້ບໍລິການແບບສຸ່ມ.
-4. **ຈຳກັດການກະທຳອັດຕະໂນມັດທຸກຢ່າງ.** ເຫດການຟື້ນຟູຖືກລຶບຊ້ຳ, ຄວາມຄືບໜ້າຖືກຕ້ອງການກ່ອນການຊ່ວຍເຫຼືອອີກຄັ້ງ, ແລະການເລີ່ມຕົ້ນພິຈາລະນາຢ່າງຫຼາຍທີ່ສຸດໜຶ່ງ session Local ທີ່ກະຕືລືລົ້ນໃໝ່ໆ.
-5. **ຮັກສາທາງອອກແບບມື.** Force Compact ສະຫຼຸບແທນທີ່ຈະລຶບປະຫວັດ, ດັ່ງນັ້ນຜູ້ໃຊ້ສາມາດຊ່ວຍເຫຼືອ session ໂດຍບໍ່ຕ້ອງແຮງໃຈວ່າບໍລິບົດບໍ່ເຄີຍມີມາກ່ອນ.
-6. **ປົກປ້ອງຄວາມເຂົ້າກັນໄດ້ຂອງ cloud.** Cloud Mode ຮັກສາຄວາມໝາຍແລະການຄວບຄຸມ upstream; ການເພີ່ມປະສິດທິພາບແບບຈຳລອງທ້ອງຖິ່ນບໍ່ໄດ້ກຳນົດຄວາມໝາຍ session cloud ໃໝ່ແບບງຽບໆ.
+This edition approaches the problem in layers:
 
-ນັ້ນແມ່ນຄວາມແຕກຕ່າງທີ່ແທ້ຈິງໃນ fork ນີ້: ມັນປະຕິບັດຕໍ່ການສະຫຼຸບຜົນທ້ອງຖິ່ນເປັນສະພາບແວດລ້ອມການດຳເນີນງານທີ່ແຍກຕ່າງຫາກ, ບໍ່ແມ່ນພຽງແຕ່ຊື່ແບບຈຳລອງອີກຊື່ໜຶ່ງໃນລາຍການເລື່ອນລົງ.
+1. **Preserve upstream first.** Shared UI and session behavior continue to come
+   from pi-web; local changes are isolated behind effective Local Mode.
+2. **Prevent before recovering.** A percentage-based 65% context boundary is
+   enforced before subsequent model calls, including calls inside long tool loops.
+3. **Recover only with evidence.** Automatic continuation is limited to recognized
+   context, transport, and thinking-only incidents—not authentication, quota, or
+   arbitrary provider errors.
+4. **Bound every autonomous action.** Recovery incidents are deduplicated,
+   progress is required before another rescue, and startup considers at most one
+   recently active Local session.
+5. **Keep a manual exit.** Force Compact summarizes rather than wipes history, so
+   the user can rescue a session without pretending the context never existed.
+6. **Protect cloud compatibility.** Cloud Mode keeps the upstream semantics and
+   controls; local-model optimizations do not silently redefine cloud sessions.
+
+That is the real difference in this fork: it treats local inference as a distinct
+operational environment, not merely another model name in a dropdown.

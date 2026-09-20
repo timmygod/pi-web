@@ -3,8 +3,8 @@
 <div align="center">
 
 [![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
-[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![npm downloads](https://img.shields.io/npm/dt/@timmygod/pi-web-local?label=downloads&color=2ea043)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -14,46 +14,45 @@
 
 <div align="center">
 
-Điều khiển [pi](https://pi.dev) coding agent của bạn từ điện thoại, máy tính bảng hoặc máy tính xách tay — bất kỳ đâu trên mạng của bạn, hoặc từ xa qua Tailscale.
+Điều khiển [pi](https://pi.dev) coding agent của bạn từ điện thoại, tablet hoặc laptop — ở bất cứ đâu trong mạng của bạn, hoặc từ xa qua Tailscale.
 
-Đây là một PWA hoàn chỉnh, vì vậy bạn có thể cài đặt và sử dụng nó như một ứng dụng gốc trên mọi thiết bị. Hãy coi nó như không gian làm việc AI cá nhân của riêng bạn — giống như Cowork của Claude, nhưng với nhiều mô hình khác nhau — trò chuyện qua nhiều mô hình, lập trình từ điện thoại, hoặc biến nó thành [trợ lý cá nhân](../en/personal-assistant.md) sống trên máy của bạn.
+Đây là một PWA hoàn chỉnh, nên bạn có thể cài đặt và sử dụng nó như một ứng dụng gốc trên bất kỳ thiết bị nào. Hãy nghĩ về nó như không gian làm việc AI cá nhân của riêng bạn — giống như Cowork của Claude, nhưng với các model khác — trò chuyện chéo giữa các model, viết code từ điện thoại, hoặc biến nó thành một [trợ lý cá nhân](../en/personal-assistant.md) chạy trên máy của bạn.
 
-Hãy biến nó thành của bạn: chuyển đổi chủ đề và phông chữ, và sử dụng nó bằng ngôn ngữ của bạn — pi-web đi kèm với nhiều ngôn ngữ và bạn có thể thêm ngôn ngữ của riêng mình. Nhiều tính năng hơn đang được phát triển, nhưng nó sẽ không trở nên cồng kềnh: mọi thứ bạn không cần đều có thể tắt trong cài đặt.
+Làm cho nó mang dấu ấn của riêng bạn: đổi theme và font, và sử dụng nó bằng ngôn ngữ của bạn — pi-web đi kèm với nhiều ngôn ngữ và bạn có thể thêm ngôn ngữ của mình. Nhiều tính năng hơn đang trên đường đến, nhưng nó sẽ không trở nên bloated: bất cứ thứ gì bạn không cần đều có thể tắt trong cài đặt.
 
 </div>
 
-## Tại sao phiên bản mô hình cục bộ này?
+## Why this local-model edition?
 
-pi-web gốc vẫn là nền tảng upstream cho các tính năng và bản sửa lỗi được chia sẻ. Phiên bản này giữ nguyên trải nghiệm đó, sau đó thêm một lớp độ tin cậy cho các mô hình chạy trên máy của riêng bạn hoặc ở nơi khác trên LAN của bạn—nơi việc tạo nội dung thường chậm hơn, bộ nhớ có hạn và ngữ cảnh dài có thể làm đình trệ một phiên vốn đang hoạt động bình thường.
+Phiên bản pi-web gốc vẫn là nền tảng upstream cho các tính năng và bản sửa lỗi được chia sẻ. Phiên bản này giữ lại trải nghiệm đó, sau đó thêm một lớp độ tin cậy cho các model chạy trên máy của bạn hoặc ở nơi khác trong LAN của bạn — nơi mà việc sinh nội dung thường chậm hơn, bộ nhớ có hạn, và một context dài có thể làm treo một phiên hoạt động bình thường khác.
 
-| Lĩnh vực | pi-web upstream | Phiên bản này |
+| Area | Upstream pi-web | This edition |
 |------|-----------------|--------------|
-| Chính sách mô hình/runtime | Hành vi pi-web tiêu chuẩn | Chế độ **Auto / Local / Cloud** theo từng phiên, với phát hiện cục bộ nhận biết endpoint và ghi đè thủ công bền vững |
-| Xử lý ngữ cảnh dài | Hành vi nén pi thông thường | Local Mode nén chủ động ở mức **65%** và kiểm tra lại trong các vòng lặp gọi công cụ dài trước một yêu cầu nhà cung cấp khác |
-| An toàn nén | Tóm tắt tiêu chuẩn | Điểm kiểm tra cuộn có giới hạn, một lần viết lại chặt chẽ hơn cho đầu ra không hợp lệ/bị giới hạn và phát hiện không tiến triển thay vì nén lại vô tận |
-| Chạy bị gián đoạn | Xử lý worker và lỗi thông thường | Khôi phục có giới hạn cho tràn ngữ cảnh, dừng chỉ suy nghĩ và gián đoạn truyền tải được chọn, với bộ ngắt vòng lặp bền vững |
-| Cứu hộ thủ công | Chi tiết ngữ cảnh tiêu chuẩn | **Force Compact** vẫn khả dụng như một đường dẫn khôi phục rõ ràng mà không xóa cuộc hội thoại |
-| Tương thích và phát hành | Dự án gốc và dòng phát hành | Các biện pháp bảo vệ chỉ dành cho cục bộ vẫn nằm sau Local Mode; Cloud Mode duy trì hành vi upstream, và các thay đổi upstream được xem xét và phát hành ở đây một cách độc lập |
+| Model/runtime policy | Hành vi chuẩn của pi-web | Chế độ **Auto / Local / Cloud** theo từng phiên, với phát hiện local nhận diện endpoint và một chế độ ghi đè thủ công được lưu bền vững |
+| Long-context handling | Hành vi nén chuẩn của pi | Chế độ Local chủ động nén ở **65%** và kiểm tra lại bên trong các vòng lặp gọi tool dài trước yêu cầu model tiếp theo |
+| Compaction safety | Tóm tắt chuẩn | Các checkpoint rolling có giới hạn, một lần viết lại chặt chẽ hơn cho đầu ra không hợp lệ/vượt giới hạn, và phát hiện không tiến triển thay vì tái nén vô hạn |
+| Interrupted runs | Xử lý worker và lỗi chuẩn | Khôi phục có giới hạn cho tràn context, dừng chỉ-thinking, và các ngắt kết nối transport được chọn, với các bộ phá vòng lặp lưu bền vững |
+| Manual rescue | Chi tiết context chuẩn | **Force Compact** vẫn khả dụng như một đường dẫn khôi phục rõ ràng mà không xóa cuộc hội thoại |
+| Compatibility and releases | Dự án và dòng phát hành gốc | Các biện pháp bảo vệ chỉ-local nằm sau chế độ Local; chế độ Cloud giữ nguyên hành vi upstream, và các thay đổi upstream được xem xét và phát hành tại đây độc lập |
 
-Đây không phải là bản viết lại hay thay thế cho upstream. Đây là một hồ sơ hoạt động được duy trì có chủ đích dành cho những người muốn quyền riêng tư và kiểm soát mô hình cục bộ mà không chấp nhận các phiên chạy dài dễ vỡ. Xem [hướng dẫn người dùng](../en/README.md) để biết quy trình làm việc dành cho người dùng và [phát triển phiên bản mô hình cục bộ](../../docs/dev/local-llm-development.md) để biết việc triển khai và chính sách đồng bộ hóa.
-
-> [!WARNING]
-> pi-web hiện đang trong giai đoạn **beta**. Mọi thứ sẽ thay đổi và có thể bị hỏng!
+Đây không phải là viết lại hay thay thế cho upstream. Đây là một hồ sơ vận hành được duy trì một cách có chủ đích cho những người muốn quyền riêng tư và quyền kiểm soát model-local mà không chấp nhận các phiên chạy dài kém ổn định. Xem
+[hướng dẫn người dùng](../en/README.md) cho luồng công việc hướng tới người dùng và
+[phát triển phiên bản local-model](../../docs/dev/local-llm-development.md) cho phần triển khai và chính sách đồng bộ hóa.
 
 > [!TIP]
-> Mới ở đây? **[Đọc hướng dẫn sử dụng →](../en/README.md)** để có cái nhìn toàn diện về tính năng, các bước cài đặt và mẹo. ([Ngôn ngữ khác →](../README.md))
+> Mới đến đây? **[Đọc hướng dẫn người dùng →](../en/README.md)** để có một tour đầy đủ về tính năng, các bước cài đặt và mẹo. ([Các ngôn ngữ khác →](../README.md))
 
-## Ảnh chụp màn hình
+## Screenshots
 
 <div align="center">
   <img src="../assets/pi-web-desktop-screenshot.png" alt="Desktop" width="90%" /><br />
-  <em>Máy tính để bàn</em>
+  <em>Desktop</em>
   <br /><br />
-  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile PWA" width="90%" /><br />
-  <em>PWA trên di động</em>
+  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile" width="90%" /><br />
+  <em>Mobile</em>
 </div>
 
-## Cách Nó Hoạt Động Cùng Nhau
+## How It Fits Together
 
 ```
  pi (terminal)                 Browser (phone / tablet / laptop)
@@ -69,65 +68,68 @@ pi-web gốc vẫn là nền tảng upstream cho các tính năng và bản sử
              chat worker)                           via MagicDNS)
 ```
 
-- **pi** ghi JSONL hội thoại vào `~/.pi/agent/sessions/` khi nó hoạt động.
-- **pi-web** là một máy chủ Go đọc các tệp đó, hiển thị chúng trong trình duyệt và truyền phát cập nhật trực tiếp qua SSE.
-- Các worker **pi --mode rpc** xử lý trò chuyện do trình duyệt khởi tạo — một worker mỗi phiên, bị thu hồi sau 10 phút không hoạt động.
-- **fsnotify** theo dõi thư mục phiên để trình duyệt tải lại trong vòng mili-giây khi có đầu ra mới.
-- **Tailscale Serve** công bố máy chủ localhost dưới dạng điểm cuối HTTPS trên tailnet của bạn.
+- **pi** ghi JSONL của cuộc hội thoại vào `~/.pi/agent/sessions/` khi nó làm việc.
+- **pi-web** là một server Go đọc các tệp đó, hiển thị chúng trong trình duyệt, và stream các cập nhật trực tiếp qua SSE.
+- Các worker **pi --mode rpc** xử lý chat khởi tạo từ trình duyệt — một worker cho mỗi phiên, được thu dọn sau 10 phút inactive.
+- **fsnotify** theo dõi thư mục sessions để trình duyệt reload lại trong vòng vài mili giây sau đầu ra mới.
+- **Tailscale Serve** xuất bản server localhost như một endpoint HTTPS trên tailnet của bạn.
 
-## Cài đặt
+## Install
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-Chỉ vậy thôi — nó tải xuống tệp nhị phân phù hợp, thiết lập tự động khởi động và đăng ký các lệnh `/web`, `/pi-web`, `/remote` và `/refresh`.
+Chỉ có vậy — nó tải về binary tương ứng, thiết lập auto-start, và đăng ký các lệnh `/web`, `/pi-web`, `/remote`, và `/refresh`.
 
-Sau khi cài đặt, mở `http://127.0.0.1:31415` trong trình duyệt của bạn. Từ pi, sử dụng `/web` để mở phiên hiện tại trong trình duyệt của bạn ngay lập tức. Nếu Tailscale đang chạy trên máy của bạn, pi-web tự động công bố một điểm cuối HTTPS trên tailnet của bạn — sử dụng `/remote` từ pi để nhận mã QR và URL cho mọi thiết bị trên tailnet của bạn.
+Sau khi cài đặt, mở `http://127.0.0.1:31415` trong trình duyệt của bạn. Từ pi, dùng `/web` để mở phiên hiện tại trong trình duyệt ngay lập tức. Nếu Tailscale đang chạy trên máy của bạn, pi-web tự động xuất bản một endpoint HTTPS trên tailnet của bạn — dùng `/remote` từ pi để lấy mã QR và URL cho bất kỳ thiết bị nào trên tailnet của bạn.
 
-> **Truy cập từ xa trên macOS:** Cài đặt và mở Tailscale theo cách tương tác, chấp thuận lời nhắc của quản trị viên rồi đăng nhập. Sau đó chạy `/pi-web restart`, tiếp theo là `/remote`.
+> **Truy cập từ xa trên macOS:** Cài đặt và mở Tailscale tương tác, chấp nhận lời nhắc quản trị viên, và đăng nhập. Sau đó chạy `/pi-web restart`, rồi chạy `/remote`.
 
-Để cài đặt thủ công, tải xuống tệp nhị phân hoặc xây dựng từ mã nguồn, xem [user-docs/install.md](../en/install.md).
+Đối với cài đặt thủ công, tải binary, hoặc build từ source, xem [user-docs/install.md](../en/install.md).
 
-## Tích hợp Pi
+## Pi Integration
 
-Sau khi `pi install npm:@timmygod/pi-web-local@beta`, bạn nhận được:
+Sau `pi install npm:@timmygod/pi-web-local`, bạn sẽ có:
 
-| Lệnh | Chức năng |
+| Command | What it does |
 |---------|--------------|
-| `/web` | Mở phiên hiện tại trong trình duyệt của bạn (nhận biết SSH: bỏ qua trình duyệt và chỉ hiển thị URL) |
-| `/pi-web` | Hiển thị trạng thái, phiên bản, khởi động/dừng/khởi động lại máy chủ hoặc cập nhật |
+| `/web` | Mở phiên hiện tại trong trình duyệt (nhận biết SSH: bỏ qua trình duyệt và chỉ hiển thị URL) |
+| `/pi-web` | Hiển thị trạng thái, phiên bản, khởi động/dừng/khởi động lại server, hoặc cập nhật |
 | `/remote` | Hiển thị mã QR và URL để truy cập từ xa qua Tailscale |
-| `/refresh` | Kéo tin nhắn mới được viết từ trình duyệt từ xa trở lại phiên terminal |
+| `/refresh` | Kéo các tin nhắn mới được ghi từ các trình duyệt từ xa trở lại phiên terminal |
 
-Tự động đặt tiêu đề phiên được tích hợp sẵn trong chính pi-web và được cấu hình trên trang `/settings`. Nó được **bật theo mặc định** và tự động đặt tên cho các phiên. Bạn có thể chọn:
+**Đặt tiêu đề tự động** cho phiên được tích hợp sẵn trong chính pi-web và được cấu hình trên trang `/settings`. Nó **bật theo mặc định** và tự động đặt tên cho các phiên. Bạn có thể chọn:
 
-- **Khi nào đặt tiêu đề** — một lần mỗi phiên, hoặc trên mỗi tin nhắn mới (mặc định).
-- **Mô hình đặt tiêu đề** — một **heuristic từ tích hợp sẵn miễn phí, tức thì (không dùng AI)** theo mặc định, hoặc chọn một mô hình (ví dụ: mô hình nhỏ/nhanh) để có tiêu đề thông minh hơn do mô hình viết.
+- **Khi nào đặt tiêu đề** — một lần mỗi phiên, hoặc với mỗi tin nhắn mới (mặc định).
+- **Model đặt tiêu đề** — theo mặc định là **heuristic từ tích hợp, miễn phí và tức thời (không dùng AI)**, hoặc chọn một model (ví dụ một model nhỏ/nhanh) để có tiêu đề do model viết thông minh hơn.
 
-Gói cũng cài đặt tệp nhị phân pi-web vào `~/.pi/agent/bin/pi-web` và thiết lập tự động khởi động khi đăng nhập.
+Gói này cũng cài đặt binary pi-web vào `~/.pi/agent/bin/pi-web` và thiết lập auto-start khi đăng nhập.
 
-## Tự động khởi động khi đăng nhập
+## Auto-Start on Login
 
-Lệnh `pi install npm:@timmygod/pi-web-local@beta` tự động thiết lập điều này:
+Lệnh `pi install npm:@timmygod/pi-web-local` thiết lập điều này tự động:
 
-| HĐH | Cơ chế |
+| OS | Mechanism |
 |----|-----------|
 | macOS | launchd plist tại `~/Library/LaunchAgents/com.pi-web.plist` |
 | Linux | systemd user service tại `~/.config/systemd/user/pi-web.service` |
+| Windows | mục Run-key `HKCU` khởi động một trình khởi động ẩn trong `~/.config/pi-web/` |
 
-Để đặt token cho truy cập từ xa, tạo tệp `~/.config/pi-web/env`:
+Để đặt một token cho truy cập từ xa, tạo `~/.config/pi-web/env`:
 
 ```
 PI_WEB_TOKEN=your-token-here
 ```
 
-Để biết thêm chi tiết (thiết lập thủ công, cổng tùy chỉnh, liên kết không loopback), xem [user-docs/install.md](../en/install.md).
+Để biết thêm chi tiết (thiết lập thủ công, custom ports, non-loopback binds), xem [user-docs/install.md](../en/install.md).
 
-## Phát triển
+## Development
 
 ```bash
 make setup   # install frontend deps and download Go modules
 make check   # frontend test/build + Go test/vet
 make build   # setup if needed, build frontend, then build ./pi-web
 ```
+
+Đối với đồng bộ hóa upstream, kiểm thử local-model, và luồng phát hành song song, xem [Local-model edition development](../../docs/dev/local-llm-development.md).

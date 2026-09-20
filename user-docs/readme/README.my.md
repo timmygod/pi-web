@@ -3,8 +3,8 @@
 <div align="center">
 
 [![GitHub stars](https://img.shields.io/github/stars/timmygod/pi-web?style=flat&logo=github&label=stars&cacheSeconds=86400)](https://github.com/timmygod/pi-web/stargazers)
-[![npm downloads](https://img.shields.io/npm/dw/@timmygod/pi-web-local?label=downloads/wk&color=2ea043&cacheSeconds=86400)](https://www.npmjs.com/package/@timmygod/pi-web-local)
-[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb&cacheSeconds=86400)](../../LICENSE)
+[![npm downloads](https://img.shields.io/npm/dt/@timmygod/pi-web-local?label=downloads&color=2ea043)](https://www.npmjs.com/package/@timmygod/pi-web-local)
+[![license MIT](https://img.shields.io/npm/l/@timmygod/pi-web-local?label=license&color=0a7bbb)](../../LICENSE)
 [![Telegram](https://img.shields.io/badge/Telegram-Join-26A5E4?logo=telegram&logoColor=white)](https://t.me/+NJvFOTTa0wNjNTc9)
 ![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-555)
 
@@ -14,46 +14,43 @@
 
 <div align="center">
 
-သင့် [pi](https://pi.dev) coding agent ကို သင့်ဖုန်း၊ တက်ဘလက် သို့မဟုတ် လက်ပ်တော့မှ မောင်းနှင်ပါ — သင့်ကွန်ရက်ပေါ်ရှိ မည်သည့်နေရာမှမဆို သို့မဟုတ် Tailscale မှတစ်ဆင့် အဝေးမှ။
+[F phone/tablet/laptop](https://pi.dev) (F) — F F network, Tailscale F.
 
-၎င်းသည် PWA အပြည့်အစုံဖြစ်သောကြောင့် မည်သည့်စက်ပစ္စည်းတွင်မဆို native app တစ်ခုကဲ့သို့ ထည့်သွင်းအသုံးပြုနိုင်ပါသည်။ ၎င်းကို သင့်ကိုယ်ပိုင် AI workspace အဖြစ် မြင်ပါ — Claude ၏ Cowork ကဲ့သို့သော်လည်း မတူညီသော model များဖြင့် — model များကြားတွင် chat လုပ်ခြင်း၊ သင့်ဖုန်းမှ code ရေးခြင်း၊ သို့မဟုတ် သင့်စက်ပေါ်တွင် တည်ရှိသော [personal assistant](../en/personal-assistant.md) အဖြစ် ပြောင်းလဲခြင်း။
+PWA — F F. Claude Cowork — F. [F](../en/personal-assistant.md) F.
 
-သင့်ကိုယ်ပိုင်ပြုလုပ်ပါ- theme များနှင့် font များကို ပြောင်းလဲခြင်း၊ သင့်ကိုယ်ပိုင်ဘာသာစကားဖြင့် အသုံးပြုခြင်း — pi-web သည် ဘာသာစကားမျိုးစုံဖြင့် ပါရှိပြီး သင့်ကိုယ်ပိုင်ကိုလည်း ထည့်သွင်းနိုင်ပါသည်။ နောက်ထပ် feature များ လာနေဆဲဖြစ်သော်လည်း bloated ဖြစ်မည်မဟုတ်ပါ- သင်မလိုအပ်သောအရာမှန်သမျှကို settings တွင် ပိတ်ထားနိုင်ပါသည်။
+F: theme/font F, [my language](../en/personal-assistant.md) — pi-web F F. F — F F F.
 
 </div>
 
-## ဤ local-model edition အတွက် ဘာကြောင့်လဲ?
+## F F F?
 
-မူလ pi-web သည် မျှဝေထားသော ခွင့်ပြုချက်များနှင့် ပြင်ဆင်မှုများအတွက် upstream အခြေခံအုတ်မြစ်အဖြစ် ဆက်လက်တည်ရှိနေပါသည်။ ဤ edition သည် ထိုအတွေ့အကြုံကို ထိန်းသိမ်းထားပြီး၊ သင့်ကွန်ပျူတာတွင် သို့မဟုတ် သင့် LAN အတွင်း အခြားနေရာများတွင် လည်ပတ်နေသော မော်ဒယ်များအတွက် ယုံကြည်စိတ်ချရမှု အလွှာတစ်ခုကို ထပ်မံထည့်သွင်းထားသည်။ ထိုနေရာများတွင် မျိုးဆက်ပွားခြင်းသည် မကြာခဏ ပိုနှေးကွေးပြီး၊ မှတ်ဉာဏ်သည် ကန့်သတ်ထားကာ၊ ရှည်လျားသော context သည် ကျန်းမာသော session တစ်ခုကို ရပ်တန့်စေနိုင်သည်။
+pi-web F F F F. F F F, F F F LAN F F F, memory F, F F F.
 
-| နယ်ပယ် | Upstream pi-web | ဤ edition |
+| Area | Upstream pi-web | F |
 |------|-----------------|--------------|
-| Model/runtime မူဝါဒ | စံ pi-web အပြုအမူ | Session အလိုက် **Auto / Local / Cloud** mode၊ endpoint-aware local detection နှင့် persistent manual override ပါဝင်သည် |
-| ရှည်လျားသော context ကိုင်တွယ်ခြင်း | ပုံမှန် pi compaction အပြုအမူ | Local Mode သည် **65%** တွင် ကြိုတင်ပြုလုပ်ပြီး၊ အခြား provider တောင်းဆိုမှုတစ်ခုမတိုင်မီ ရှည်လျားသော tool-call loops အတွင်း ပြန်လည်စစ်ဆေးသည် |
-| Compaction ဘေးကင်းရေး | စံအကျဉ်းချုပ်များ | Bounded rolling checkpoints၊ မမှန်ကန်သော/capped output အတွက် ပိုမိုတင်းကျပ်သော ပြန်လည်ရေးသားခြင်းတစ်ခု၊ နှင့် အဆုံးမရှိ re-compaction အစား တိုးတက်မှုမရှိခြင်းကို ထောက်လှမ်းခြင်း |
-| ပြတ်တောက်သော လည်ပတ်မှုများ | ပုံမှန် worker နှင့် error ကိုင်တွယ်ခြင်း | Context overflow၊ thinking-only stops နှင့် ရွေးချယ်ထားသော transport interruptions များအတွက် bounded recovery၊ persistent loop breakers များနှင့်အတူ |
-| လက်ဖြင့် ကယ်ဆယ်ခြင်း | စံ context အသေးစိတ် | **Force Compact** သည် စကားဝိုင်းကို ဖျက်သိမ်းခြင်းမရှိဘဲ ရှင်းလင်းသော ပြန်လည်ရရှိရေး လမ်းကြောင်းအဖြစ် ဆက်လက်ရရှိနိုင်သည် |
-| ကိုက်ညီမှုနှင့် ထုတ်ဝေမှုများ | မူလပရောဂျက်နှင့် ထုတ်ဝေမှုလိုင်း | Local-only safeguards များသည် Local Mode နောက်တွင် ဆက်လက်တည်ရှိနေသည်။ Cloud Mode သည် upstream အပြုအမူကို ထိန်းသိမ်းပြီး၊ upstream ပြောင်းလဲမှုများကို ဤနေရာတွင် သီးခြားစီ သုံးသပ်ပြီး ထုတ်ဝေသည် |
+| Model/runtime policy | F pi-web F | **Auto / Local / Cloud** F, endpoint F F F, persistent manual override |
+| Long-context handling | F pi compaction F | Local Mode **65%** F, long tool-call F F F |
+| Compaction safety | F summaries | Bounded rolling checkpoints, F F F, F F |
+| Interrupted runs | F worker error F | Context overflow, thinking-only F, transport F, persistent loop breakers |
+| Manual rescue | F context F | **Force Compact** F F F, F F |
+| Compatibility and releases | F F F | Local Mode F; Cloud Mode F F, F F F F |
 
-ဤသည်မှာ upstream အတွက် ပြန်လည်ရေးသားခြင်း သို့မဟုတ် အစားထိုးခြင်း မဟုတ်ပါ။ ဤသည်မှာ ခိုင်မာမှုနည်းသော ရှည်လျားစွာ လည်ပတ်နေသော session များကို လက်ခံခြင်းမရှိဘဲ local-model privacy နှင့် ထိန်းချုပ်မှုကို လိုချင်သော လူများအတွက် ရည်ရွယ်ချက်ရှိရှိ ထိန်းသိမ်းထားသော လည်ပတ်ရေး profile ဖြစ်သည်။ အသုံးပြုသူအတွက် workflow အတွက် [user guide](../en/README.md) ကို ကြည့်ရှုပါ၊ အကောင်အထည်ဖော်ခြင်းနှင့် synchronization မူဝါဒအတွက် [local-model edition development](../../docs/dev/local-llm-development.md) ကို ကြည့်ရှုပါ။
-
-> [!WARNING]
-> pi-web သည် လက်ရှိတွင် **beta** အဆင့်ဖြစ်သည်။ အရာများ ပြောင်းလဲပြီး ပျက်စီးနိုင်ပါသည်။
+F F F. F F F F. [F](../en/README.md) F [F](../../docs/dev/local-llm-development.md) F.
 
 > [!TIP]
-> အသစ်ဖြစ်ပါသလား။ feature များ၏ အပြည့်အစုံလမ်းညွှန်၊ ထည့်သွင်းနည်းအဆင့်ဆင့်နှင့် အကြံပြုချက်များအတွက် **[အသုံးပြုသူလမ်းညွှန်ကို ဖတ်ပါ →](../en/README.md)** ([အခြားဘာသာစကားများ →](../README.md))
+> F? **[F →](../en/README.md)** F. ([F →](../README.md))
 
-## Screenshots
+## F
 
 <div align="center">
   <img src="../assets/pi-web-desktop-screenshot.png" alt="Desktop" width="90%" /><br />
   <em>Desktop</em>
   <br /><br />
-  <img src="../assets/pi-web-mobile-screenshot.png" alt="မိုဘိုင်း PWA" width="90%" /><br />
-  <em>မိုဘိုင်း PWA</em>
+  <img src="../assets/pi-web-mobile-screenshot.png" alt="Mobile" width="90%" /><br />
+  <em>Mobile</em>
 </div>
 
-## မည်သို့ချိတ်ဆက်အလုပ်လုပ်ပုံ
+## F F F
 
 ```
  pi (terminal)                 Browser (phone / tablet / laptop)
@@ -69,65 +66,68 @@
              chat worker)                           via MagicDNS)
 ```
 
-- **pi** သည် အလုပ်လုပ်နေစဉ် conversation JSONL ကို `~/.pi/agent/sessions/` သို့ ရေးသားသည်။
-- **pi-web** သည် ထိုဖိုင်များကို ဖတ်ရှုကာ browser တွင် render လုပ်ပြီး SSE မှတစ်ဆင့် live update များ stream လုပ်ပေးသည့် Go server တစ်ခုဖြစ်သည်။
-- **pi --mode rpc** worker များသည် browser မှစတင်သော chat ကို ကိုင်တွယ်သည် — session တစ်ခုလျှင် တစ်ခု၊ ၁၀ မိနစ် idle ပြီးနောက် ဖယ်ရှားခံရသည်။
-- **fsnotify** သည် sessions directory ကို စောင့်ကြည့်သောကြောင့် output အသစ်ရောက်ပြီး မီလီစက္ကန့်အတွင်း browser က reload လုပ်သည်။
-- **Tailscale Serve** သည် localhost server ကို သင့် tailnet ပေါ်တွင် HTTPS endpoint အဖြစ် ထုတ်ပြန်ပေးသည်။
+- **pi** JSONL F `~/.pi/agent/sessions/`.
+- **pi-web** Go F, browser F, SSE F.
+- **pi --mode rpc** F F F — F, 10 F F.
+- **fsnotify** F F, browser F F.
+- **Tailscale Serve** localhost F HTTPS F tailnet.
 
-## ထည့်သွင်းနည်း
+## F
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-ဒါပါပဲ — ၎င်းသည် သင့်လျော်သော binary ကို download လုပ်ကာ auto‑start ပြင်ဆင်သတ်မှတ်ပြီး `/web`၊ `/pi-web`၊ `/remote` နှင့် `/refresh` command များကို register လုပ်ပေးပါသည်။
+F — binary F, F, `/web`, `/pi-web`, `/remote`, `/refresh` F.
 
-ထည့်သွင်းပြီးသည်နှင့် သင့် browser တွင် `http://127.0.0.1:31415` ကိုဖွင့်ပါ။ pi မှ၊ လက်ရှိ session ကို သင့် browser တွင် ချက်ချင်းဖွင့်ရန် `/web` ကို အသုံးပြုပါ။ သင့်စက်တွင် Tailscale ကို run ထားပါက pi-web သည် သင့် tailnet ပေါ်တွင် HTTPS endpoint တစ်ခုကို အလိုအလျောက် ထုတ်ပြန်ပေးသည် — သင့် tailnet ပေါ်ရှိ မည်သည့်စက်အတွက်မဆို QR code နှင့် URL ရယူရန် pi မှ `/remote` ကို အသုံးပြုပါ။
+`http://127.0.0.1:31415` F. pi F `/web` F. Tailscale F, pi-web HTTPS F tailnet — `/remote` F, QR F URL F.
 
-> **macOS မှ အဝေးမှ ဝင်ရောက်အသုံးပြုခြင်း:** Tailscale ကို အပြန်အလှန်အသုံးပြုနိုင်သည့်နည်းဖြင့် တပ်ဆင်ပြီး ဖွင့်ပါ၊ စီမံခန့်ခွဲသူအတည်ပြုချက်တောင်းခံမှုကို အတည်ပြုပြီး အကောင့်ဝင်ပါ။ ထို့နောက် `/pi-web restart` ကို လုပ်ဆောင်ပြီး `/remote` ကို လုပ်ဆောင်ပါ။
+> **macOS F:** Tailscale F, admin F, F. `/pi-web restart`, `/remote` F.
 
-Manual ထည့်သွင်းခြင်း၊ binary download များ သို့မဟုတ် source မှ build လုပ်ခြင်းအတွက် [user-docs/install.md](../en/install.md) ကို ကြည့်ပါ။
+F, binary F, [F](../en/install.md) F.
 
-## Pi နှင့်ပေါင်းစပ်မှု
+## F F
 
-`pi install npm:@timmygod/pi-web-local@beta` ပြီးနောက်၊ သင်ရရှိသည်များ-
+`pi install npm:@timmygod/pi-web-local` F:
 
-| Command | လုပ်ဆောင်ချက် |
+| Command | F |
 |---------|--------------|
-| `/web` | လက်ရှိ session ကို browser တွင်ဖွင့်ပါ (SSH-သိရှိနိုင်သည်- browser ကိုကျော်ပြီး URL သာပြသသည်) |
-| `/pi-web` | status၊ version ပြသခြင်း၊ server ကို start/stop/restart လုပ်ခြင်း သို့မဟုတ် update လုပ်ခြင်း |
-| `/remote` | Tailscale မှတစ်ဆင့် အဝေးမှအသုံးပြုရန် QR code နှင့် URL ကိုပြသခြင်း |
-| `/refresh` | အဝေးမှ browser များမှ ရေးသားထားသော မက်ဆေ့ချ်အသစ်များကို terminal session ထဲသို့ ပြန်လည်ဆွဲယူခြင်း |
+| `/web` | browser F (SSH: browser F URL F) |
+| `/pi-web` | F, version, start/stop/restart, F |
+| `/remote` | Tailscale F QR F URL F |
+| `/refresh` | browser F F terminal F |
 
-Session **auto-titling** ကို pi-web တွင်ယှဉ်တွဲပါရှိပြီး `/settings` စာမျက်နှာတွင် configure လုပ်နိုင်ပါသည်။ ၎င်းသည် **မူလအားဖြင့် ဖွင့်ထားသည်** ဖြစ်ပြီး session များကို အလိုအလျောက် အမည်ပေးပါသည်။ သင်ရွေးချယ်နိုင်သည်များ-
+**F** F pi-web F, `/settings` F. **F** F. F:
 
-- **မည်သည့်အချိန်တွင် အမည်ပေးမည်နည်း** — session တစ်ခုလျှင် တစ်ကြိမ်၊ သို့မဟုတ် မက်ဆေ့ချ်အသစ်တိုင်းတွင် (မူလသတ်မှတ်ချက်)။
-- **ခေါင်းစဉ်ပေး model** — မူလအားဖြင့် အခမဲ့၊ ချက်ချင်းလက်ငင်း **built-in word heuristic (AI မပါ)** သို့မဟုတ် ပိုမိုထက်မြက်သော model ရေးသားသည့် ခေါင်းစဉ်များအတွက် model တစ်ခု (ဥပမာ သေးငယ်/မြန်ဆန်သော) ကို ရွေးချယ်ပါ။
+- **F** — F F, F F.
+- **F** — F F **F (no AI)**, F (F F) F.
 
-ထို package သည် pi-web binary ကို `~/.pi/agent/bin/pi-web` သို့လည်း ထည့်သွင်းပြီး login ဝင်သည့်အခါ auto-start ပြင်ဆင်ပေးပါသည်။
+pi-web F `~/.pi/agent/bin/pi-web` F, F F.
 
-## Login ဝင်သည့်အခါ Auto-Start
+## F F
 
-`pi install npm:@timmygod/pi-web-local@beta` command က ၎င်းကို အလိုအလျောက် ပြင်ဆင်ပေးပါသည်-
+`pi install npm:@timmygod/pi-web-local` F:
 
-| OS | လုပ်ဆောင်ပုံ |
+| OS | F |
 |----|-----------|
-| macOS | `~/Library/LaunchAgents/com.pi-web.plist` တွင် launchd plist |
-| Linux | `~/.config/systemd/user/pi-web.service` တွင် systemd user service |
+| macOS | launchd plist `~/Library/LaunchAgents/com.pi-web.plist` |
+| Linux | systemd F `~/.config/systemd/user/pi-web.service` |
+| Windows | `HKCU` Run-key F `~/.config/pi-web/` |
 
-အဝေးမှအသုံးပြုခွင့်အတွက် token တစ်ခုသတ်မှတ်ရန် `~/.config/pi-web/env` ကို ဖန်တီးပါ-
+F F, `~/.config/pi-web/env` F:
 
 ```
 PI_WEB_TOKEN=your-token-here
 ```
 
-အသေးစိတ်အတွက် (manual ပြင်ဆင်သတ်မှတ်ခြင်း၊ custom port များ၊ non-loopback bind များ) [user-docs/install.md](../en/install.md) ကို ကြည့်ပါ။
+F (F, F, F), [F](../en/install.md) F.
 
-## Development
+## F
 
 ```bash
-make setup   # frontend deps ထည့်သွင်းပြီး Go module များ download လုပ်ပါ
-make check   # frontend test/build + Go test/vet
-make build   # လိုအပ်ပါက setup၊ frontend build၊ ထို့နောက် ./pi-web build
+make setup   # F F Go F
+make check   # F test/build + Go test/vet
+make build   # setup F, F, ./pi-web F
 ```
+
+F F, F, F, [F](../../docs/dev/local-llm-development.md) F.

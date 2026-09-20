@@ -1,91 +1,100 @@
-# တပ်ဆင်ခြင်းနှင့် အသုံးပြုခြင်း
+# တပ်ဆင်ခြင်းနှင့် အသုံးပြုနည်း
 
-## အင်္ဂါရပ်များ
+## လုပ်ဆောင်ချက်များ
 
-### အဝေးထိန်း ထိန်းချုပ်မှု
+### ဓာတ်ပိုးထိန်းချုပ်ခြင်း (Remote control)
 
-- စာသား သို့မဟုတ် ပုံပူးတွဲမှုများဖြင့် မည်သည့် session ကိုမဆို browser မှ ဆက်လက်လုပ်ဆောင်နိုင်ခြင်း
-- Web UI မှတစ်ဆင့် မည်သည့် project path တွင်မဆို session အသစ်တစ်ခု စတင်နိုင်ခြင်း
-- Browser အတွင်းမှ model ပြောင်းလဲခြင်းနှင့် thinking-level ရွေးချယ်နိုင်ခြင်း (session တစ်ခုချင်းစီအလိုက်)
-- Session တစ်ခုချင်းစီ၏ worker အခြေအနေ (ငြိမ်နေသည် / လုပ်ဆောင်နေသည် / အမှား) နှင့် crash ဖြစ်ပါက အလိုအလျောက် ပြန်လည်ရယူခြင်း
-- Session များစွာကို တစ်ပြိုင်နက်တည်း လုပ်ဆောင်နိုင်ခြင်း — တစ်ခုတွင် အလုပ်စတင်ပြီး အခြားတစ်ခုကို stream ကြည့်ရှုနိုင်ခြင်း
-- LAN အတွင်း ဘေးကင်းစွာ ဖွင့်ထုတ်ရန်အတွက် `PI_WEB_TOKEN` — loopback မဟုတ်သော bind အတွက် ပုံမှန်အားဖြင့် လိုအပ်သည်
+- browser ကနေ text သို့မဟုတ် image attachment ချိတ်ဆက်ထားပြီး မည်သည့် session မဆို ဆက်လက်လုပ်ဆောင်နိုင်သည်
+- web UI တွင်နေ၍ project path မှာနေရာအနှံ့သို့ brand-new session စတင်ရန်
+- session တစ်ခုချင်းစီအတွက် in-browser model switching နှင့် thinking-level selector
+- session တစ်ခုချင်းစီအတွက် worker status (idle / running / error) နှင့် crash ဖြစ်လျှင် auto-recovery
+- parallel ဖြင့် sessions များကို တစ်ပြိုင်နက်လိုက်လည်လည် အလုပ်လုပ်နိုင်သည် — တစ်ခုတွင် အလုပ်စတင်ပြီး တစ်ခုခြင်း၏ stream ကို ကြည့်ရှုနိုင်သည်
+- `PI_WEB_TOKEN` သည် secure LAN exposure အတွက် — explicit non-loopback bind များအားလုံးအတွက် default ဖြင့်လိုအပ်သည်
 
-### Session များကို ဖတ်ရှုခြင်း
+### Sessions ကို အဖတ်ရှုခြင်း
 
-- Project များအနှံ့ session များကို filter များ၊ ရှာဖွေမှုနှင့် branch အပြည့်အစုံဖြင့် လမ်းညွှန်ကြည့်ရှုနိုင်ခြင်း
-- pi လည်ပတ်ဆဲတွင် တိုက်ရိုက် တစ်စိတ်တစ်ပိုင်း အပ်ဒိတ်များ (fsnotify မှတစ်ဆင့်၊ ~ms latency)
-- လုပ်ဆောင်ဆဲ session များကို နောက်ယောင်ခံကြည့်ရှုရန် follow mode
-- သီးခြားစာတစ်ခုချင်းသို့ deep link များ
-- Session တစ်ခုကို JSONL အဖြစ် ဒေါင်းလုဒ်လုပ်နိုင်ခြင်း
-- တည်ငြိမ်သော snapshot များကို လျှို့ဝှက် GitHub Gist များအဖြစ် မျှဝေနိုင်ခြင်း
-- Session များဖွင့်ရန်၊ အဝေးထိန်း QR၊ session ထပ်တူပြုခြင်းနှင့် token စီမံခန့်ခွဲခြင်းအတွက် `/web`၊ `/remote`၊ `/refresh`၊ `/pi-web token` နှင့် `/pi-web set-token` pi extension များ
+- filters, search နှင့် full branch navigation ဖြင့် project များအနှံ့ sessions ကို ကြည့်ရှုနိုင်သည်
+- pi က ဆက်လက်လည်ပတ်နေချိန်တွင် live incremental updates (fsnotify ကြona; ~ms latency)
+- active session တွင်း tailing အတွက် follow mode
+- individual message တစ်ခုချင်းစီအတွက် deep links
+- session တစ်ခုကို JSONL အဖြစ် download
+- static snapshots ကို secret GitHub Gists အနေဖြင့် share
+- sessions မှာ ပြန်ဖွင့်ရန်, remote QR, session sync နှင့် token management အတွက် `/web`, `/remote`, `/refresh`, `/pi-web token` နှင့် `/pi-web set-token` pi extensions များ
+- `/skill:pi-web-schedule`, `/skill:pi-web-notes`, `/skill:pi-web-settings` (`pi-web-ctl`) သည် session က schedules, project scratchpad နှင့် settings များကို natural language ဖြင့် စီမံပေးနိုင်ရန်
 
-## Session mode ကို ရွေးချယ်ပါ
+## Session Mode ကို ရွေးချယ်ခြင်း
 
-ဤထုတ်ဝေမှုသည် pi တွင် ကြိုတင်သတ်မှတ်ထားပြီးသော provider များနှင့် model များကို အသုံးပြုသည်။ Local Mode သည် runtime မူဝါဒတစ်ခုဖြစ်ပြီး သီးခြား model installer သို့မဟုတ် ဒုတိယမြောက် API-key screen မဟုတ်ပါ။
-Session တစ်ခုကို ဖန်တီးသည့်အခါ mode ကို ရွေးချယ်ပါ၊ သို့မဟုတ် လက်ရှိ run ပြီးဆုံးပြီးနောက် ပြောင်းလဲပါ။
+ဤ edition သည် pi တွင် ပြင်ဆင်ပြီးသား providers နှင့် models များကို အသုံးပြုသည်; Local Mode သည် runtime policy ဖြစ်ပြီး၊ တစ်ခြား model installer သို့မဟုတ် စတုတ္ထပိုင်း API-key screen မဟုတ်ပါ။ session သို့ ဖန်တီးစဉ် mode ကို ရွေးချယ်နိုင်သည် သို့မဟုတ် current run က stable ဖြစ်သွားပြီးနောက် ပြောင်းလဲနိုင်သည်:
 
-| Mode | အသုံးပြုသည့်အခါ | အပြုအမူ |
+| Mode | သုံးရန်အချိန် | Behavior |
 |------|-------------|----------|
-| **Auto** | pi-web က ဆုံးဖြတ်စေလိုသည် | ဖြစ်နိုင်သမျှ provider metadata မှ local/LAN endpoints များကို ဖြေရှင်းသည်။ မဖြစ်နိုင်ပါက ပုံမှန်လမ်းကြောင်းကို ထိန်းသိမ်းသည် |
-| **Local** | Model သည် ဤစက်တွင် သို့မဟုတ် သင့် LAN တွင် လည်ပတ်နေသည် | 65% compaction နယ်နိမိတ်၊ bounded checkpoints၊ Force Compact နှင့် ကာကွယ်ထားသော အလိုအလျောက် ပြန်လည်ရယူခြင်းတို့ကို ဖွင့်ထားသည် |
-| **Cloud** | ရွေးချယ်ထားသော model သည် host လုပ်ထားပြီး upstream အပြုအမူကို လိုက်နာသင့်သည် | Session အတွင်းမှ local-only compaction နှင့် ပြန်လည်ရယူခြင်း မူဝါဒကို ဖယ်ရှားထားသည် |
+| **Auto** | pi-web က အာမခံပေးရန် | provider metadata မှ local/LAN endpoints များကို မဖြစ်နိုင်လျှင် normal path ကို ဆက်လက်ရန် |
+| **Local** | model သည် ဤ machine တွင် သို့မဟုတ် LAN တွင် လည်ပတ်နေပါက | 65% compaction boundary, bounded checkpoints, Force Compact နှင့် guarded automatic recovery ကို ဖွင့်ရန် |
+| **Cloud** | ရွေးချယ်ထားသော model သည် hosted ဖြစ်ပြီး upstream behavior ကို လိုက်နာရမည် | local-only compaction နှင့် recovery policy ကို session မှ ထုတ်ပစ်ရန် |
 
-Local သို့မဟုတ် Cloud ကို လက်ဖြင့်ရွေးချယ်ခြင်းသည် အလိုအလျောက် တွေ့ရှိမှုထက် ဦးစားပေးပြီး reload နှင့် restart များအတွက် ကျန်ရှိနေသည်။ လည်ပတ်နေသော session တစ်ခုသည် ၎င်း၏ worker ပြီးဆုံးသည်အထိ mode ပြောင်းလဲမှုများကို ငြင်းပယ်သည်။ ထို့ကြောင့် UI တွင် ပြသထားသော mode သည် အမှန်တကယ် အသုံးပြုနေသော မူဝါဒနှင့် အမြဲတမ်း ကိုက်ညီနေသည်။
+Manual Local သို့မဟုတ် Cloud selection သည် automatic detection ထက် အဆုံးအဖြတ်တွင် ရှိပြီး reload နှင့် restart များအတွင်း ပြောင်းလဲရန်။ running session သည် mode change များကို worker က stable ဖြစ်သွားသည်အထိ reject လုပ်သည်။ ထို့ကြောင့် UI တွင် ပြသထားသော mode သည် actually in use ဖြစ်သော policy နှင့် အမြဲကိုက်ညီသည်။
 
-## လိုအပ်ချက်များ
+## Requirements
 
-- [Go](https://go.dev) 1.25+
-- Browser chat/model ပြောင်းရန်အတွက် သင့် `PATH` တွင် `pi` ရှိရန်
-- ရွေးချယ်နိုင်သော- မျှဝေရန်အတွက် `gh`
+- [Go](https://go.dev) 1.25+ (source မှ တည်ဆောက်ရန်သာ)
+- `pi` သည် `PATH` တွင် browser chat/model switching အတွက်
+- Optional: `gh` သည် share အတွက်
+- Windows တွင်: pi သည် shell tool အတွက် bash shell လိုအပ်သည် — [Git for Windows](https://git-scm.com/download/win) သည် လုံလောက်ပါသည် (pi ၏ Windows docs ကို ကြည့်ပါ)
 
-## တပ်ဆင်ခြင်း
+## Install
 
-### Pi package (အကြံပြုသည်)
-
-```bash
-pi install npm:@timmygod/pi-web-local@beta
-```
-
-ဤ command တစ်ခုတည်းသည်-
-- npm pi package ကို pi ၏ package directory အောက်တွင် တပ်ဆင်သည်
-- Package ၏ `postinstall` script (`bash install.sh`) ကို လုပ်ဆောင်သည်
-- သင့် package ဗားရှင်းနှင့် platform အတွက် သင့်လျော်သော pi-web binary ကို GitHub Releases မှ ဒေါင်းလုဒ်လုပ်သည်
-- ၎င်းကို `~/.pi/agent/bin/pi-web` တွင် တပ်ဆင်သည်
-- Login ဝင်သည့်အခါ အလိုအလျောက် စတင်ရန် သတ်မှတ်ပေးသည် (macOS တွင် launchd၊ Linux တွင် systemd)
-- `/web`၊ `/remote`၊ `/refresh`၊ `/pi-web token` နှင့် `/pi-web set-token` pi command များကို မှတ်ပုံတင်ပေးသည်
-
-Session အလိုအလျောက် ခေါင်းစဉ်တပ်ခြင်းကို pi-web တွင် (extension မဟုတ်ဘဲ) တည်ဆောက်ထားပြီး `/settings` စာမျက်နှာတွင် ပြင်ဆင်သတ်မှတ်နိုင်သည်။ ပုံမှန်အားဖြင့် ဖွင့်ထားသည်- pi-web သည် session များကို အခမဲ့ built-in word heuristic (AI မဟုတ်) သုံး၍ အလိုအလျောက် အမည်ပေးပြီး စာသစ်တစ်ခုတိုင်းတွင် ခေါင်းစဉ်ပြန်တပ်သည်။ Session တစ်ခုလျှင် တစ်ကြိမ်သာ ခေါင်းစဉ်တပ်ရန် ပြောင်းနိုင်သည်၊ နှင့်/သို့မဟုတ် heuristic အစား ပိုမိုထက်မြက်သော ခေါင်းစဉ်များရေးရန် model တစ်ခုကို ရွေးချယ်နိုင်သည်။
-
-Linux တွင်၊ auto-start ကို `~/.config/systemd/user/pi-web.service` တွင် user systemd service အဖြစ် သတ်မှတ်ထားသည်။ Installer သည် ၎င်း၏ `ExecStart` ကို အမှန်တကယ် တပ်ဆင်ထားသော binary လမ်းကြောင်းသို့ ပြန်ရေးသည်။ Runtime တွင် Tailscale ရရှိနိုင်ပါက၊ pi-web သည် localhost server ကို Tailscale Serve HTTPS ဖြင့် ထုတ်ပြန်သည်။ User systemd မရရှိနိုင်ပါက၊ `~/.pi/agent/bin/pi-web -o` ဖြင့် ကိုယ်တိုင်လည်ပတ်ပါ။
-
-သီးခြား project တစ်ခုအတွက်သာ (.pi/settings.json မှတစ်ဆင့် သင့်အဖွဲ့နှင့် မျှဝေရန်) တပ်ဆင်ရန်-
+### Pi package (အကြံပြုထားသည်)
 
 ```bash
-pi install -l npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
-ထို့နောက် pi ကို ပြန်လည်စတင်ပါ (သို့မဟုတ် `/reload` ကို လုပ်ဆောင်ပါ)၊ ပြီးလျှင် `/web`၊ `/pi-web`၊ `/remote`၊ `/refresh` တို့ကို အသုံးပြုပါ။ `/pi-web token` နှင့် `/pi-web set-token` ဖြင့် သင့်ဝင်ရောက်ခွင့် token ကို စီမံခန့်ခွဲပါ။
+ဒီ command တစ်ခုတည်းသည်:
+- pi ၏ package directory အောက်တွင် npm pi package ကို တပ်ဆင်သည်
+- package `postinstall` script (`install.sh`, Windows တွင် `install.ps1`) ကို လည်ပတ်သည်
+- package version နှင့် platform တွင် ကိုက်ညီသော pi-web binary ကို GitHub Releases မှ download
+- `~/.pi/agent/bin/pi-web` (Windows တွင် `pi-web.exe`) သို့ တပ်ဆင်သည်
+- login တွင် auto-start ကို စီစဉ်သည် (macOS တွင် launchd, Linux တွင် systemd, Windows တွင် Run-key launcher)
+- `/web`, `/remote`, `/refresh`, `/pi-web token`, နှင့် `/pi-web set-token` pi commands များကို register
 
-`@timmygod/pi-web-local` ကို အမည်ပြောင်းစဉ် npm မှ `ENOTEMPTY` ဖြင့် ရပ်တန့်သွားပါက၊ npm ၏ ဟောင်းနွမ်းသော ဝှက်ထားသည့် backup directory များကို ဖယ်ရှားပြီး beta channel ကို ပြန်လည်တပ်ဆင်ပါ-
+Session auto-titling သည် pi-web တွင် (extension မဟုတ်) ပါဝင်ပြီး `/settings` page တွင် configure လုပ်ထားသည်။ Default ဖြင့် on ဖြစ်သည်: pi-web သည် free built-in word heuristic (AI မဟုတ်) ကို အသုံးပြု၍ sessions များကို အလိုအလျောက် နာမည်ပေးပြီး၊ message အသစ်တစ်ခုစီအတွက် ပြန်လည်တပ်ဆင်သည်။ session တစ်ခုအတွက် titling တစ်ကြိမ်သာ ပြောင်းနိုင်သည်၊ နှင့်/သို့မဟုတ် heuristic ထက် ပိုမို smart ဖြစ်သော titles များ ရေးသားရန် model တစ်ခုကို ရွေးချယ်နိုင်သည်။
+
+Linux တွင် auto-start သည် `~/.config/systemd/user/pi-web.service` တွင် user systemd service အဖြစ် configure လုပ်ထားသည်။ Installer သည် `ExecStart` ကို actually installed binary path ပြောင်းလဲသည်။ runtime တွင် Tailscale ရရှိနိုင်ပါက pi-web သည် localhost server ကို Tailscale Serve HTTPS ဖြင့် publish လုပ်သည်။ user systemd မရရှိပါက `~/.pi/agent/bin/pi-web -o` ဖြင့် manual ဖြင့် လည်ပတ်ပါ။
+
+project တစ်ခုတည်းအတွက်သာ တပ်ဆင်ရန် (`.pi/settings.json` ကြောင့် team နှင့် share လုပ်ထားသည်):
 
 ```bash
-rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@timmygod/pi-web-local@beta
+pi install -l npm:@timmygod/pi-web-local
 ```
 
-### အမြန်တပ်ဆင်ခြင်း (build tools မလိုအပ်ပါ)
+ထို့နောက် pi ကို restart လုပ်ပါ (သို့မဟုတ် `/reload` လည်ပတ်ပါ)၊ `/web`, `/pi-web`, `/remote`, `/refresh` များကို အသုံးပြုပါ။ `/pi-web token` နှင့် `/pi-web set-token` ဖြင့် access token ကို စီမံပါ။
+
+npm သည် `ENOTEMPTY` ဖြင့် abort လျှင် `@timmygod/pi-web-local` ကို rename လုပ်ရင်းတွင် npm ၏ stale hidden backup directories များကိုဖယ်ရှားပြီး package ကို ပြန်လည်တပ်ဆင်ပါ:
+
+```bash
+rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-*
+pi install npm:@timmygod/pi-web-local
+```
+
+### Quick install (build tools မလိုအပ်)
+
+macOS / Linux:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
-ဤသည်မှာ နောက်ဆုံးထွက် pi-web binary ကို ဒေါင်းလုဒ်လုပ်ပြီး `/usr/local/bin` တွင် တပ်ဆင်ကာ login ဝင်သည့်အခါ အလိုအလျောက် စတင်ရန် သတ်မှတ်ပေးသည်။ Go၊ Node သို့မဟုတ် pi မလိုအပ်ပါ။
+Windows (PowerShell):
 
-### Binary ဒေါင်းလုဒ်လုပ်ခြင်း
+```powershell
+irm https://raw.githubusercontent.com/timmygod/pi-web/main/install.ps1 | iex
+```
 
-ကြိုတင်တည်ဆောက်ထားသော binary များကို [GitHub Release](https://github.com/timmygod/pi-web/releases) တစ်ခုစီတွင် ပူးတွဲထားသည်။
+ဒါသည် latest pi-web binary ကို download လုပ်ပြီး `/usr/local/bin` (Windows တွင် `~/.pi/agent/bin`) သို့ တပ်ဆင်ပြီး login တွင် auto-start ကို စီစဉ်သည်။ Go, Node, သို့မဟုတ် pi မလိုအပ်ပါ။
+
+### Download binary
+
+Pre-built binaries များသည် foreach [GitHub Release](https://github.com/timmygod/pi-web/releases) တွင် attached ဖြစ်သည်။
 
 ```bash
 # macOS (Apple Silicon)
@@ -105,115 +114,143 @@ curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi
 chmod +x pi-web
 ```
 
-ထို့နောက် ၎င်းကို သင့် PATH သို့ ရွှေ့ပါ-
+```powershell
+# Windows (x64)
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-amd64.exe
+
+# Windows (ARM64)
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-arm64.exe
+```
+
+ထို့နောက် PATH တွင် သွင်းပါ:
 
 ```bash
 cp pi-web ~/.pi/agent/bin/
-# သို့မဟုတ် system တစ်ခုလုံးအတွက်-
+# သို့မဟုတ် system-wide:
 sudo cp pi-web /usr/local/bin/
 ```
 
-### Source မှတည်ဆောက်ခြင်း
+### Source မှ Build
+
+ဒီ checkout သည် pi-web ၏ local-model edition ဖြစ်သည်။ Normal build သည် web application နှင့် backend ကို ခေတ်ထုတ်အောင် တည်ဆောက်သည်; local-model safeguards များသည် session ၏ effective Local Mode ဖြင့် runtime တွင် ဖွင့်ထားသည်။ တစ်ခြား binary ဖြင့် မဟုတ်ပါ။
 
 ```bash
 git clone https://github.com/timmygod/pi-web.git
 cd pi-web
-make build   # Vite bundle ကို တည်ဆောက်ပြီး Go binary ထဲသို့ ထည့်သွင်းသည်
+make build   # Vite bundle ကို build လုပ်ပြီး Go binary သို့ embed လုပ်သည်
 
-# ရွေးချယ်နိုင်သော- PATH ပေါ်တွင် ထားပါ
+# optional: PATH တွင် ထားရန်
 cp pi-web ~/.pi/agent/bin/
 ```
 
-Frontend bundle ကို `web/assets_embed.go` မှ ထည့်သွင်းထားသောကြောင့် `go build` သည်
-`web/dist` ကို ဦးစွာရှိရန် လိုအပ်သည်။ `make build` သည် အဆင့်နှစ်ခုစလုံးကို အစဉ်လိုက် လုပ်ဆောင်သည်။ ကိုယ်တိုင်တည်ဆောက်ပါက
-`go build ./cmd/pi-web` မတိုင်မီ `npm --prefix web install && npm --prefix web run build` ကို လုပ်ဆောင်ပါ။
+Frontend bundle သည် `web/assets_embed.go` ဖြင့် embed လုပ်ထားပြီး၊ `go build` သည် `web/dist` ကို အရင်ရှိရမည်။ `make build` သည် ခေတ်လက်ရှိ two steps ကို ဆက်တိုက်လည်ပတ်သည်; hand ဖြင့် build လုပ်ပါက `go build ./cmd/pi-web` ကို အရင် `npm --prefix web install && npm --prefix web run build` ကို လည်ပတ်ပါ။
 
-## ဖယ်ရှားခြင်း
+maintained fork workflow, upstream synchronization နှင့် Local Mode verification checklist အတွက် [local-model development notes](../../docs/dev/local-llm-development.md) ကို ကြည့်ပါ။
+
+### Installed instance နှင့်အတူ Develop
+
+Installed instance ကို port `31415` တွင် လည်ပတ်နေရန် ခံထားရပြီး၊ source checkout ကို development mode တွင် စတင်ပါ:
 
 ```bash
-pi remove npm:@timmygod/pi-web-local@beta
+make dev
 ```
 
-ဤသည်မှာ package ၏ `preuninstall` script (`bash uninstall.sh`) ကို လုပ်ဆောင်ပြီး
-လက်ရှိလည်ပတ်နေသော instance ကို ရပ်တန့်ကာ အောက်ပါတို့ကို ဖယ်ရှားသည်-
+`http://127.0.0.1:31416` ကို ဖွင့်ပါ။ `make dev` သည် internal `PI_WEB_DEV=1` development environment ကို set လုပ်ထားပြီး၊ source checkout သည် installed instance နှင့် sessions, settings, နှင့် SQLite data များကို share လုပ်သည်။ သို့သော် separate development runtime lock နှင့် state file ကို ကိုင်တွယ်ထားသည်။ Regular installed နှင့် manually launched instances များသည် မပြောင်းလဲဘဲ original single-instance behavior ကို ဆက်လက်ရိပ်ချက်ထားသည်။
 
-- pi-web binary (`~/.pi/agent/bin/pi-web` သို့မဟုတ် standalone တပ်ဆင်မှုများအတွက် `/usr/local/bin/pi-web`)
-- ဗားရှင်းဖိုင် (`~/.pi/agent/pi-web-version`)
-- runtime state ဖိုင် (`~/.pi/agent/pi-web/pi-web-state.json`)
-- auto-start config (macOS တွင် launchd plist၊ Linux တွင် systemd user service)
+duplicate autonomous work များကို တားဆီးရန် development mode သည် schedule loop, chat-queue drainer, auto-titling, သို့မဟုတ် push notifications များကို လည်ပတ်မည်မဟုတ်ပါ။ development UI မှ တင်သွင်းသော direct requests များသည် ဆက်လက်လည်ပတ်နိုင်သည်။ ခေတ်တို ခြောက်ဖွဲ့ chat session တစ်ခုကို instances နှစ်ခုမှ တစ်ပြိုင်နက် စီမံမေးသေးပါ။ foreach process သည် ကိုယ်ပိုင် RPC worker manager ကို ဖြစ်သည်။
 
-သင့်ဒေတာကို ထိန်းသိမ်းထားသောကြောင့် နောက်မှ ပြန်လည်တပ်ဆင်ပါက သင်ရပ်တန့်ခဲ့သည့်နေရာမှ ဆက်လက်နိုင်သည်-
-`~/.pi/agent/pi-web.sqlite`၊ `~/.pi/agent/pi-web-memory.sqlite`၊ သင့် session ဖိုင်များ (`~/.pi/agent/sessions/` အောက်တွင်) နှင့် `~/.config/pi-web/env` (`PI_WEB_TOKEN` အပါအဝင်)။ ရှင်းလင်းစွာ ပြန်လည်စတင်လိုပါက ၎င်းတို့ကို ကိုယ်တိုင်ဖယ်ရှားပါ။
-
-## အသုံးပြုခြင်း
+`make dev` သည် Go hot reload အတွက် [Air](https://github.com/air-verse/air) လိုအပ်သည်:
 
 ```bash
-# ပုံမှန် port (31415) တွင် စတင်ရန်
+go install github.com/air-verse/air@latest
+```
+
+`PI_WEB_DEV` သည် development harness plumbing ဖြစ်ပြီး၊ production multi-instance mode မဟုတ်ပါ။
+
+## Uninstall
+
+```bash
+pi remove npm:@timmygod/pi-web-local
+```
+
+ဒါသည် package `preuninstall` script (`uninstall.sh`, Windows တွင် `uninstall.ps1`) ကို လည်ပတ်ပြီး running instance ကို stop လုပ်ထားသည်။ အောက်ပါတို့ကို ဖယ်ရှားသည်:
+
+- pi-web binary (`~/.pi/agent/bin/pi-web`, သို့မဟုတ် standalone installs အတွက် `/usr/local/bin/pi-web`)
+- version file (`~/.pi/agent/pi-web-version`)
+- runtime state file (`~/.pi/agent/pi-web/pi-web-state.json`)
+- auto-start config (macOS တွင် launchd plist, Linux တွင် systemd user service, Windows တွင် Run-key entry + launcher scripts)
+
+သင့် data များသည် ခေတ်တို ပြန်လည်တပ်ဆင်မှုအတွက် ခေတ်တို ပိတ်ဆို့ထားသောနေရာမှ ဆက်လက်အသုံးပြုနိုင်ရန် preserve ဖြစ်သည်: `~/.pi/agent/pi-web.sqlite`, `~/.pi/agent/pi-web-memory.sqlite`, `~/.pi/agent/sessions/` အောက်တွင် session files များနှင့် `~/.config/pi-web/env` (including `PI_WEB_TOKEN`)။ clean slate ဖြစ်စေရန် manually ဖယ်ရှားပါ။
+
+## Usage
+
+```bash
+# default port (31415) တွင် စတင်ရန်
 pi-web
 
-# စတင်ပြီး browser ဖွင့်ရန်
+# browser ဖွင့်ပြီး စတင်ရန်
 pi-web -o
 
-# စိတ်ကြိုက် port
+# Custom port
 pi-web -p 8080
 
-# Bind host ကို override လုပ်ရန် (loopback သည် ပုံမှန်အားဖြင့် စစ်မှန်ကြောင်းအတည်ပြုရန် မလိုအပ်ပါ)
+# bind host ကို override လုပ်ပါ (loopback သည် default ဖြင့် unauthenticated ဖြစ်သည်)
 pi-web --host 127.0.0.1
 
-# Loopback မဟုတ်သော bind သည် token လိုအပ်သည် — pi-web သည် မဟုတ်ပါက စတင်ရန် ငြင်းဆန်သည်
+# non-loopback bind သည် token လိုအပ်သည် — pi-web သည် အခြားအခြင်းတွင် start ဖြင့် reject လုပ်သည်
 PI_WEB_TOKEN=$(openssl rand -hex 16) pi-web --host 192.168.1.50
 ```
 
-ပုံမှန်အားဖြင့်၊ pi-web သည် `127.0.0.1` သို့ bind လုပ်သည်။ MagicDNS ဖြင့် Tailscale လည်ပတ်နေပါက၊ pi-web သည် `tailscale serve --bg --https=<port> http://127.0.0.1:<port>` ကိုလည်ပတ်ပြီး HTTPS tailnet URL ကို ပုံနှိပ်ထုတ်ပေးသည်။ Loopback မဟုတ်သော မည်သည့် bind မဆို `PI_WEB_TOKEN` သတ်မှတ်ရန် လိုအပ်သည်။ ဒေသတွင်းစမ်းသပ်ရန်အတွက် override လုပ်ရန် `--insecure` ကို ထည့်ပါ။
+Default ဖြင့် pi-web သည် `127.0.0.1` သို့ bind လုပ်ထားသည်။ Tailscale သည် MagicDNS ကြona **and `PI_WEB_TOKEN` သည် set ဖြစ်နေပါက** pi-web သည် `tailscale serve --bg --https=<port> http://127.0.0.1:<port>` ကို ဆက်လက်လည်ပတ်ပြီး HTTPS tailnet URL ကို ပုံဖော်သည်။ token မရှိပါက pi-web သည် loopback-only ဖြစ်နေပြီး Tailscale Serve ကို ခေတ်ဖုံးပြီး၊ tailnet peers များက unauthenticated ဖြင့် agent ကို ခေတ်ထိစပ်မရအောင်။ explicit non-loopback bind များအားလုံးသည် `PI_WEB_TOKEN` သည် set ဖြစ်နေရန် လိုအပ်သည်။ local testing အတွက် override လုပ်ရန် `--insecure` ကို pass လုပ်ပါ။
 
-## အဝေးမှ ဝင်ရောက်ခြင်း
+## Remote Access
 
-pi-web ကို ဒေသတွင်း၌ နားထောင်နေစေပြီး၊ ထို့နောက် tailnet ပေါ်ရှိ သင့်ဖုန်း သို့မဟုတ် laptop မှ ပုံနှိပ်ထုတ်ပေးထားသော Tailscale HTTPS URL ကို အသုံးပြုပါ။
+pi-web ကို local တွင် ကြည့်နေရင်း ခေတ်တို tailnet တွင် phone သို့မဟုတ် laptop ကနေ printed Tailscale HTTPS URL ကို အသုံးပြုပါ။
 
-macOS တွင် Tailscale ကို ထည့်သွင်းဖွင့်လှစ်ပြီး administrator အတည်ပြုချက်ကို ခွင့်ပြုကာ sign in လုပ်ပါ။ ထို့နောက် `/pi-web restart` ကို လုပ်ဆောင်ပြီးနောက် `/remote` ကို လုပ်ဆောင်ပါ။
+macOS တွင် Tailscale ကို အသုံးတပ်ပြီး interactively ဖွင့်ပါ၊ administrator prompt ကို ခေတ်ကိုင်သည့်သော သောဟိုသော sign in လုပ်ပါ။ ထို့နောက် `/pi-web restart` ကို ခေတ်လည်ပတ်ပြီး `/remote` ကို ခေတ်လည်ပတ်ပါ။
 
-Linux တွင်၊ pi-web မတပ်ဆင်မီ/မလည်ပတ်မီ သင့်အသုံးပြုသူအား Tailscale ကို စီမံခန့်ခွဲခွင့်ပေးပါ၊ မဟုတ်ပါက `tailscale serve` သည် sudo လိုအပ်နိုင်ပြီး auto-start ပျက်ကွက်နိုင်သည်-
+Linux တွင် pi-web ကို install/lówပတ်ရန်အရင် သင့် user က Tailscale ကို စီမံနိုင်ရန် လုပ်ပါ။ အခြားအခြင်းတွင် `tailscale serve` သည် sudo လိုအပ်ပြီး auto-start သည် fail ဖြစ်နိုင်သည်:
 
 ```bash
 sudo tailscale set --operator=$USER
 ```
 
 ```bash
-# ၁။ pi-web ကို စတင်ပါ
-pi-web
+# 1. Tailscale HTTPS endpoint ကို publish လုပ်ရန် token ဖြင့် pi-web ကို စတင်ပါ
+PI_WEB_TOKEN=$(openssl rand -hex 16) pi-web
 
-# ၂။ Tailscale ချိတ်ဆက်ထားသော အခြားမည်သည့် စက်မှမဆို ပုံနှိပ်ထုတ်ပေးထားသော
-#    "Tailscale HTTPS" URL ကို ဖွင့်ပါ။
+# 2. Tailscale connected device တစ်ခုမှ printed
+#    "Tailscale HTTPS" URL ကို ဖွင့်ပြီး token ကို တစ်ကြိမ် ခေတ်ဝှန်ပါ။
 ```
 
-> ပုံမှန်အားဖြင့်၊ pi-web သည် `PI_WEB_TOKEN` သတ်မှတ်မထားပါက loopback မဟုတ်သော လိပ်စာသို့ bind လုပ်ရန် ငြင်းဆန်သည် — bind လုပ်ထားသော လိပ်စာသို့ ရောက်ရှိနိုင်သူ မည်သူမဆို session များကို ကြည့်ရှုနိုင်ပြီး pi သို့ ညွှန်ကြားချက်များ ပေးပို့နိုင်သည်။ ဒေသတွင်း ကွန်ရက်စမ်းသပ်ရန်အတွက် ဤအကာအကွယ်ကို override လုပ်ရန် `--insecure` ကို ထည့်ပါ။ **Tailscale သို့မဟုတ် သင့်စက်ပြင်ပမှ ရောက်ရှိနိုင်သော မည်သည့်လိပ်စာတွင်မဆို `--insecure` ကို မသုံးပါနှင့်။**
+> Default ဖြင့် pi-web သည် `PI_WEB_TOKEN` သည် set ဖြစ်နေပါက non-loopback address သို့ bind လုပ်ရန် reject လုပ်သည်။ ခေတ်တို bind address ကို ခေတ်ထိစပ်နိုင်သောသူတိုင်း sessions များကို ခေတ်ကြည့်ရှုပြီး pi သို့ instructions များကို ခေတ်တင်နိုင်သည်။ local-network testing အတွက် ဤ guard ကို override လုပ်ရန် `--insecure` ကို pass လုပ်ပါ။ **Tailscale တွင် သို့မဟုတ် machine ကျော်အပြင် ထိစပ်နိုင်သော address များတွင် `--insecure` ကို အသုံးမပြုပါနှင့်။**
 >
-> Client များသည် token ကို `Authorization: Bearer <token>` header၊ `X-Pi-Token` header မှတစ်ဆင့် သို့မဟုတ် `?token=<token>` မှတစ်ဆင့် တစ်ကြိမ်ပေးပို့နိုင်သည် (ယင်းသည် နောက်ဆက်တွဲ တောင်းဆိုမှုများအတွက် `pi_token` cookie ကို သတ်မှတ်ပေးသည်)။ `?token=` မှတစ်ဆင့် ပေးပို့သော token များသည် browser history၊ server access logs နှင့် စာမျက်နှာပေါ်ရှိ link များမှ `Referer` headers များတွင် အဆုံးသတ်သည် — ကနဦး bookmark ထက်ကျော်လွန်ပါက header ပုံစံကို ပိုမိုနှစ်သက်ပါ။
+> Clients များသည် `Authorization: Bearer <token>` header, `X-Pi-Token` header, သို့မဟုတ် တစ်ကြိမ်တည်း `?token=<token>` (ခေတနာ `pi_token` cookie ကို subsequent requests များအတွက် set လုပ်သည်) ကြona token ကို pass လုပ်နိုင်သည်။ `?token=` ကြona pass လုပ်ထားသော tokens များသည် browser history, server access logs, နှင့် page တွင် links များမှ `Referer` headers တွင် ရှိနေသည်။ initial bookmark များအပြင် header form ကို ခေတ်ထောက်ပေးပါ။
 
 ## Browser Chat
 
-Session စာမျက်နှာတစ်ခုကိုဖွင့်ပြီး ထို session အတိအကျကို ဆက်လက်ရန် အောက်ခြေရှိ composer ကို အသုံးပြုပါ။
+Session page တစ်ခုကို ဖွင့်ပြီး၊ ခေတ် exact session ကို ဆက်လက်လုပ်ဆောင်ရန် အောက်ဘက် composer ကို အသုံးပြုပါ။
 
-- `Enter` က ပို့သည်၊ `Shift+Enter` က စာကြောင်းသစ်ထည့်သည်
-- ပုံများကို composer ထဲသို့ တိုက်ရိုက် ဆွဲချထည့်နိုင်သည် သို့မဟုတ် paste လုပ်နိုင်သည်
-- Model picker နှင့် thinking-level selector သည် header တွင် ရှိသည် — ပြောင်းလဲမှုများသည် နောက်ခံ pi worker သို့ ချက်ချင်းသက်ရောက်သည်
-- လုပ်ဆောင်ဆဲ session တစ်ခုစီသည် ၎င်း၏ကိုယ်ပိုင် `pi --mode rpc` worker ကို ရရှိသောကြောင့် မတူညီသော session များသည် တစ်ခုကိုတစ်ခု ပိတ်ဆို့မှုမရှိပါ
+- `Enter` သည် send လုပ်သည်၊ `Shift+Enter` သည် newline ကို insert လုပ်သည်
+- composer တွင် images များကို drag-and-drop သို့မဟုတ် paste လုပ်ပါ
+- model picker နှင့် thinking-level selector သည် header တွင်ရှိပြီး — changes များသည် underlying pi worker တွင် ခေတ်တို apply လုပ်သည်
+- active session တစ်ခုချင်းစီသည် ကိုယ်ပိုင် dedicated `pi --mode rpc` worker ကို ရရှိပြီး၊ sessions များတစ်ခုနှင့်တစ်ခုကို ခေတ်တို block မလုပ်နိုင်အောင်
 
-## Session များကို မျှဝေခြင်း
+## Sharing Sessions
 
-Session စာမျက်နှာတစ်ခုပေါ်ရှိ **Share** ကိုနှိပ်၍ လျှို့ဝှက် GitHub Gist တစ်ခု ဖန်တီးပါ။
+Session page တွင် **Share** ကို ခေတ်နှိပ်၍ secret GitHub Gist တစ်ခုကို ဖန်တီးပါ။
 
-လိုအပ်ချက်များ-
-- `gh` တပ်ဆင်ထားရန်
-- `gh auth login` ပြီးစီးထားရန်
+Requirements:
+- `gh` ကို တပ်ဆင်ထားပါ
+- `gh auth login` ကို ပြီးမြောက်ပါ
 
-မျှဝေခြင်းမှ ပြန်လည်ရရှိသည်များ-
-- လျှို့ဝှက် gist URL
-- `https://pi.dev/session/#<gistId>` တွင် အစမ်းကြည့်ရှုနိုင်သော URL
+Sharing သည် အောက်ပါတို့ကို ခေတ်ပြန်ရန်:
+- secret gist URL
+- `https://pi.dev/session/#<gistId>` တွင် preview URL
 
-မျှဝေထားသော gist များသည် snapshot များဖြစ်ပြီး တိုက်ရိုက် အပ်ဒိတ်မလုပ်ပါ။
+Shared gists များသည် snapshots များဖြစ်ပြီး live update မလုပ်ပါ။
 
-## Login ဝင်သည့်အခါ အလိုအလျောက် စတင်ခြင်း
+## Login တွင် Auto-Start
 
 ### macOS
 
@@ -229,21 +266,38 @@ launchctl load ~/Library/LaunchAgents/com.pi-web.plist
 mkdir -p ~/.config/systemd/user
 cp init/pi-web.service ~/.config/systemd/user/
 
-# ရွေးချယ်နိုင်သော- loopback မဟုတ်သော bind များအတွက် သင့် PI_WEB_TOKEN ကို သတ်မှတ်ပါ
+# Optional: non-loopback binds အတွက် PI_WEB_TOKEN ကို set လုပ်ပါ
 # (သို့မဟုတ် pi အတွင်းမှ /pi-web set-token <token> ကို အသုံးပြုပါ)
 mkdir -p ~/.config/pi-web
 echo 'PI_WEB_TOKEN=your-token-here' > ~/.config/pi-web/env
 
-# Enable လုပ်ပြီး စတင်ပါ
+# enable လုပ်ပြီး start လုပ်ပါ
 systemctl --user daemon-reload
 systemctl --user enable --now pi-web.service
 
-# အခြေအနေကို စစ်ဆေးပါ
+# status ကို ကြည့်ပါ
 systemctl --user status pi-web.service
 
-# Logs များကို ကြည့်ရှုပါ
+# logs များကို ခေတ်ကြည့်ပါ
 journalctl --user -u pi-web.service -f
 ```
 
-> Boot လုပ်သည့်အခါ (login မဝင်မီ) service စတင်ရန်အတွက် system service ကို အစားသုံးပါ-
-> `init/pi-web.service` ကို `/etc/systemd/system/` သို့ ကူးယူပြီး `sudo systemctl` ကို အသုံးပြုပါ။
+> boot တွင် (login မတိုင်မီ) service ကို start လုပ်ရန် system service ကို အသုံးပြုပါ:
+> `init/pi-web.service` ကို `/etc/systemd/system/` သို့ copy လုပ်ပြီး `sudo systemctl` ကို အသုံးပြုပါ။
+
+### Windows
+
+Installer သည် admin rights မလိုအပ်ဘဲ automatically configure လုပ်ထားသည်: `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` အောက်တွင် `pi-web` entry တစ်ခုသည် login တွင် `~/.config/pi-web/pi-web-start.vbs` ကို launch လုပ်ထားပြီး၊ `~/.config/pi-web/env` (`PI_WEB_TOKEN`, `PATH`, ...) ကို load လုပ်ပြီး binary ကို hidden (console window မရှိ) ဖြင့် start လုပ်ထားသည်။
+
+hand ဖြင့် စီမံရန်:
+
+```powershell
+# start / stop လုပ်ရန်
+wscript.exe "$HOME\.config\pi-web\pi-web-start.vbs"
+taskkill /IM pi-web.exe /F
+
+# auto-start ကို ဖယ်ရှားရန်
+Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'pi-web'
+```
+
+Windows တွင် service supervision မရှိပါ: pi-web သည် crash ဖြစ်ပါက next login အထိ down ဖြစ်နေသည် (launchd/systemd သည် အခြား platforms တွင် automatically restart လုပ်ထားသည်)။

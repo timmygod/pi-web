@@ -1,85 +1,87 @@
-# ផ្លូវកាត់ក្តារចុច
+# ក្លាវៀស្ទីដ
 
-## ទំព័រលិបិក្រម (`/`)
+ក្លាវៀស្ទីដទាំងនេះ អនុវត្តទៅតាម edition របស់ local-model របស់ pi-web។ Runtime behavior ដែលពាក់ព័ន្ធនឹង edition ត្រូវបានសរសេរឆ្លងកាត់ [Local-model edition development](../../docs/dev/local-llm-development.md)។
 
-### ការរមូរទំព័រ (រចនាប័ទ្ម vim)
+## Index page (`/`)
 
-ផ្លូវកាត់រចនាប័ទ្ម vim ដូចគ្នាដំណើរការលើគ្រប់ទំព័រ នៅពេលការផ្តោត **មិន** នៅក្នុងធាតុ input, textarea ឬ contenteditable។
+### Page scrolling (vim-style)
 
-| ផ្លូវកាត់ | សកម្មភាព |
+ក្លាវៀស្ទីដ vim-style ដូចគ្នា ដំណើរការនៅទាំងអស់នៃទំព័រ នៅពេល focus មិនក្នុង input, textarea, ឬ contenteditable element ទេ។
+
+| Shortcut | Action |
 |----------|--------|
-| `j` | រមូរចុះក្រោម 300px |
-| `k` | រមូរឡើងលើ 300px |
-| `g g` | រមូរទៅផ្នែកខាងលើនៃទំព័រ |
-| `G` (Shift+G) | រមូរទៅផ្នែកខាងក្រោមនៃទំព័រ |
-| `Escape` | ដកការផ្តោតចេញពីប្រអប់បញ្ចូលសកម្ម ដើម្បីឲ្យការរុករក j/k ដំណើរការ |
+| `j` | Scroll down 300px |
+| `k` | Scroll up 300px |
+| `g g` | Scroll to top of page |
+| `G` (Shift+G) | Scroll to bottom of page |
+| `Escape` | Blur the active input so j/k navigation works |
 
-### ពាក្យបញ្ជាលិបិក្រម
+### Index commands
 
-| ផ្លូវកាត់ | បរិបទ | សកម្មភាព |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `⌘K` / `Ctrl+K` | កម្រិតទំព័រ | បើកបន្ទះស្វែងរក/សម័យ |
-| `⌘⇧L` / `Ctrl+Shift+L` | កម្រិតទំព័រ | ប្តូររូបរាងប្រព័ន្ធ (ភ្លឺ/ងងឹត) |
-| `Escape` | កម្រិតទំព័រ | បិទបន្ទះ ម៉ឺនុយ ឬម៉ូឌុល |
-| `Enter` | ប្រអប់បញ្ចូលផ្លូវសម័យថ្មី | បង្កើតសម័យថ្មី |
+| `⌘K` / `Ctrl+K` | Page-level | Open search/sessions palette |
+| `⌘⇧L` / `Ctrl+Shift+L` | Page-level | Toggle system theme (light/dark) |
+| `Escape` | Page-level | Close palette, menu, or modal |
+| `Enter` | New-session path input | Create new session |
 
-> `⌘K` / `Ctrl+K` ក៏ជាផ្លូវកាត់ "ផ្តោតរបារអាសយដ្ឋាន" របស់ Chrome ដែរ។ កម្មវិធីរុករកអាចចាប់យកវា លុះត្រាតែការផ្តោតស្ថិតនៅក្នុងប្រអប់បញ្ចូលអត្ថបទ។
+> `⌘K` / `Ctrl+K` ក៏ជា shortcut របស់ Chrome ដែរ សម្រាប់ "focus address bar"។ Browser អាច intercept វា លើកលែងតែ focus ក្នុង text input។
 
-## ទំព័រព័ត៌មានលម្អិតសម័យ (`/session?id=...`)
+## Session detail page (`/session?id=...`)
 
-### ការរមូរទំព័រ (រចនាប័ទ្ម vim)
+### Page scrolling (vim-style)
 
-ផ្លូវកាត់ទាំងនេះដំណើរការលើទាំងទំព័រលិបិក្រម និងទំព័រសម័យ នៅពេលការផ្តោត **មិន** នៅក្នុងធាតុ input, textarea ឬ contenteditable។
+ក្លាវៀស្ទីដទាំងនេះ ដំណើរការទាំង index និង session pages នៅពេល focus មិនក្នុង input, textarea, ឬ contenteditable element ទេ។
 
-| ផ្លូវកាត់ | សកម្មភាព |
+| Shortcut | Action |
 |----------|--------|
-| `j` | រមូរចុះក្រោម 300px |
-| `k` | រមូរឡើងលើ 300px |
-| `g g` | រមូរទៅផ្នែកខាងលើនៃទំព័រ |
-| `G` (Shift+G) | រមូរទៅផ្នែកខាងក្រោមនៃទំព័រ |
-| `I` (Shift+I) | ផ្តោតលើប្រអប់សរសេរជជែក |
-| `Escape` | ដកការផ្តោតចេញពីប្រអប់បញ្ចូលសកម្ម ដើម្បីឲ្យការរុករក j/k ដំណើរការ |
+| `j` | Scroll down 300px |
+| `k` | Scroll up 300px |
+| `g g` | Scroll to top of page |
+| `G` (Shift+G) | Scroll to bottom of page |
+| `I` (Shift+I) | Focus the chat composer textarea |
+| `Escape` | Blur the active input so j/k navigation works |
 
-### របារចំហៀង និងការរុករក
+### Sidebar & navigation
 
-| ផ្លូវកាត់ | បរិបទ | សកម្មភាព |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `⌘B` / `Ctrl+B` | កម្រិតទំព័រ | ប្តូរការបង្ហាញរបារចំហៀង |
-| `⌘K` / `Ctrl+K` | កម្រិតទំព័រ | បើកបន្ទះបញ្ជីសម័យ |
-| `⌘T` / `Ctrl+T` | កម្រិតទំព័រ | សម័យថ្មី |
-| `⌘⇧L` / `Ctrl+Shift+L` | កម្រិតទំព័រ | ប្តូររូបរាងប្រព័ន្ធ (ភ្លឺ/ងងឹត) |
-| `⌘⇧N` / `Ctrl+Shift+N` | កម្រិតទំព័រ | ប្តូររបារចំហៀងក្រដាសខ្ចប់ / កំណត់ហេតុ |
+| `⌘B` / `Ctrl+B` | Page-level | Toggle sidebar visibility |
+| `⌘K` / `Ctrl+K` | Page-level | Open session list palette |
+| `⌘T` / `Ctrl+T` | Page-level | New session |
+| `⌘⇧L` / `Ctrl+Shift+L` | Page-level | Toggle system theme (light/dark) |
+| `⌘⇧N` / `Ctrl+Shift+N` | Page-level | Toggle scratchpad / notes sidebar |
 
-> `⌘K` និង `⌘T` ក៏ជាផ្លូវកាត់របស់កម្មវិធីរុករក (ផ្តោតរបារអាសយដ្ឋាន / ផ្ទាំងថ្មី) ដែរ។ កម្មវិធីរុករកអាចចាប់យកពួកវា លុះត្រាតែការផ្តោតស្ថិតនៅក្នុងប្រអប់បញ្ចូលអត្ថបទ។
+> `⌘K` និង `⌘T` ក៏ជា shortcut របស់ browser ដែរ (focus address bar / new tab)។ Browser អាច intercept វា លើកលែងតែ focus ក្នុង text input។
 
-### ប្រអប់សរសេរជជែក
+### Chat composer
 
-| ផ្លូវកាត់ | បរិបទ | សកម្មភាព |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `Enter` | ប្រអប់អត្ថបទជជែក | ដាក់ស្នើសារ |
-| `Shift+Enter` | ប្រអប់អត្ថបទជជែក | បញ្ចូលបន្ទាត់ថ្មី |
-| `Shift+Tab` | ប្រអប់អត្ថបទជជែក | ប្តូរទៅកម្រិតគិតបន្ទាប់ (`off` → `minimal` → … → `xhigh` → `off`) |
-| `Ctrl+I` / `Ctrl+L` | ប្រអប់អត្ថបទជជែក | បើកផ្ទាំងជ្រើសរើសម៉ូដែល (វាយដើម្បីត្រង, Enter ដើម្បីជ្រើសរើស, ការផ្តោតត្រឡប់ទៅប្រអប់អត្ថបទវិញ) |
+| `Enter` | Chat textarea | Submit message |
+| `Shift+Enter` | Chat textarea | Insert newline |
+| `Shift+Tab` | Chat textarea | Cycle to next thinking level (`off` → `minimal` → … → `xhigh` → `off`) |
+| `Ctrl+I` / `Ctrl+L` | Chat textarea | Open model selector popup (type to filter, Enter to select, focus returns to textarea) |
 
-### ការប្តូរការបង្ហាញធាតុ
+### Entry visibility toggles
 
-| ផ្លូវកាត់ | បរិបទ | សកម្មភាព |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `t` | នៅពេលការផ្តោត **មិន** នៅក្នុង input/textarea | ប្តូរការបង្ហាញការគិត |
-| `o` | នៅពេលការផ្តោត **មិន** នៅក្នុង input/textarea | ប្តូរការបង្ហាញឧបករណ៍ |
-| `p` | នៅពេលការផ្តោត **មិន** នៅក្នុង input/textarea | ប្តូរការបង្ហាញលទ្ធផលឧបករណ៍ |
+| `t` | When focus is **not** in an input/textarea | Toggle thinking visibility |
+| `o` | When focus is **not** in an input/textarea | Toggle tools visibility |
+| `p` | When focus is **not** in an input/textarea | Toggle tool outputs |
 
-### បន្ទះ ម៉ឺនុយ និងសន្លឹក
+### Palettes, menus & sheets
 
-| ផ្លូវកាត់ | បរិបទ | សកម្មភាព |
+| Shortcut | Context | Action |
 |----------|---------|--------|
-| `Escape` | កម្រិតទំព័រ | បិទបន្ទះ ម៉ឺនុយ ឬសន្លឹកដែលបើក |
-| `⌘K` / `Ctrl+K` | កម្រិតទំព័រ | បើកបន្ទះបញ្ជីសម័យ |
-| `ArrowUp` / `ArrowDown` | បន្ទះបញ្ជីសម័យ | រុករកលទ្ធផលសម័យ |
-| `Enter` | បន្ទះបញ្ជីសម័យ | បើកសម័យដែលបានជ្រើសរើស (ឬដំបូងគេ) |
-| `ArrowUp` / `ArrowDown` | ផ្ទាំងជ្រើសរើសម៉ូដែល | រុករកបញ្ជីម៉ូដែល |
-| `Enter` | ផ្ទាំងជ្រើសរើសម៉ូដែល | ជ្រើសរើសម៉ូដែលដែលបានបន្លិច |
-| `ArrowUp` / `ArrowDown` | ម៉ូឌុលបំបែក | រុករកសារ |
-| `Enter` | ម៉ូឌុលបំបែក | បំបែកពីសារដែលបានបន្លិច |
-| `Tab` | សន្លឹកពេញអេក្រង់ | ផ្លាស់ប្តូរការផ្តោតក្នុងសន្លឹក |
-| `Escape` | សន្លឹកពេញអេក្រង់ | បិទសន្លឹក |
+| `Escape` | Page-level | Close any open palette, menu, or sheet |
+| `⌘K` / `Ctrl+K` | Page-level | Open session list palette |
+| `ArrowUp` / `ArrowDown` | Session list palette | Navigate session results |
+| `Enter` | Session list palette | Open the selected (or first) session |
+| `ArrowUp` / `ArrowDown` | Model selector popup | Navigate model list |
+| `Enter` | Model selector popup | Select highlighted model |
+| `ArrowUp` / `ArrowDown` | Fork modal | Navigate messages |
+| `Enter` | Fork modal | Fork from highlighted message |
+| `Tab` | Full-screen sheet | Cycle focus within the sheet |
+| `Escape` | Full-screen sheet | Close the sheet |

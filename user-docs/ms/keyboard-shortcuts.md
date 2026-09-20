@@ -1,56 +1,59 @@
-# Pintasan Papan Kekunci
+# Larian Pintasan Papan Kekunci
+
+Pintasan ini terpakai pada edisi model-tempatan bagi pi-web. Kelakuan masa-eksekusi khusus edisi
+didokumentasikan dalam [Pembangunan edisi model-tempatan](../../docs/dev/local-llm-development.md).
 
 ## Halaman indeks (`/`)
 
-### Penatalan halaman (gaya vim)
+### Skrol halaman (gaya vim)
 
-Pintasan gaya vim yang sama berfungsi di semua halaman apabila fokus **bukan** dalam elemen input, textarea, atau contenteditable.
+Pintasan gaya vim yang sama berfungsi pada semua halaman apabila tumpuan **tidak** berada dalam elemen input, textarea, atau contenteditable.
 
 | Pintasan | Tindakan |
 |----------|--------|
-| `j` | Tatal ke bawah 300px |
-| `k` | Tatal ke atas 300px |
-| `g g` | Tatal ke atas halaman |
-| `G` (Shift+G) | Tatal ke bawah halaman |
-| `Escape` | Nyahfokus input aktif supaya navigasi j/k berfungsi |
+| `j` | Skrol turun 300px |
+| `k` | Skrol naik 300px |
+| `g g` | Skrol ke bahagian atas halaman |
+| `G` (Shift+G) | Skrol ke bahagian bawah halaman |
+| `Escape` | Keluarkan tumpuan daripada input aktif supaya navigasi j/k berfungsi |
 
-### Arahan indeks
+### Perintah indeks
 
 | Pintasan | Konteks | Tindakan |
 |----------|---------|--------|
-| `⌘K` / `Ctrl+K` | Peringkat halaman | Buka palet carian/sesi |
-| `⌘⇧L` / `Ctrl+Shift+L` | Peringkat halaman | Togol tema sistem (terang/gelap) |
-| `Escape` | Peringkat halaman | Tutup palet, menu, atau modal |
+| `⌘K` / `Ctrl+K` | Tahap halaman | Buka palet carian/sesi |
+| `⌘⇧L` / `Ctrl+Shift+L` | Tahap halaman | Togol tema sistem (cerah/gelap) |
+| `Escape` | Tahap halaman | Tutup palet, menu, atau modal |
 | `Enter` | Input laluan sesi baharu | Cipta sesi baharu |
 
-> `⌘K` / `Ctrl+K` juga merupakan pintasan "fokus bar alamat" Chrome. Pelayar mungkin memintasnya melainkan fokus berada dalam input teks.
+> `⌘K` / `Ctrl+K` juga merupakan pintasan "tumpun ke bar alamat" Chrome. Pelayar mungkin memintasnya kecuali tumpuan berada di dalam input teks.
 
 ## Halaman butiran sesi (`/session?id=...`)
 
-### Penatalan halaman (gaya vim)
+### Skrol halaman (gaya vim)
 
-Ini berfungsi di kedua-dua halaman indeks dan sesi apabila fokus **bukan** dalam elemen input, textarea, atau contenteditable.
+Pintasan ini berfungsi pada kedua-dua halaman indeks dan sesi apabila tumpuan **tidak** berada dalam elemen input, textarea, atau contenteditable.
 
 | Pintasan | Tindakan |
 |----------|--------|
-| `j` | Tatal ke bawah 300px |
-| `k` | Tatal ke atas 300px |
-| `g g` | Tatal ke atas halaman |
-| `G` (Shift+G) | Tatal ke bawah halaman |
-| `I` (Shift+I) | Fokus textarea pengarang sembang |
-| `Escape` | Nyahfokus input aktif supaya navigasi j/k berfungsi |
+| `j` | Skrol turun 300px |
+| `k` | Skrol naik 300px |
+| `g g` | Skrol ke bahagian atas halaman |
+| `G` (Shift+G) | Skrol ke bahagian bawah halaman |
+| `I` (Shift+I) | Tumpun ke textarea pengarang sembang |
+| `Escape` | Keluarkan tumpuan daripada input aktif supaya navigasi j/k berfungsi |
 
 ### Bar sisi & navigasi
 
 | Pintasan | Konteks | Tindakan |
 |----------|---------|--------|
-| `⌘B` / `Ctrl+B` | Peringkat halaman | Togol keterlihatan bar sisi |
-| `⌘K` / `Ctrl+K` | Peringkat halaman | Buka palet senarai sesi |
-| `⌘T` / `Ctrl+T` | Peringkat halaman | Sesi baharu |
-| `⌘⇧L` / `Ctrl+Shift+L` | Peringkat halaman | Togol tema sistem (terang/gelap) |
-| `⌘⇧N` / `Ctrl+Shift+N` | Peringkat halaman | Togol bar sisi contengan / nota |
+| `⌘B` / `Ctrl+B` | Tahap halaman | Togol kelihatan bar sisi |
+| `⌘K` / `Ctrl+K` | Tahap halaman | Buka palet senarai sesi |
+| `⌘T` / `Ctrl+T` | Tahap halaman | Sesi baharu |
+| `⌘⇧L` / `Ctrl+Shift+L` | Tahap halaman | Togol tema sistem (cerah/gelap) |
+| `⌘⇧N` / `Ctrl+Shift+N` | Tahap halaman | Togol bar sisi skrap / nota |
 
-> `⌘K` dan `⌘T` juga merupakan pintasan pelayar (fokus bar alamat / tab baharu). Pelayar mungkin memintasnya melainkan fokus berada dalam input teks.
+> `⌘K` dan `⌘T` juga merupakan pintasan pelayar (tumpun ke bar alamat / tab baharu). Pelayar mungkin memintaskannya kecuali tumpuan berada di dalam input teks.
 
 ### Pengarang sembang
 
@@ -58,28 +61,28 @@ Ini berfungsi di kedua-dua halaman indeks dan sesi apabila fokus **bukan** dalam
 |----------|---------|--------|
 | `Enter` | Textarea sembang | Hantar mesej |
 | `Shift+Enter` | Textarea sembang | Sisip baris baharu |
-| `Shift+Tab` | Textarea sembang | Kitar ke tahap pemikiran seterusnya (`off` → `minimal` → … → `xhigh` → `off`) |
-| `Ctrl+I` / `Ctrl+L` | Textarea sembang | Buka popup pemilih model (taip untuk tapis, Enter untuk pilih, fokus kembali ke textarea) |
+| `Shift+Tab` | Textarea sembang | Berpindah ke tahap pemikiran berikutnya (`off` → `minimal` → … → `xhigh` → `off`) |
+| `Ctrl+I` / `Ctrl+L` | Textarea sembang | Buka popap pemilih model (ketik untuk tapisan, Enter untuk pilih, tumpuan kembali ke textarea) |
 
-### Togol keterlihatan entri
-
-| Pintasan | Konteks | Tindakan |
-|----------|---------|--------|
-| `t` | Apabila fokus **bukan** dalam input/textarea | Togol keterlihatan pemikiran |
-| `o` | Apabila fokus **bukan** dalam input/textarea | Togol keterlihatan alatan |
-| `p` | Apabila fokus **bukan** dalam input/textarea | Togol output alatan |
-
-### Palet, menu & helaian
+### Togol kelihatan entri
 
 | Pintasan | Konteks | Tindakan |
 |----------|---------|--------|
-| `Escape` | Peringkat halaman | Tutup sebarang palet, menu, atau helaian yang terbuka |
-| `⌘K` / `Ctrl+K` | Peringkat halaman | Buka palet senarai sesi |
+| `t` | Apabila tumpuan **tidak** berada dalam input/textarea | Togol kelihatan pemikiran |
+| `o` | Apabila tumpuan **tidak** berada dalam input/textarea | Togol kelihatan alat |
+| `p` | Apabila tumpuan **tidak** berada dalam input/textarea | Togol keluaran alat |
+
+### Palet, menu & lembaran
+
+| Pintasan | Konteks | Tindakan |
+|----------|---------|--------|
+| `Escape` | Tahap halaman | Tutup sebarang palet, menu, atau lembaran yang terbuka |
+| `⌘K` / `Ctrl+K` | Tahap halaman | Buka palet senarai sesi |
 | `ArrowUp` / `ArrowDown` | Palet senarai sesi | Navigasi hasil sesi |
 | `Enter` | Palet senarai sesi | Buka sesi yang dipilih (atau pertama) |
-| `ArrowUp` / `ArrowDown` | Popup pemilih model | Navigasi senarai model |
-| `Enter` | Popup pemilih model | Pilih model yang diserlahkan |
-| `ArrowUp` / `ArrowDown` | Modal cabang | Navigasi mesej |
-| `Enter` | Modal cabang | Cabang dari mesej yang diserlahkan |
-| `Tab` | Helaian skrin penuh | Kitar fokus dalam helaian |
-| `Escape` | Helaian skrin penuh | Tutup helaian |
+| `ArrowUp` / `ArrowDown` | Popap pemilih model | Navigasi senarai model |
+| `Enter` | Popap pemilih model | Pilih model yang disorot |
+| `ArrowUp` / `ArrowDown` | Modal garahan | Navigasi mesej |
+| `Enter` | Modal garahan | Garahan daripada mesej yang disorot |
+| `Tab` | Lembaran skrin penuh | Berpindah tumpuan dalam lembaran |
+| `Escape` | Lembaran skrin penuh | Tutup lembaran |

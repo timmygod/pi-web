@@ -1,30 +1,56 @@
 # Warum pi-web?
 
-Ich bin irgendwie süchtig nach Claude Code. Ich benutze es ständig. Wenn ich nicht vor dem Computer sitze, denke ich daran. Ich habe das Gefühl, ich verbrenne nicht genug Tokens. Es war die Anfangszeit von Claude Code. Und ich dachte mir, warum kann ich nicht vom Handy aus weitermachen? Ich habe Termius eingerichtet und es hat mir nicht wirklich gefallen.
+Ich bin sozusagen süchtig nach Claude Code. Ich nutze es ständig. Wenn ich nicht vor dem Computer sitze, dann denke ich über es nach. Ich habe das Gefühl, dass ich nicht genug Tokens verbruche. Es waren die Anfangstage von Claude Code. Und ich dachte mir, warum kann ich nicht von meinem Telefon aus weitermachen? Ich habe Termius eingerichtet und es hat mir nicht wirklich gefallen.
 
-Ich fing an, mein eigenes zu entwickeln und hörte auf, als Claude seine Claude Code Mobile-App vorstellte.
+Ich begann, mir etwas Eigenes zu bauen, und hörte auf, als Claude seine Claude Code mobile app einführte.
 
-Dann bekam ich einen Bandscheibenvorfall und konnte nicht wirklich viel machen. Die Zeit verging und ich fühlte mich etwas erholt und wollte mein Claude Code via Web/PWA-Projekt fortsetzen.
+Dann hatte ich einen Bandscheibenvorfall und konnte nicht wirklich viel tun. Die Zeit verging und ich fühlte mich etwas erholt und wollte mein Claude Code via web/pwa Projekt fortsetzen.
 
-Dann begann Claude Code, die Nutzung außerhalb ihres eigenen Harness zu verbieten. Und ich habe das Gefühl, es ist es nicht wert.
+Dann begann Claude Code, Nutzungen außerhalb ihres eigenen Harness zu blockieren. Und ich fühle, dass es sich nicht lohnt.
 
-Dann fand ich pi.dev und erkundete es ein wenig, aber tauchte nicht wirklich ein. Ich las darüber, schaute Videos dazu und beschloss, es richtig auszuprobieren, und jetzt bin ich voll und ganz bei pi.
+Dann fand ich pi.dev und habe mich ein bisschen damit beschäftigt, aber ich bin nicht wirklich tief eingestiegen. Ich habe darüber gelesen, Videos darüber geschaut und mich entschieden, es voll auszuprobieren – und jetzt bin ich total in pi.
 
-Da es Open Source ist, finde ich, es lohnt sich, dafür zu entwickeln. Ich habe auch verschiedene Anbieter zur Auswahl. Ich habe auch das Gefühl, dass es nicht nachhaltig ist, sich auf einen Anbieter/ein Modell wie Anthropic/Claude zu verlassen.
+Da es Open Source ist, fühle ich, dass es sich zu bauen lohnt. Ich habe auch verschiedene Anbieter zur Auswahl. Ich fühle auch, dass die Abhängigkeit von einem Anbieter/Modell wie Anthropic/Claude nicht nachhaltig ist.
 
 Also baue ich es hier.
 
-## Warum ein lokales Modell ein anderes Betriebsprofil benötigt
+Dieses Checkout wird als lokale-Modell-Edition von pi-web gepflegt. Es folgt dem
+upstream Projekt für gemeinsame Verbesserungen, während lokale Deployment,
+Kontext-Stabilität und lokale-Modell-Tests auf einem separat veröffentlichten
+Track bleiben.
 
-Die ursprüngliche pi-web-Erfahrung ist eine hervorragende Grundlage, aber lokale Inferenz weist andere Fehlermodi auf als ein typisches gehostetes Modell. Ein lokales Modell kann sich stark verlangsamen, wenn der Kontext wächst, sich begrenzten Speicher mit dem Rest des Systems teilen, nach der Erzeugung von nur Reasoning stoppen oder einen langen Durchlauf aufgrund eines vorübergehenden lokalen Transportfehlers verlieren. Diese Fälle genau wie Cloud-Fehler zu behandeln, lässt die Benutzeroberfläche kompatibel erscheinen, während die tatsächliche Sitzung fragil bleibt.
+## Warum ein lokales Modell ein anderes Betriebsprofil braucht
 
-Diese Ausgabe geht das Problem schichtweise an:
+Das ursprüngliche pi-web Erlebnis ist eine ausgezeichnete Grundlage, aber lokale
+Inferenz hat andere Fehlerarten als ein typisches gehostetes Modell. Ein lokales
+Modell kann sich mit wachsendem Kontext stark verlangsamen, den begrenzten
+Speicher mit dem Rest der Maschine teilen, nach der Erzeugung nur von
+Reasoning stoppen oder einen langen Lauf durch einen transienten lokalen
+Transportfehler verlieren. Diese Fälle exakt wie Cloud-Fehler zu behandeln,
+lässt die UI kompatibel aussehen, während die eigentliche Session fragil bleibt.
 
-1. **Upstream zuerst bewahren.** Gemeinsame UI- und Sitzungsverhalten stammen weiterhin von pi-web; lokale Änderungen sind hinter effektivem Local Mode isoliert.
-2. **Vorbeugen vor Wiederherstellen.** Eine prozentuale 65%-Kontextgrenze wird vor späteren Provider-Aufrufen durchgesetzt, einschließlich Aufrufen innerhalb langer Tool-Schleifen.
-3. **Nur mit Nachweis wiederherstellen.** Automatische Fortsetzung ist auf erkannte Kontext-, Transport- und Thinking-only-Vorfälle beschränkt, nicht auf Authentifizierungs-, Quota- oder beliebige Provider-Fehler.
-4. **Jede autonome Aktion begrenzen.** Wiederherstellungsvorfälle werden dedupliziert, Fortschritt ist vor einer weiteren Rettung erforderlich, und der Start berücksichtigt höchstens eine kürzlich aktive Local-Sitzung.
-5. **Manuellen Ausstieg bewahren.** Force Compact fasst zusammen, statt den Verlauf zu löschen, sodass der Benutzer eine Sitzung retten kann, ohne so zu tun, als hätte der Kontext nie existiert.
-6. **Cloud-Kompatibilität schützen.** Cloud Mode behält die Upstream-Semantik und -Steuerungen bei; lokale Modell-Optimierungen definieren Cloud-Sitzungen nicht stillschweigend neu.
+Diese Edition geht das Problem in Schichten an:
 
-Das ist der wahre Unterschied in diesem Fork: Er behandelt lokale Inferenz als eine eigenständige operative Umgebung, nicht einfach als einen weiteren Modellnamen in einem Dropdown-Menü.
+1. **Upstream zuerst bewahren.** Gemeinsame UI- und Session-Verhalten kommen
+   weiterhin von pi-web; lokale Änderungen werden hinter dem effektiven Local
+   Mode isoliert.
+2. **Vorher verhindern, statt danach wiederherstellen.** Eine prozentbasierte
+   65%-Kontextgrenze wird vor nachfolgenden Modellaufrufen erzwungen,
+   einschließlich von Aufrufen innerhalb langer Tool-Schleifen.
+3. **Nur mit Belegen wiederherstellen.** Automatische Fortsetzung ist auf
+   erkannte Kontext-, Transport- und thinking-only-Vorfälle begrenzt – nicht
+   auf Authentifizierung, Kontingent oder beliebige Anbieterfehler.
+4. **Jede autonome Aktion begrenzen.** Wiederherstellungsvorfälle werden
+   dedupliziert, Fortschritt wird vor einem weiteren Rettungsschritt
+   verlangt, und beim Start wird höchstens eine kürzlich aktive Local-Session
+   berücksichtigt.
+5. **Einen manuellen Ausweg beibehalten.** Force Compact fasst zusammen,
+   anstatt den Verlauf zu löschen, damit die Nutzenden eine Session retten
+   können, ohne zu tun, als hätte der Kontext nie existiert.
+6. **Cloud-Kompatibilität schützen.** Cloud Mode behält die Upstream-Semantik
+   und -Steuerelemente bei; lokale-Modell-Optimierungen definieren Cloud-
+   Sessions nicht stillschweigend neu.
+
+Das ist der eigentliche Unterschied in diesem Fork: Es behandelt lokale
+Inferenz als eigenständiges Betriebsumfeld, nicht einfach als einen weiteren
+Modellnamen in einer Dropdown-Liste.

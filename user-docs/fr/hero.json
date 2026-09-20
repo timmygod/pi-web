@@ -4,7 +4,7 @@
   "actions": [
     {
       "theme": "brand",
-      "text": "Démarrer",
+      "text": "Commencer",
       "to": "guide"
     },
     {
@@ -21,28 +21,28 @@
   "features": [
     {
       "icon": "📱",
-      "title": "Reprenez où que vous soyez",
-      "details": "Continuez une session depuis votre téléphone, tablette ou un autre ordinateur. Pas de SSH, pas de Termius — ouvrez simplement votre navigateur."
+      "title": "Reprendre depuis n'importe où",
+      "details": "Poursuivez une session depuis votre téléphone, votre tablette ou un autre ordinateur. Pas de SSH, pas de Termius — ouvrez simplement votre navigateur."
     },
     {
       "icon": "🗂️",
       "title": "Tableau de bord multi-sessions",
-      "details": "Lancez du travail dans une session tout en surveillant le flux d'une autre. Recherchez à travers les projets, filtrez par branche, trouvez rapidement ce dont vous avez besoin."
+      "details": "Lancez du travail dans une session tout en suivant le flux d'une autre. Recherchez dans tous vos projets, filtrez par branche, trouvez ce dont vous avez besoin rapidement."
     },
     {
       "icon": "🔓",
-      "title": "Open source et indépendant des modèles",
-      "details": "pi est entièrement open source et indépendant des fournisseurs. Choisissez n'importe quel modèle, changez quand vous le souhaitez — vous n'êtes pas enfermé chez un fournisseur."
+      "title": "Open-source & agnostique envers les modèles",
+      "details": "pi est entièrement open source et agnostique envers les fournisseurs. Choisissez n'importe quel modèle, changez à volonté — vous n'êtes pas lié à un fournisseur."
     },
     {
       "icon": "🔒",
-      "title": "Accès distant sécurisé",
-      "details": "Authentification par jeton intégrée pour pouvoir l'exposer sur votre réseau local ou via Tailscale sans inquiétude."
+      "title": "Accès à distance sécurisé",
+      "details": "Authentification par jeton intégrée, pour l'exposer sur votre LAN ou via Tailscale sans souci."
     },
     {
       "icon": "📤",
       "title": "Partagez votre travail",
-      "details": "Exportez vos sessions sous forme d'instantanés statiques ou de Gists GitHub secrets en un clic."
+      "details": "Exportez vos sessions en instantanés statiques ou en Gists GitHub secrets, en un clic."
     },
     {
       "icon": "🏠",

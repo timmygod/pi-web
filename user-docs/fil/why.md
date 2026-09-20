@@ -1,30 +1,32 @@
 # Bakit pi-web?
 
-Medyo adik ako sa Claude Code. Lagi ko itong ginagamit. Kapag hindi ako nakaupo sa harap ng computer, iniisip ko ito. Pakiramdam ko hindi ako nakakasunog ng sapat na tokens. Noong mga unang araw ito ng Claude Code. At iniisip ko, bakit hindi ako makapagpatuloy mula sa aking telepono? Nag-set up ako ng Termius at hindi ko talaga ito nagustuhan.
+Nag-aaddict ako sa Claude Code. Laging ginagamit ko ito. Kung hindi ako nakaupo sa harap ng computer, inuusisa ko ito. Nakakaramdam akong hindi ko sapat na binubuhos ang mga token. Noong mga unang araw pa ng Claude Code. At nangungulugod ako, bakit hindi ko ma-resume mula sa phone ko? Na-set up ko ang Termius at hindi naman ako talaga nagustuhan.
 
-Nagsimula akong gumawa ng sarili ko at tumigil nang ipinakilala ng Claude ang kanilang Claude Code mobile app.
+Nagsimula akong gumawa ng sarili ko at tumigil nang ipinalanag ng Claude ang kanilang Claude Code mobile app.
 
-Pagkatapos ay nagkaroon ako ng herniated disc at wala talaga akong masyadong magawa. Lumipas ang panahon at medyo gumaling ako at gusto kong ipagpatuloy ang aking Claude Code via web/pwa project.
+Pagkatapos, may herniated disc ako at hindi na ako talaga makagawa ng marami. Lumipas ang oras at nakaramdam akong kaunti nang nakapag-recover at gusto kong ituloy ang Claude Code sa pamamagitan ng web/pwa project ko.
 
-Pagkatapos ay sinimulan ng Claude Code na i-ban ang paggamit sa labas ng kanilang sariling harness. At pakiramdam ko hindi na ito sulit.
+Pagkatapos, nagsimulang ipagbabawal ng Claude Code ang gamit sa labas ng kanilang sariling harness. At kinikilusan kong hindi na worth it.
 
-Pagkatapos ay natagpuan ko ang pi.dev at nag-explore nang kaunti pero hindi pa talaga sumisid. Binasa ko ang tungkol dito, nanood ng mga video tungkol dito at nagpasya na subukan nang buo at ngayon ay lubos na akong nahuhumaling sa pi.
+Pagkatapos, natagpuan ko ang pi.dev at tinananginig ko nang konti pero wala pang talagang malalim na pagsusuri. Binasa ko tungkol dito, tiningnan ko ang mga video tungkol dito, at nagdesisyon akong ibigyan ito ng buong pagsubok—ngayon ay buong-buo na ako sa pi.
 
-Dahil ito ay open source, pakiramdam ko sulit itong pagbuuan. Nakakakuha rin ako ng iba't ibang pagpipilian ng provider. Pakiramdam ko rin na ang pag-asa sa iisang provider/model tulad ng Anthropic/Claude ay hindi sustainable.
+Dahil open source ito, akala ko ay worth na worth it na gawin. May iba't ibang provider choices din ako. Nakaramdam din akong hindi sustainable na magtiwala sa iisang provider/model tulad ng Anthropic/Claude.
 
-Kaya ginagawa ko ito dito.
+Kaya ngayon kong itinataayo dito.
 
-## Bakit kailangan ng isang lokal na modelo ng ibang profile ng operasyon
+Inaangkin itong checkout bilang isang local-model edition ng pi-web. Sundo nito ang upstream project para sa shared improvements, habang pinapanatili ang local deployment, context stability, at local-model testing sa hiwalay na released track.
 
-Ang orihinal na karanasan sa pi-web ay isang mahusay na pundasyon, ngunit ang lokal na paghuhusga ay may iba't ibang paraan ng pagkabigo kumpara sa karaniwang naka-host na modelo. Maaaring mabagal nang husto ang isang lokal na modelo habang lumalaki ang konteksto, magbahagi ng limitadong memorya sa natitirang bahagi ng makina, huminto pagkatapos ng paggawa lamang ng pag-iisip, o mawalan ng mahabang pagtakbo dahil sa pansamantalang pagkabigo sa lokal na transportasyon. Ang pagtrato sa mga kaso na iyon nang eksakto bilang mga pagkabigo sa cloud ay nagpapakita ng UI na tila compatible habang ang aktwal na sesyon ay nananatiling fragile.
+## Bakit kailangan ng local model ng magkaibang operating profile
 
-Lapitan ng edisyong ito ang problema sa mga layer:
+Ang orihinal na pi-web experience ay isang napakahusay na pundasyon, ngunit ang local inference ay may magkaibang failure modes kaysa sa isang tipikal na hosted model. Maaaring mabagabagagap ang local model habas lumalaki ang context, makipagbahagi ng limitadong memory sa buong machine, huminto pagkatapos lumikha lamang ng reasoning, o mawala ang isang mahabang run dahil sa transient local transport failure. Ang pagpapanggap na eksaktong pag-aaralan ang mga kaso na ito na parang cloud failures ay nagpapakita sa UI ng compatibility ngunit ang aktwal na session ay nananatiling mahina.
 
-1. **Panatilihin muna ang upstream.** Ang ibinahaging UI at pag-uugali ng sesyon ay patuloy na galing sa pi-web; ang mga lokal na pagbabago ay nakahiwalay sa likod ng epektibong Local Mode.
-2. **Iwasan bago ibalik.** Ang isang 65% hangganan ng konteksto na batay sa porsyento ay ipinatupad bago ang mga susunod na tawag sa provider, kabilang ang mga tawag sa loob ng mahahabang tool loop.
-3. **Ibalik lamang may ebidensya.** Ang awtomatikong pagpapatuloy ay limitado sa mga kinikilalang insidente ng konteksto, transportasyon, at thinking-only, hindi sa mga error sa authentication, quota, o arbitrary na error ng provider.
-4. **Limitahan ang bawat awtonomong aksyon.** Ang mga insidente ng pagbabalik ay deduplicated, kinakailangan ang progreso bago ang isa pang pagligtas, at ang startup ay nag-iisip ng hindi hihigit sa isang kamakailang aktibong Local session.
-5. **Panatilihin ang manual na paglabas.** Ang Force Compact ay nagbubuod sa halip na burahin ang history, kaya magagawa ng user na iligtas ang isang sesyon nang hindi nagpapanggap na wala nang umiiral na konteksto.
-6. **Protektahan ang compatibility ng cloud.** Ang Cloud Mode ay pinapanatili ang upstream na semantika at kontrol; ang mga optimization ng lokal na modelo ay hindi tahimik na tinutukoy muli ang mga cloud session.
+Inaabot ng edisyong ito ang problema sa pamamagitan ng mga antas:
 
-Iyan ang tunay na pagkakaiba sa fork na ito: itinuturing nito ang lokal na paghuhusga bilang isang hiwalay na kapaligiran ng operasyon, hindi lamang isa pang pangalan ng modelo sa dropdown.
+1. **Linagilin muna ang upstream.** Ang shared UI at session behavior ay patuloy na galing sa pi-web; ang local na mga pagbabago ay naa-isolate sa likod ng effective Local Mode.
+2. **Iwasan bago makarecover.** May isang percentage-based na 65% context boundary na ipinapatupad bago ang mga sumunod na model calls, kasama ang mga calls sa loob ng mahahabang tool loops.
+3. **Makarecover lamang may ebidensya.** Ang automatic na pagpapatuloy ay limitado sa kilalang context, transport, at thinking-only na mga insidente—hindi authentication, quota, o anumang provider errors.
+4. **Limitahin ang bawat autonomous na aksyon.** Ang mga recovery incidents ay deduplikado, kinakailangan ng progress bago ang isa pang rescue, at ang startup ay binibigyan ng pangako na iisang recently active Local session lamang.
+5. **Panatilihin ang manual na exit.** Ang Force Compact ay nagsasaari bilang halip na wapasin ang history, kaya't maaari ng user na i-rescue ang isang session nang hindi nagpapanggap na wala kailanman ang context.
+6. **Protektahan ang cloud compatibility.** Ang Cloud Mode ay nagpapanatili ng upstream semantics at controls; ang local-model na mga optimization ay hindi nakaibig ng silent redefinition sa cloud sessions.
+
+Ito ang tunay na pagkakaiba sa fork na ito: itinakdang isang hiwalay na operational environment ang local inference, hindi lamang isa pang pangalan ng model sa dropdown.

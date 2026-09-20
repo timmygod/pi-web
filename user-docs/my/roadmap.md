@@ -1,50 +1,54 @@
-# လမ်းပြမြေပုံ
+# Roadmap
 
-pi-web ကို ပရိသတ်နှစ်မျိုးအတွက် တည်ဆောက်ထားပါသည်။
+ဒီ roadmap က pi-web ၏ local-model edition အတွက် ဖြစ်ပါတယ်။ Upstream feature များကို စက္ရတ်လိုက် ယှဉ်ညှိပြီး၊ local deployment နှင့် reliability လုပ်ငန်းများကို ဒီလိုင်းတွင် စစ်ဆေးပြီး ထုတ်ဝေပါသည်။ [Local-model edition development](../../docs/dev/local-llm-development.md) ကို ကြည့်ပါ။
 
-- **Developer များအတွက်** — terminal ထဲတွင် နေထိုင်သော်လည်း မိုဘိုင်းမှ session များကို ဆက်လက်လုပ်ဆောင်လိုသူများ၊ remote server သို့ လွှဲပြောင်းလိုသူများ၊ သို့မဟုတ် ကြာရှည်လုပ်ဆောင်နေသော အလုပ်များကို မည်သည့်နေရာမှမဆို စောင့်ကြည့်လိုသူများအတွက် ဖြစ်သည်။
-- **Developer မဟုတ်သူများအတွက်** — အလုပ်လုပ်သော လှပသည့် AI app တစ်ခုကိုသာ လိုချင်သူများအတွက် ဖြစ်သည်။ ဖွင့်လိုက်၊ စာရိုက်လိုက်၊ အဆင်ပြေသွား။ Terminal မလို၊ SSH မလို၊ ရှုပ်ထွေးမှုမရှိ။ အသုံးပြုရ အဆင်ပြေဆုံး AI ကိရိယာများကဲ့သို့ပင်၊ သို့သော် မော်ဒယ်ရွေးချယ်ခွင့်နှင့် open-source လွတ်လပ်မှုတို့ဖြင့်။
+pi-web သည် အသုံးပြုသူအဖွဲ့နှစ်ဖွဲ့အတွက် ဆောက်လုပ်ထားခြင်းဖြစ်ပါသည်။
 
-အောက်ပါတို့မှာ လာမည့်အရာများ ဖြစ်သည်။
+- **Developers များအတွက်** — terminal တွင်နေထိုင်သော်လည်း mobile အတူတက် sessions ဆက်လက်နိုင်ရန်၊ remote server သို့ hand off လုပ်နိုင်ရန်၊ သို့မဟုတ် နေရာမရွေး long-running tasks များကို စောင့်ကြည့်နိုင်ရန် လိုအပ်သူများ။
+- **Non-developers များအတွက်** — ကောင်းမွန်လှပသော AI app တစ်ခုသာ လိုချင်သူများ။ ဖွင့်ရုံ၊ ရိုက်ရုံ၊ vibe ရုံ။ Terminal မလို၊ SSH မလို၊ ရှုပ်ထွေးမှု မရှိ။ အသုံးလွယ်ဆုံး AI tools များအတိုင်းပင်၊ သို့သော် model ရွေးချယ်ခြင်းနှင့် open-source အခွင့်အာ�ာနှင့်အတူ။
 
----
+အောက်ပါအရာများ ကျရောက်လာပါမည်။
 
-## ယခု (ထွက်ပြီး)
-
-[အင်္ဂါရပ်များ ဇယား](README.md#what-you-can-do-with-pi-web) တွင် ဖော်ပြထားသမျှ အားလုံးသည် ယနေ့တွင် အသုံးပြုနိုင်ပါသည်။
+ဒီ edition သည် upstream pi-web ကို မတူညီသော release line တစ်ခုဖြင့် ခံစောသည်။ Upstream feature များကို စက္ရတ်လိုက် ဝင်ရောက်ယူပြီး၊ local-model reliability လုပ်ငန်းများကို upstream release history မပြောင်းလဲဘဲ ဤနေရာတွင် နှစ်ထွေးထားပြီး စစ်ဆေးပါသည်။
 
 ---
 
-## လာမည့်အစီအစဉ်
+## Now (shipped)
 
-| # | အင်္ဂါရပ် | လုပ်ဆောင်ချက် |
+[the features table](README.md#what-you-can-do-with-pi-web) တွင် ရေးဆွဲထားသမျှ အားလုံးကို ယနေ့တွင် အသုံးပြုနိုင်ပါပြီ။
+
+---
+
+## Next up
+
+| # | Feature | ပါဝင်သည့်အရာ |
 |---|---|---|
-| [#50](https://github.com/timmygod/pi-web/issues/50) | **Telegram & Discord bots** | Telegram သို့မဟုတ် Discord မှတစ်ဆင့် pi နှင့် စကားပြောပါ — သွားရင်းလာရင်း personal assistant workflows အတွက် အကောင်းဆုံးဖြစ်သည်။ |
-| [#49](https://github.com/timmygod/pi-web/issues/49) | **အသုံးပြုမှု ထိုးထွင်းအမြင်များ** | Token ခြေရာခံခြင်း၊ ကုန်ကျစရိတ် ခန့်မှန်းခြင်း၊ session ခွဲခြမ်းစိတ်ဖြာခြင်း — pi ကို သင်မည်သို့အသုံးပြုနေသည်ကို သိရှိပါ။ |
-| [#48](https://github.com/timmygod/pi-web/issues/48) | **ပြင်ဆင်သတ်မှတ်နိုင်သော မူလတန်ဖိုးများ** | session အားလုံးအတွက် thinking၊ tools နှင့် tool outputs များ၏ မြင်နိုင်မှုကို သင်နှစ်သက်သလို သတ်မှတ်ပါ။ |
-| [#46](https://github.com/timmygod/pi-web/issues/46) | **လမ်းညွှန်ခြင်း / တန်းစီခြင်း** | pi လုပ်ဆောင်နေစဉ်အတွင်း နောက်ဆက်တွဲ ညွှန်ကြားချက်များ ပေးပို့ပါ — ပျံသန်းနေစဉ် လမ်းညွှန်ပါ။ |
-| [#41](https://github.com/timmygod/pi-web/issues/41) | **`/compact` အမိန့်** | Web UI မှ တိုက်ရိုက် ရှည်လျားသော စကားပြောများကို ကျစ်လစ်အောင်ပြုလုပ်ပါ၊ terminal မလိုပါ။ |
+| [#50](https://github.com/timmygod/pi-web/issues/50) | **Telegram & Discord bots** | Telegram သို့ Discord မှတစ်ဆင့် pi နှင့် ချက်ချင်းစကားပြောနိုင်သည် — on the go လုပ်ဆောင်မှုများအတွက် personal assistant workflows များအတွက် အထူးကောင်းမွန်သည်။ |
+| [#49](https://github.com/timmygod/pi-web/issues/49) | **Usage insights** | Token tracking၊ cost estimation၊ session analytics များဖြင့် ခရိုက်သည်အတိုင်းသိပါ။ |
+| [#48](https://github.com/timmygod/pi-web/issues/48) | **Configurable defaults** | Sessions အားလုံးတွင် thinking၊ tools၊ tool outputs များအတွက် သင့်ဝင်သော visibility ကို သတ်မှတ်ပါ။ |
+| [#46](https://github.com/timmygod/pi-web/issues/46) | **Steering / queue** | pi အနေ၌ ဆက်လက်လည်ပတ်နေစဉ် follow-up instructions များကို ပေးပို့နိုင်သည် — mid-flight တွင် လမ်းညွှန်ပါ။ |
+| [#41](https://github.com/timmygod/pi-web/issues/41) | **`/compact` command** | Web UI မှတိုက်ရိုက်ဖြင့် ရှည်လျားသော အစကားပြောမှုများကို compact လုပ်နိုင်သည်၊ terminal မလိုအပ်ပါ။ |
 
 ---
 
-## စီစဉ်ထားသည်
+## Planned
 
-| # | အင်္ဂါရပ် | လုပ်ဆောင်ချက် |
+| # | Feature | ပါဝင်သည့်အရာ |
 |---|---|---|
-| [#47](https://github.com/timmygod/pi-web/issues/47) | **File Explorer & Git Diff** | pi-web အတွင်း၌ပင် project file tree ကို လှန်လှောကြည့်ရှုပြီး git ပြောင်းလဲမှုများကို ကြည့်ရှုပါ။ ရွေးချယ်အသုံးပြုနိုင်သောကြောင့် သင့်လမ်းကြောင်းတွင် အနှောင့်အယှက်မဖြစ်ပါ။ |
-| [#44](https://github.com/timmygod/pi-web/issues/44) | **အချိန်ဇယားဆွဲခြင်း** | Prompt များကို အလိုအလျောက် လုပ်ဆောင်ရန် စီစဉ်ပါ — နေ့စဉ် standup များ၊ မနက်ခင်း အကျဉ်းချုပ်များ၊ ထပ်တလဲလဲ အလုပ်များ။ လုံခြုံရေးအတွက် admin ထိန်းချုပ်ထားသည်။ |
-| [#43](https://github.com/timmygod/pi-web/issues/43) | **စိတ်ကြိုက်ပြင်ဆင်နိုင်သော ဖြတ်လမ်းများ** | သင့်ကြွက်သားမှတ်ဉာဏ်နှင့် ကိုက်ညီစေရန် ကီးဘုတ်ဖြတ်လမ်းတိုင်းကို ပြန်လည်သတ်မှတ်ပါ။ |
+| [#47](https://github.com/timmygod/pi-web/issues/47) | **File Explorer & Git Diff** | Project file tree ကို browse လုပ်ပြီး git ပြောင်းလဲမှုများကို pi-web တွင် တိုက်ရိုက်ဖြင့် မြင်နိုင်သည်။ Opt-in ဖြစ်သောကြောင့် သင့်လမ်းတွင် မနှောင့်နှေးပါ။ |
+| [#44](https://github.com/timmygod/pi-web/issues/44) | **Scheduler** | Prompts များကို automatic ဖြင့် ရောင်းချနိုင်သည် — daily standups၊ မနက်စခေါက် summaries၊ ပုံမှန်လုပ်ဆောင်ချက်များ။ Safety အတွက် Admin-gated ဖြစ်သည်။ |
+| [#43](https://github.com/timmygod/pi-web/issues/43) | **Customizable shortcuts** | သင့် muscle memory နှင့် ညီအောင် keyboard shortcuts များအားလုံးကို remap လုပ်နိုင်သည်။ |
 
 ---
 
-## အမြင်
+## Vision
 
-ရေရှည်ရည်မှန်းချက်- pi-web သည် **pi အတွက် မျက်နှာစာ** ဖြစ်သင့်သည် — လူတိုင်းအတွက်။
+အချိန်အတော်ကြာသော အရည်ဆုံး ဦးပန်း: pi-web သည် **pi ၏ interface** ဖြစ်သင့်သည် — လူအားလုံးအတွက်။
 
-- **Dev မဟုတ်သူများ** သည် အခြား app တစ်ခုကဲ့သို့ပင် ဖွင့်လိုက်သည်။ မော်ဒယ်တစ်ခုရွေးပါ။ စာရိုက်ပါ။ ပြီးပါပြီ။ Command line လုံးဝမလိုပါ။
-- **Dev များ** သည် နက်ရှိုင်းသော ပေါင်းစည်းမှုကို ရရှိသည် — remote handoff၊ multi-session dashboards၊ git သိရှိနိုင်သော လှန်လှောကြည့်ရှုမှု၊ messaging bots များ။
-- **လူတိုင်း** သည် မော်ဒယ်လွတ်လပ်မှု၊ open-source ပွင့်လင်းမြင်သာမှုနှင့် အဆင့်တိုင်းတွင် စဉ်းစားသုံးသပ်ထားသည်ဟု ခံစားရသော UI ကို ရရှိသည်။
+- **Non-devs များ** သည် အခြား app များအတိုင်းပင် ဖွင့်ပါ။ Model တစ်ခုကို ရွေးပါ။ ရိုက်ပါ။ ပြီးပါပြီ။ Command line မလိုအပ်ပါ။
+- **Developers များ** အတွက် အနက်ရိသော integration များ ရရှိသည် — remote handoff၊ multi-session dashboards၊ git-aware browsing၊ messaging bots များ။
+- **လူအားလုံး** အတွက် model freedom၊ open-source transparency၊ နှင့် တစ်ခုစီတွင် စဉ်းစားမှုရှိသောသဘောရရှိသည့် UI ကို ရရှိပါမည်။
 
 ---
 
-> 💡 အကြံဥာဏ်ရှိပါသလား။ [Issue တစ်ခုဖွင့်ပါ](https://github.com/timmygod/pi-web/issues/new) သို့မဟုတ် ဆွေးနွေးမှုတွင် ပါဝင်ပါ။
+> 💡 Idea တစ်ခုရှိပါသလား။ [Open an issue](https://github.com/timmygod/pi-web/issues/new) သို့မဟုတ် ကိစ္စပြောဆိုချက်တွင် ပါဝင်ပါ။

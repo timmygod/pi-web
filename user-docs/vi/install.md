@@ -4,88 +4,101 @@
 
 ### Điều khiển từ xa
 
-- Tiếp tục bất kỳ phiên nào từ trình duyệt với tệp đính kèm văn bản hoặc hình ảnh
-- Khởi tạo phiên mới cho bất kỳ đường dẫn dự án nào, ngay từ giao diện web
-- Chuyển đổi mô hình và chọn mức độ suy nghĩ ngay trong trình duyệt, theo từng phiên
-- Trạng thái worker theo từng phiên (rảnh / đang chạy / lỗi) với tự động phục hồi khi gặp sự cố
-- Nhiều phiên chạy song song — khởi động công việc trong phiên này, theo dõi luồng phiên khác
-- `PI_WEB_TOKEN` để phơi mạng LAN an toàn — mặc định bắt buộc cho mọi ràng buộc non-loopback tường minh
+- Tiếp tục bất kỳ phiên nào từ trình duyệt, kèm theo đính kèm văn bản hoặc hình ảnh
+- Khởi tạo một phiên hoàn toàn mới cho bất kỳ đường dẫn dự án nào, ngay từ giao diện web
+- Chuyển đổi model và bộ chọn mức độ suy luận trong trình duyệt, theo từng phiên
+- Trạng thái worker theo từng phiên (đỡ / đang chạy / lỗi) với tự khôi phục khi crash
+- Nhiều phiên chạy song song — khởi động công việc ở phiên này, xem phiên khác stream
+- `PI_WEB_TOKEN` cho phơi bày LAN an toàn — bắt buộc mặc định cho bất kỳ việc bind không phải loopback nào
 
 ### Đọc phiên
 
-- Duyệt phiên trên các dự án với bộ lọc, tìm kiếm và điều hướng nhánh đầy đủ
-- Cập nhật gia tăng trực tiếp khi pi vẫn đang chạy (qua fsnotify; độ trễ ~ms)
-- Chế độ theo dõi để bám đuôi các phiên đang hoạt động
-- Liên kết sâu đến từng tin nhắn
-- Tải phiên dưới dạng JSONL
-- Chia sẻ ảnh chụp tĩnh dưới dạng GitHub Gists bí mật
-- Các tiện ích mở rộng pi `/web`, `/remote`, `/refresh`, `/pi-web token` và `/pi-web set-token` để mở phiên, QR từ xa, đồng bộ phiên và quản lý token
+- Duyệt các phiên xuyên suốt các dự án với bộ lọc, tìm kiếm, và điều hướng branch đầy đủ
+- Cập nhật tăng phân trực tiếp khi pi vẫn đang chạy (qua fsnotify; độ trễ ~ms)
+- Chế độ Follow để tail các phiên đang hoạt động
+- Deep links đến từng tin nhắn
+- Tải xuống một phiên dưới dạng JSONL
+- Chia sẻ các bản chụp tĩnh dưới dạng GitHub Gist bí mật
+- Các extension pi: `/web`, `/remote`, `/refresh`, `/pi-web token` và `/pi-web set-token` để mở phiên, QR từ xa, đồng bộ phiên, và quản lý token
+- `/skill:pi-web-schedule`, `/skill:pi-web-notes`, `/skill:pi-web-settings` (`pi-web-ctl`) để một phiên có thể quản lý lịch trình, bản nháp (scratchpad) của dự án và cài đặt bằng ngôn ngữ tự nhiên
 
 ## Chọn chế độ phiên
 
-Phiên bản này sử dụng các nhà cung cấp và mô hình đã được cấu hình trong pi; Local Mode là một chính sách thời gian chạy, không phải là một trình cài đặt mô hình riêng biệt hay một màn hình khóa API thứ hai.
-Chọn chế độ khi tạo phiên, hoặc thay đổi sau khi phiên chạy hiện tại kết thúc:
+Phiên bản này sử dụng các provider và model đã được cấu hình trong pi; Local Mode
+là một chính sách runtime, không phải trình cài đặt model riêng hay một màn hình API-key thứ hai.
+Chọn một chế độ khi tạo phiên, hoặc thay đổi sau khi lượt chạy hiện tại ổn định:
 
-| Chế độ | Sử dụng khi | Hành vi |
+| Chế độ | Dùng khi | Hành vi |
 |------|-------------|----------|
-| **Auto** | Bạn muốn pi-web quyết định | Giải quyết các điểm cuối cục bộ/LAN từ siêu dữ liệu nhà cung cấp khi có thể; nếu không, giữ nguyên đường dẫn thông thường |
-| **Local** | Mô hình đang chạy trên máy này hoặc LAN của bạn | Bật ranh giới nén 65%, các điểm kiểm tra có giới hạn, Force Compact và phục hồi tự động được bảo vệ |
-| **Cloud** | Mô hình được chọn được lưu trữ và nên tuân theo hành vi upstream | Giữ chính sách nén và phục hồi chỉ cục bộ ra khỏi phiên |
+| **Auto** | Bạn muốn pi-web tự quyết định | Giải quyết các endpoint local/LAN từ metadata của provider khi có thể; nếu không thì giữ đường dẫn bình thường |
+| **Local** | Model đang chạy trên máy này hoặc LAN của bạn | Bật ranh giới nén (compaction) 65%, checkpoint có giới hạn, Force Compact, và khôi phục tự động có bảo vệ |
+| **Cloud** | Model được chọn là dạng hosted và nên tuân theo hành vi upstream | Giữ chính sách nén và khôi phục chỉ-địa-phương nằm ngoài phiên |
 
-Việc chọn Local hoặc Cloud thủ công sẽ ghi đè lên phát hiện tự động và duy trì qua các lần tải lại và khởi động lại. Một phiên đang chạy từ chối thay đổi chế độ cho đến khi worker của nó kết thúc, vì vậy chế độ hiển thị trong UI luôn khớp với chính sách thực sự đang được sử dụng.
+Việc chọn thủ công Local hoặc Cloud sẽ thắng so với phát hiện tự động và được giữ lại qua
+các lần tải lại và khởi động lại. Một phiên đang chạy sẽ từ chối thay đổi chế độ cho đến khi worker
+của nó ổn định, nên chế độ hiển thị trong UI luôn khớp với chính sách thực sự đang được dùng.
 
 ## Yêu cầu
 
-- [Go](https://go.dev) 1.25+
-- `pi` có trong `PATH` của bạn để trò chuyện trên trình duyệt / chuyển đổi mô hình
+- [Go](https://go.dev) 1.25+ (chỉ để build từ source)
+- `pi` trên `PATH` của bạn để chat/đổi model trong trình duyệt
 - Tùy chọn: `gh` để chia sẻ
+- Trên Windows: pi cần một shell bash cho công cụ shell của nó — [Git for Windows](https://git-scm.com/download/win) là đủ (xem tài liệu Windows của pi)
 
 ## Cài đặt
 
 ### Gói Pi (khuyến nghị)
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
 Một lệnh duy nhất này:
-- Cài đặt gói npm pi vào thư mục gói của pi
-- Chạy script `postinstall` của gói (`bash install.sh`)
-- Tải xuống tệp nhị phân pi-web phù hợp với phiên bản gói và nền tảng của bạn từ GitHub Releases
-- Cài đặt vào `~/.pi/agent/bin/pi-web`
-- Thiết lập tự động khởi động khi đăng nhập (launchd trên macOS, systemd trên Linux)
-- Đăng ký các lệnh pi `/web`, `/remote`, `/refresh`, `/pi-web token` và `/pi-web set-token`
+- Cài gói npm pi vào thư mục gói của pi
+- Chạy script `postinstall` của gói (`install.sh`, hoặc `install.ps1` trên Windows)
+- Tải binary pi-web tương ứng với phiên bản gói và nền tảng của bạn từ GitHub Releases
+- Cài đặt nó vào `~/.pi/agent/bin/pi-web` (`pi-web.exe` trên Windows)
+- Thiết lập tự động khởi chạy khi đăng nhập (launchd trên macOS, systemd trên Linux, trình khởi chạy Run-key trên Windows)
+- Đăng ký các lệnh pi: `/web`, `/remote`, `/refresh`, `/pi-web token`, và `/pi-web set-token`
 
-Tự động đặt tiêu đề phiên được tích hợp sẵn trong pi-web (không phải tiện ích mở rộng) và được cấu hình trên trang `/settings`. Tính năng này được bật theo mặc định: pi-web tự động đặt tên phiên bằng heuristic từ miễn phí có sẵn (không dùng AI), đặt lại tiêu đề cho mỗi tin nhắn mới. Bạn có thể chuyển sang đặt tiêu đề một lần mỗi phiên và/hoặc chọn một mô hình để viết tiêu đề thông minh hơn thay vì dùng heuristic.
+Chức năng tự động đặt tiêu đề phiên được tích hợp sẵn trong pi-web (không nằm trong extension) và được cấu hình trên trang `/settings`. Bật mặc định: pi-web tự động đặt tên phiên bằng một heuristic từ vựng tích hợp sẵn (không dùng AI), đặt lại tên ở mỗi tin nhắn mới. Bạn có thể chuyển sang chỉ đặt tiêu đề một lần mỗi phiên, và/hoặc chọn một model để viết các tiêu đề thông minh hơn thay vì heuristic.
 
-Trên Linux, tự động khởi động được cấu hình dưới dạng dịch vụ systemd người dùng tại `~/.config/systemd/user/pi-web.service`. Trình cài đặt ghi lại `ExecStart` của nó thành đường dẫn tệp nhị phân thực tế đã cài đặt. Nếu Tailscale khả dụng khi chạy, pi-web công bố máy chủ localhost với Tailscale Serve HTTPS. Nếu systemd người dùng không khả dụng, hãy chạy thủ công với `~/.pi/agent/bin/pi-web -o`.
+Trên Linux, tự động khởi chạy được cấu hình như một dịch vụ systemd người dùng tại `~/.config/systemd/user/pi-web.service`. Trình cài đặt sẽ ghi đè lại `ExecStart` của nó thành đường dẫn binary đã cài thực sự. Nếu Tailscale khả dụng ở runtime, pi-web sẽ công bố (publish) máy chủ localhost với Tailscale Serve HTTPS. Nếu user systemd không khả dụng, hãy chạy thủ công với `~/.pi/agent/bin/pi-web -o`.
 
-Để chỉ cài đặt cho một dự án cụ thể (chia sẻ với nhóm qua `.pi/settings.json`):
+Để chỉ cài cho một dự án cụ thể (chia sẻ với đội ngũ của bạn qua `.pi/settings.json`):
 
 ```bash
-pi install -l npm:@timmygod/pi-web-local@beta
+pi install -l npm:@timmygod/pi-web-local
 ```
 
 Sau đó khởi động lại pi (hoặc chạy `/reload`), và sử dụng `/web`, `/pi-web`, `/remote`, `/refresh`. Quản lý token truy cập của bạn với `/pi-web token` và `/pi-web set-token`.
 
-Nếu npm hủy bỏ với `ENOTEMPTY` khi đổi tên `@timmygod/pi-web-local`, hãy xóa các thư mục sao lưu ẩn cũ của npm và cài đặt lại kênh beta:
+Nếu npm bị dừng với `ENOTEMPTY` trong lúc đổi tên `@timmygod/pi-web-local`, hãy xóa các thư mục backup ẩn đã lỗi thời của npm và cài lại gói:
 
 ```bash
-rm -rf ~/.pi/agent/npm/node_modules/@ygncode/.pi-web-*
-pi install npm:@timmygod/pi-web-local@beta
+rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-*
+pi install npm:@timmygod/pi-web-local
 ```
 
-### Cài đặt nhanh (không cần công cụ build)
+### Cài nhanh (không cần công cụ build)
+
+macOS / Linux:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/timmygod/pi-web/main/install.sh | bash
 ```
 
-Lệnh này tải xuống tệp nhị phân pi-web mới nhất, cài đặt vào `/usr/local/bin` và thiết lập tự động khởi động khi đăng nhập. Không cần Go, Node hoặc pi.
+Windows (PowerShell):
 
-### Tải xuống tệp nhị phân
+```powershell
+irm https://raw.githubusercontent.com/timmygod/pi-web/main/install.ps1 | iex
+```
 
-Các tệp nhị phân dựng sẵn được đính kèm với mỗi [GitHub Release](https://github.com/timmygod/pi-web/releases).
+Điều này tải binary pi-web mới nhất, cài đặt nó vào `/usr/local/bin` (`~/.pi/agent/bin` trên Windows), và thiết lập tự động khởi chạy khi đăng nhập. Không cần Go, Node, hay pi.
+
+### Tải binary
+
+Các binary đã build sẵn được đính kèm với mỗi [GitHub Release](https://github.com/timmygod/pi-web/releases).
 
 ```bash
 # macOS (Apple Silicon)
@@ -105,7 +118,15 @@ curl -L -o pi-web https://github.com/timmygod/pi-web/releases/latest/download/pi
 chmod +x pi-web
 ```
 
-Sau đó di chuyển nó vào PATH của bạn:
+```powershell
+# Windows (x64)
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-amd64.exe
+
+# Windows (ARM64)
+irm -OutFile pi-web.exe https://github.com/timmygod/pi-web/releases/latest/download/pi-web-windows-arm64.exe
+```
+
+Sau đó chuyển nó vào PATH của bạn:
 
 ```bash
 cp pi-web ~/.pi/agent/bin/
@@ -113,110 +134,146 @@ cp pi-web ~/.pi/agent/bin/
 sudo cp pi-web /usr/local/bin/
 ```
 
-### Dựng từ mã nguồn
+### Build từ source
+
+Cái checkout này là phiên bản local-model của pi-web. Quy trình build bình thường tạo ra
+ứng dụng web và backend cùng lúc; các biện pháp bảo vệ local-model được kích hoạt
+ở runtime bởi Local Mode hiệu lực của phiên, chứ không phải bằng một binary riêng.
 
 ```bash
 git clone https://github.com/timmygod/pi-web.git
 cd pi-web
-make build   # dựng gói Vite, sau đó nhúng vào tệp nhị phân Go
+make build   # builds the Vite bundle, then embeds it into the Go binary
 
-# tùy chọn: đưa vào PATH
+# optional: put it on PATH
 cp pi-web ~/.pi/agent/bin/
 ```
 
-Gói frontend được nhúng bởi `web/assets_embed.go`, vì vậy `go build` cần
-`web/dist` tồn tại trước. `make build` thực hiện cả hai bước theo thứ tự; nếu bạn
-dựng thủ công, hãy chạy `npm --prefix web install && npm --prefix web run build`
-trước `go build ./cmd/pi-web`.
+Frontend bundle được nhúng (embed) bởi `web/assets_embed.go`, nên `go build` cần
+`web/dist` phải tồn tại trước. `make build` thực hiện cả hai bước theo thứ tự; nếu bạn build
+thủ công, hãy chạy `npm --prefix web install && npm --prefix web run build` trước
+`go build ./cmd/pi-web`.
+
+Để xem quy trình fork được bảo trì, đồng bộ upstream, và danh sách kiểm tra xác minh Local Mode, xem [ghi chú phát triển local-model](../../docs/dev/local-llm-development.md).
+
+### Phát triển song song với một instance đã cài
+
+Giữ instance đã cài đang chạy trên cổng `31415`, sau đó khởi chạy cái
+checkout source ở chế độ phát triển:
+
+```bash
+make dev
+```
+
+Mở `http://127.0.0.1:31416`. `make dev` đặt môi trường phát triển nội bộ `PI_WEB_DEV=1`,
+nên cái checkout source sẽ dùng chung các phiên, cài đặt, và dữ liệu
+SQLite với instance đã cài trong khi giữ một khóa runtime phát triển và
+tệp state riêng. Các instance đã cài thông thường và được khởi chạy thủ công
+không bị thay đổi và giữ nguyên hành vi single-instance ban đầu.
+
+Để ngăn chặn công việc tự động trùng lặp, chế độ phát triển không chạy
+schedule loop, chat-queue drainer, tự động đặt tiêu đề, hay thông báo đẩy. Các
+yêu cầu trực tiếp được thực hiện qua UI phát triển vẫn hoạt động. Đừng điều khiển cùng
+một phiên chat từ cả hai instance cùng một lúc; mỗi tiến trình có trình
+quản lý RPC worker riêng.
+
+`make dev` yêu cầu [Air](https://github.com/air-verse/air) để hot reload Go:
+
+```bash
+go install github.com/air-verse/air@latest
+```
+
+`PI_WEB_DEV` là cơ chế chạy của môi trường phát triển, không phải chế độ
+multi-instance production được hỗ trợ.
 
 ## Gỡ cài đặt
 
 ```bash
-pi remove npm:@timmygod/pi-web-local@beta
+pi remove npm:@timmygod/pi-web-local
 ```
 
-Lệnh này chạy script `preuninstall` của gói (`bash uninstall.sh`), dừng
-phiên bản đang chạy và xóa:
+Điều này chạy script `preuninstall` của gói (`uninstall.sh`, hoặc `uninstall.ps1`
+trên Windows), để dừng instance đang chạy và xóa:
 
-- tệp nhị phân pi-web (`~/.pi/agent/bin/pi-web`, hoặc `/usr/local/bin/pi-web` cho cài đặt độc lập)
+- binary pi-web (`~/.pi/agent/bin/pi-web`, hoặc `/usr/local/bin/pi-web` đối với cài đặt standalone)
 - tệp phiên bản (`~/.pi/agent/pi-web-version`)
-- tệp trạng thái thời gian chạy (`~/.pi/agent/pi-web/pi-web-state.json`)
-- cấu hình tự động khởi động (plist launchd trên macOS, dịch vụ systemd người dùng trên Linux)
+- tệp state runtime (`~/.pi/agent/pi-web/pi-web-state.json`)
+- cấu hình tự động khởi chạy (plist launchd trên macOS, dịch vụ systemd người dùng trên Linux, mục Run-key + các script khởi chạy trên Windows)
 
-Dữ liệu của bạn được giữ nguyên để lần cài đặt lại sau này tiếp tục từ nơi bạn đã dừng:
-`~/.pi/agent/pi-web.sqlite`, `~/.pi/agent/pi-web-memory.sqlite`, các tệp phiên
-của bạn trong `~/.pi/agent/sessions/`, và `~/.config/pi-web/env` (bao gồm
-`PI_WEB_TOKEN`). Xóa thủ công những tệp đó nếu bạn muốn bắt đầu lại từ đầu.
+Dữ liệu của bạn được giữ lại để một lần cài lại sau đó sẽ tiếp tục từ chỗ bạn đã dừng:
+`~/.pi/agent/pi-web.sqlite`, `~/.pi/agent/pi-web-memory.sqlite`, các tệp
+phiên của bạn dưới `~/.pi/agent/sessions/`, và `~/.config/pi-web/env` (bao gồm
+`PI_WEB_TOKEN`). Hãy tự xóa chúng nếu bạn muốn một trang giấy sạch.
 
 ## Sử dụng
 
 ```bash
-# Khởi động trên cổng mặc định (31415)
+# Start on the default port (31415)
 pi-web
 
-# Khởi động và mở trình duyệt
+# Start and open a browser
 pi-web -o
 
-# Cổng tùy chỉnh
+# Custom port
 pi-web -p 8080
 
-# Ghi đè máy chủ ràng buộc (loopback không xác thực theo mặc định)
+# Override bind host (loopback is unauthenticated by default)
 pi-web --host 127.0.0.1
 
-# Ràng buộc non-loopback yêu cầu token — pi-web từ chối khởi động nếu không có
+# Non-loopback bind requires a token — pi-web refuses to start otherwise
 PI_WEB_TOKEN=$(openssl rand -hex 16) pi-web --host 192.168.1.50
 ```
 
-Theo mặc định, pi-web ràng buộc vào `127.0.0.1`. Nếu Tailscale đang chạy với MagicDNS, pi-web cũng chạy `tailscale serve --bg --https=<port> http://127.0.0.1:<port>` và in ra URL tailnet HTTPS. Mọi ràng buộc non-loopback tường minh đều yêu cầu `PI_WEB_TOKEN` được đặt; truyền `--insecure` để ghi đè khi kiểm thử cục bộ.
+Mặc định, pi-web bind đến `127.0.0.1`. Nếu Tailscale đang chạy với MagicDNS **và `PI_WEB_TOKEN` đã được đặt**, pi-web cũng sẽ chạy `tailscale serve --bg --https=<port> http://127.0.0.1:<port>` và in ra URL tailnet HTTPS. Nếu không có token, pi-web chỉ dùng loopback và bỏ qua Tailscale Serve, nên các peer trong tailnet không thể tiếp cận agent mà không xác thực. Mọi việc bind không phải loopback rõ ràng cũng yêu cầu `PI_WEB_TOKEN` phải được đặt; truyền `--insecure` để ghi đè cho việc test nội bộ.
 
 ## Truy cập từ xa
 
-Để pi-web lắng nghe cục bộ, sau đó sử dụng URL Tailscale HTTPS được in ra từ điện thoại hoặc máy tính xách tay trên tailnet.
+Giữ pi-web đang lắng nghe cục bộ, sau đó dùng URL Tailscale HTTPS được in ra từ điện thoại hoặc laptop của bạn trên tailnet.
 
-Trên macOS, hãy cài đặt và mở Tailscale theo cách tương tác, chấp thuận lời nhắc quản trị viên và đăng nhập. Sau đó chạy `/pi-web restart`, rồi chạy `/remote`.
+Trên macOS, cài đặt và mở Tailscale tương tác, chấp nhận prompt quản trị viên, và đăng nhập. Sau đó chạy `/pi-web restart`, tiếp theo là `/remote`.
 
-Trên Linux, cho phép người dùng của bạn quản lý Tailscale trước khi cài đặt/chạy pi-web, nếu không `tailscale serve` có thể yêu cầu sudo và tự động khởi động có thể thất bại:
+Trên Linux, cho phép người dùng của bạn quản lý Tailscale trước khi cài/chạy pi-web, nếu không `tailscale serve` có thể yêu cầu sudo và tự động khởi chạy có thể thất bại:
 
 ```bash
 sudo tailscale set --operator=$USER
 ```
 
 ```bash
-# 1. Khởi động pi-web
-pi-web
+# 1. Start pi-web with a token so it publishes the Tailscale HTTPS endpoint
+PI_WEB_TOKEN=$(openssl rand -hex 16) pi-web
 
-# 2. Từ bất kỳ thiết bị nào khác được kết nối Tailscale, mở URL
-#    "Tailscale HTTPS" được in ra.
+# 2. From any other Tailscale-connected device, open the printed
+#    "Tailscale HTTPS" URL and enter the token once.
 ```
 
-> Theo mặc định, pi-web từ chối ràng buộc vào địa chỉ non-loopback trừ khi `PI_WEB_TOKEN` được đặt — bất kỳ ai có thể truy cập địa chỉ ràng buộc đều có thể xem phiên và gửi chỉ thị cho pi. Để ghi đè biện pháp bảo vệ này khi kiểm thử mạng cục bộ, hãy truyền `--insecure`. **Đừng sử dụng `--insecure` trên Tailscale hoặc bất kỳ địa chỉ nào có thể truy cập từ bên ngoài máy của bạn.**
+> Mặc định, pi-web từ chối bind đến một địa chỉ không phải loopback trừ khi `PI_WEB_TOKEN` đã được đặt — nếu không, bất kỳ ai có thể tiếp cận địa chỉ đã bind đều có thể xem các phiên và gửi chỉ thị cho pi. Để ghi đè cơ chế bảo vệ này cho việc test mạng nội bộ, hãy truyền `--insecure`. **Đừng dùng `--insecure` trên Tailscale hay bất kỳ địa chỉ nào có thể tiếp cận từ bên ngoài máy của bạn.**
 >
-> Máy khách có thể truyền token qua header `Authorization: Bearer <token>`, header `X-Pi-Token`, hoặc một lần qua `?token=<token>` (thiết lập cookie `pi_token` cho các yêu cầu tiếp theo). Token được truyền qua `?token=` sẽ xuất hiện trong lịch sử trình duyệt, nhật ký truy cập máy chủ và header `Referer` từ bất kỳ liên kết nào trên trang — ưu tiên dạng header cho bất kỳ điều gì ngoài dấu trang ban đầu.
+> Các client có thể truyền token qua header `Authorization: Bearer <token>`, header `X-Pi-Token`, hoặc một lần qua `?token=<token>` (lần này sẽ đặt cookie `pi_token` cho các yêu cầu sau). Token truyền qua `?token=` sẽ kết thúc trong lịch sử trình duyệt, server access logs, và các header `Referer` từ bất kỳ link nào trên trang — hãy dùng dạng header cho mọi thứ ngoài bookmark ban đầu.
 
-## Trò chuyện trên trình duyệt
+## Chat trong trình duyệt
 
-Mở trang phiên và sử dụng trình soạn thảo ở dưới cùng để tiếp tục chính xác phiên đó.
+Mở trang phiên và dùng composer ở dưới cùng để tiếp tục đúng phiên đó.
 
-- `Enter` gửi, `Shift+Enter` chèn dòng mới
-- Kéo-thả hoặc dán hình ảnh trực tiếp vào trình soạn thảo
-- Bộ chọn mô hình và bộ chọn mức độ suy nghĩ nằm trong tiêu đề — thay đổi áp dụng ngay lập tức cho worker pi bên dưới
-- Mỗi phiên hoạt động có worker `pi --mode rpc` riêng, vì vậy các phiên khác nhau không chặn nhau
+- `Enter` để gửi, `Shift+Enter` để chèn dòng mới
+- Kéo-thả hoặc dán hình ảnh trực tiếp vào composer
+- Bộ chọn model và bộ chọn mức độ suy luận nằm trong header — các thay đổi áp dụng ngay lập tức lên worker pi nền tảng
+- Mỗi phiên đang hoạt động có một worker `pi --mode rpc` chuyên dụng riêng, nên các phiên khác nhau không chặn nhau
 
 ## Chia sẻ phiên
 
-Nhấp **Share** trên trang phiên để tạo GitHub Gist bí mật.
+Nhấp vào **Chia sẻ** trên trang phiên để tạo một GitHub Gist bí mật.
 
 Yêu cầu:
-- `gh` đã cài đặt
+- `gh` đã được cài
 - `gh auth login` đã hoàn tất
 
 Chia sẻ trả về:
 - URL gist bí mật
-- URL xem trước tại `https://pi.dev/session/#<gistId>`
+- một URL xem trước tại `https://pi.dev/session/#<gistId>`
 
-Các gist được chia sẻ là ảnh chụp tĩnh và không cập nhật trực tiếp.
+Các gist được chia sẻ là bản chụp (snapshot) và không tự cập nhật trực tiếp.
 
-## Tự động khởi động khi đăng nhập
+## Tự động khởi chạy khi đăng nhập
 
 ### macOS
 
@@ -228,25 +285,48 @@ launchctl load ~/Library/LaunchAgents/com.pi-web.plist
 ### Linux (systemd)
 
 ```bash
-# Cài đặt dịch vụ systemd người dùng
+# Install the systemd user service
 mkdir -p ~/.config/systemd/user
 cp init/pi-web.service ~/.config/systemd/user/
 
-# Tùy chọn: đặt PI_WEB_TOKEN của bạn cho ràng buộc non-loopback
-# (hoặc sử dụng /pi-web set-token <token> từ bên trong pi)
+# Optional: set your PI_WEB_TOKEN for non-loopback binds
+# (or use /pi-web set-token <token> from inside pi)
 mkdir -p ~/.config/pi-web
 echo 'PI_WEB_TOKEN=your-token-here' > ~/.config/pi-web/env
 
-# Kích hoạt và khởi động
+# Enable and start
 systemctl --user daemon-reload
 systemctl --user enable --now pi-web.service
 
-# Kiểm tra trạng thái
+# Check status
 systemctl --user status pi-web.service
 
-# Xem nhật ký
+# View logs
 journalctl --user -u pi-web.service -f
 ```
 
-> Để dịch vụ khởi động khi khởi động máy (trước khi đăng nhập), hãy sử dụng dịch vụ hệ thống thay thế:
-> sao chép `init/pi-web.service` vào `/etc/systemd/system/` và sử dụng `sudo systemctl`.
+> Để dịch vụ khởi động khi bật máy (trước khi đăng nhập), hãy dùng một dịch vụ hệ thống thay vì:
+> sao chép `init/pi-web.service` vào `/etc/systemd/system/` và dùng `sudo systemctl`.
+
+### Windows
+
+Trình cài đặt tự động cấu hình điều này, mà không cần quyền admin: một
+mục `pi-web` dưới `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`
+sẽ khởi chạy `~/.config/pi-web/pi-web-start.vbs` khi đăng nhập, sau đó sẽ khởi chạy binary
+ở chế độ ẩn (không có cửa sổ console) sau khi nạp `~/.config/pi-web/env`
+(`PI_WEB_TOKEN`, `PATH`, ...).
+
+Để tự quản lý:
+
+```powershell
+# Start / stop
+wscript.exe "$HOME\.config\pi-web\pi-web-start.vbs"
+taskkill /IM pi-web.exe /F
+
+# Remove auto-start
+Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'pi-web'
+```
+
+Không có giám sát dịch vụ trên Windows: nếu pi-web crash, nó sẽ giữ trạng thái tắt
+cho đến lần đăng nhập tiếp theo (launchd/systemd tự động khởi chạy lại nó trên các
+nền tảng khác).

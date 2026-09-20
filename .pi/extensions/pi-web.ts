@@ -235,7 +235,7 @@ async function startPiWeb(
     const launcher = windowsLauncher();
     if (!existsSync(launcher)) {
       throw new Error(
-        "pi-web launcher not found; reinstall with: pi install npm:@timmygod/pi-web-local@beta",
+        "pi-web launcher not found; reinstall with: pi install npm:@timmygod/pi-web-local",
       );
     }
     await pi.exec("wscript.exe", [launcher]);
@@ -776,7 +776,7 @@ export default function (pi: ExtensionAPI) {
   // registers a title tool or input handler.
 
   // Start pi-web opportunistically when the extension loads so /remote works on a
-  // fresh shell after `pi install npm:@timmygod/pi-web-local@beta`.
+  // fresh shell after `pi install npm:@timmygod/pi-web-local`.
   void detectHostPort(pi)
     .then((detected) => {
       if (!detected) return;
@@ -948,7 +948,7 @@ export default function (pi: ExtensionAPI) {
               : "Updating pi-web package...",
             "info",
           );
-          await pi.exec("pi", ["install", "npm:@timmygod/pi-web-local@beta"]);
+          await pi.exec("pi", ["install", "npm:@timmygod/pi-web-local"]);
           try {
             await restartPiWeb(pi);
           } catch {
@@ -962,7 +962,7 @@ export default function (pi: ExtensionAPI) {
           return;
         } catch (err) {
           ctx.ui.notify(
-            `Failed to update pi-web: ${err}\nTry: rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-* && pi install npm:@timmygod/pi-web-local@beta`,
+            `Failed to update pi-web: ${err}\nTry: rm -rf ~/.pi/agent/npm/node_modules/@timmygod/.pi-web-local-* && pi install npm:@timmygod/pi-web-local`,
             "error",
           );
         }

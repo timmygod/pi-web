@@ -6,56 +6,67 @@
 
 </div>
 
-**Du überlegst, pi-web auszuprobieren? Nur zu — du wirst es lieben.**
+**Überlegst du, pi-web auszuprobieren? Lass es dir nicht nehmen — du wirst es lieben.**
 
-pi-web ist eine schöne Web-UI und PWA für [pi](https://pi.dev) — den quelloffenen KI-Coding-Agenten. Sie ermöglicht dir, deine pi-Sitzungen von jedem Browser auf jedem Gerät zu durchsuchen, zu lesen und fortzusetzen — mit durchdachten Funktionen auf Schritt und Tritt.
+pi-web ist eine schöne Web-UI und PWA für [pi](https://pi.dev) — den Open-Source-AI-Coding-Agenten. Es ermöglicht dir, deine pi-Sitzungen aus jedem Browser heraus zu durchsuchen, zu lesen und fortzusetzen, auf jedem Gerät, mit durchdachten Funktionen an jeder Ecke.
 
-## Was ist in dieser Ausgabe anders?
+## Was ist in dieser Edition anders?
 
-Dieses Repository behält die pi-web-Oberfläche und die gemeinsamen Funktionen von upstream bei, ändert jedoch, wie Sitzungen geschützt werden, wenn das ausgewählte Modell lokal oder in Ihrem LAN ausgeführt wird.
+Dieses Repository behält die pi-web-Oberfläche des Upstream-Projekts und die gemeinsamen Funktionen bei,
+ändert aber, wie Sitzungen geschützt werden, wenn das ausgewählte Modell lokal oder in
+deinem LAN ausgeführt wird.
 
-- **Wählen Sie die Laufzeitrichtlinie pro Sitzung.** Auto erkennt lokale/LAN-Endpunkte, wenn die Anbieter-Metadaten eindeutig sind; Local und Cloud sind dauerhafte manuelle Überschreibungen.
-- **Verhindern Sie Kontextfehler frühzeitig.** Local Mode komprimiert bei 65 % Nutzung und prüft zwischen Tool-Aufrufen erneut, bevor die nächste Anbieteranfrage gestellt wird.
-- **Halten Sie Zusammenfassungen begrenzt.** Rollierende Kontrollpunkte verhindern, dass eine alte Zusammenfassung endlos wächst, versuchen es einmal mit einem engeren Budget neu und stoppen sicher, wenn die Komprimierung keinen sinnvollen Fortschritt macht.
-- **Erholen Sie sich konservativ.** Kontextüberläufe, Unterbrechungen des ausgewählten Transports und vorzeitige Stopps, die nur auf Reasoning basieren, können automatisch fortgesetzt werden, aber die Deduplizierung von Vorfällen und fortschrittsbewusste Sicherungen verhindern Wiederherstellungsschleifen.
-- **Behalten Sie die Kontrolle.** Force Compact ist immer der sichtbare manuelle Rettungsmechanismus, während Cloud Mode den upstream-Workflow und die Steuerung beibehält.
+- **Wähle die Laufzeitrichtlinie pro Sitzung.** Wird lokal/LAN-Endpunkte automatisch erkannt, wenn die
+  Provider-Metadaten eindeutig sind; Local und Cloud sind dauerhafte manuelle Überschreibungen.
+- **Verhindere Kontextfehler frühzeitig.** Local Mode komprimiert bei 65 % Auslastung und prüft
+  erneut zwischen Tool-Aufrufen, vor der nächsten Modell-Anfrage.
+- **Halte Zusammenfassungen begrenzt.** Rolling Checkpoints verhindern, dass eine alte
+  Zusammenfassung endlos wächst, versuchen einmal mit engerem Budget und stoppen sicher, wenn Komprimierung
+  keine sinnvolle Fortschritte bringt.
+- **Erhole dich konservativ.** Kontextüberlauf, Unterbrechungen der gewählten Übertragungsart
+  und vorzeitige Stopps nur bei Reasoning können sich automatisch wiederherstellen, aber die
+  Entduplizierung von Vorfällen und fortschrittsbewusste Circuit Breaker verhindern Wiederherstellungs-Schleifen.
+- **Gib die Kontrolle dem Nutzer.** Force Compact bleibt immer der sichtbare manuelle
+  Rettungsmechanismus, während Cloud Mode den Upstream-Workflow und die Steuerung beibehält.
 
-Das praktische Ergebnis ist einfach: Eine lange Aufgabe mit einem lokalen Modell sollte komprimiert werden, bevor sie abstürzt, sich einmal erholen, wenn die Erholung sicher ist, und sauber stoppen, anstatt in eine Schleife zu geraten, wenn dies nicht der Fall ist.
+Das praktische Ergebnis ist einfach: Eine lange lokale Modell-Aufgabe sollte komprimiert werden, bevor sie
+umkippt, sich einmal wiederherstellen, wenn dies sicher ist, und sauber aufhören, statt in einer
+Schleife zu enden, wenn es das nicht ist.
 
 **pi-web ist für zwei Arten von Menschen gemacht:**
 
-- 🧑‍💻 **Für Entwickler** — die im Terminal leben, aber Sitzungen vom Handy aus fortsetzen, auf einen entfernten Server übertragen oder lang laufende Aufgaben von überall überwachen möchten.
-- ✨ **Für Nicht-Entwickler** — die einfach eine schöne KI-App wollen, die funktioniert. Öffnen, tippen, loslegen. Kein Terminal, kein SSH, keine Verwirrung. Wie die benutzerfreundlichsten KI-Tools, aber mit Modellauswahl und quelloffener Freiheit.
+- 🧑‍💻 **Für Entwickler** — die im Terminal leben, aber Sitzungen vom Handy fortsetzen, an einen Remote-Server übergeben oder lange laufende Aufgaben von überall überwachen möchten.
+- ✨ **Für Nicht-Entwickler** — die nur eine schöne AI-App wollen, die funktioniert. Öffnen, tippen, vibe. Kein Terminal, kein SSH, keine Verwirrung. Wie die benutzerfreundlichsten AI-Tools, aber mit Modellwahl und Open-Source-Freiheit.
 
 ---
 
 ## Warum pi-web?
 
-Du bist bereits tief im Flow mit pi in deinem Terminal. pi-web hält diesen Schwung aufrecht, wenn du deinen Schreibtisch verlässt:
+Du bist bereits tief im Flow mit pi in deinem Terminal. pi-web behält diesen Schwung aufrecht, wenn du deinen Platz verlässt:
 
 - **Von überall fortsetzen** — setze eine Sitzung von deinem Handy, Tablet oder einem anderen Computer fort. Kein SSH, kein Termius — öffne einfach deinen Browser.
-- **Multi-Sitzungs-Dashboard** — starte Arbeit in einer Sitzung, während du eine andere im Stream verfolgst. Projekte durchsuchen, nach Branch filtern, schnell finden, was du brauchst.
-- **Quelloffene Grundlage** — pi ist vollständig quelloffen und anbieterunabhängig. Du bist nicht an ein einzelnes Modell oder einen Anbieter gebunden. pi-web ist ebenfalls quelloffen.
-- **Sicherer Fernzugriff** — integrierte Token-Authentifizierung, damit du es in deinem LAN oder über Tailscale ohne Bedenken bereitstellen kannst.
-- **Deine Arbeit teilen** — exportiere Sitzungen als statische Snapshots oder private GitHub Gists mit einem Klick.
+- **Multi-Sitzungs-Dashboard** — starte Arbeit in einer Sitzung, während du eine andere streamst. Suche über Projekte hinweg, filtere nach Branch und finde, was du brauchst, schnell.
+- **Open-Source-Grundlage** — pi ist vollständig Open Source und Provider-unabhängig. Du bist an kein einzelnes Modell oder einen einzelnen Anbieter gebunden. Auch pi-web ist Open Source.
+- **Sicherer Remote-Zugriff** — eingebauter Token-Auth, sodass du es auf deinem LAN oder Tailscale veröffentlichen kannst, ohne Sorgen zu haben.
+- **Teile deine Arbeit** — exportiere Sitzungen als statische Snapshots oder geheime GitHub-Gists mit einem Klick.
 
-> Neugierig auf die Hintergrundgeschichte? [Lies, warum wir es entwickelt haben →](why.md)
+> Lust auf die Hintergrundgeschichte? [Lies, warum wir es gebaut haben →](why.md)
 
 ---
 
-## pi-web als dein persönlicher KI-Arbeitsplatz 🏠
+## pi-web als dein persönlicher AI-Arbeitsplatz 🏠
 
-pi-web ist eine PWA (Progressive Web App), sodass du sie **wie eine native App installieren kannst** — auf deinem Desktop, Laptop, Handy oder Tablet, ohne App-Store. Auf dem Desktop öffnet sie sich in einem eigenen Fenster ohne Browser-Chrome, sodass sie wie eine echte Desktop-Anwendung aussieht und sich auch so anfühlt.
+pi-web ist eine PWA (Progressive Web App), sodass du es **wie eine Native-App installieren** kannst auf deinem Desktop, Laptop, Handy oder Tablet — ohne App-Store. Auf dem Desktop öffnet es sich in seinem eigenen Fenster ohne Browser-Chrome, sodass es aussieht und sich anfühlt wie eine echte Desktop-Anwendung.
 
-Stell es dir vor wie **dein eigenes Claude Cowork** — ein persönlicher KI-Arbeitsplatz, der auf deiner Maschine lebt — nur dass es quelloffen und modellunabhängig ist:
+Denk daran wie an **dein eigenes Claude Cowork** — einen persönlichen AI-Arbeitsplatz, der auf deinem Rechner lebt — nur ist er Open Source und modellunabhängig:
 
-- **Dir gehört der Stack.** Wähle ein beliebiges Modell, wechsle jederzeit. Führe ein lokales Modell aus und deine Daten verlassen nie deine Maschine.
-- **Nicht-technische Menschen können es nutzen.** Richte pi-web auf ihrer Maschine ein, zeig ihnen einmal, wie es geht, und sie sind startklar. Deine Eltern, dein Partner, deine nicht-technischen Freunde — kein Terminal, kein SSH, einfach eine vertraute Chat-Oberfläche.
-- **Eine Einrichtung, viele Nutzer.** Installiere es auf deinem Desktop und teile deinen Bildschirm, oder stelle es in deinem Heimnetzwerk bereit und lass Familienmitglieder es auf ihren eigenen Geräten öffnen.
+- **Du besitzt den Stack.** Wähle jedes Modell und wechsle, wann immer du möchtest. Führe ein lokales aus und deine Daten verlassen deinen Rechner nie.
+- **Nicht-technische Menschen können es nutzen.** Richte pi-web auf ihrem Rechner ein, zeige ihnen einmal, wie es funktioniert, und sie sind startklar. Deine Eltern, dein Partner, deine nicht-tech-freundlichen Freunde — kein Terminal, kein SSH, nur eine vertraute Chat-Oberfläche.
+- **Eine Einrichtung, viele Nutzer.** Installiere es auf deinem Desktop und teile deinen Bildschirm, oder veröffentliche es in deinem Heimnetzwerk und lass Familienmitglieder es auf ihren eigenen Geräten öffnen.
 
-Du willst mehr als nur Coden? Verwandle es in einen dedizierten [persönlichen Assistenten](personal-assistant.md), der weiß, wer du bist und auf deiner Maschine lebt — wie dein eigener OpenClaw oder Hermes.
+Mehr als nur Coding? Wandle es in einen dedizierten [persönlichen Assistenten](personal-assistant.md) um, der weiß, wer du bist und auf deinem Rechner lebt — wie dein eigenes OpenClaw oder Hermes.
 
-> 💡 **Profi-Tipp:** Installiere pi-web als PWA über Chrome/Edge (klicke auf das Installationssymbol in der Adressleiste) oder Safari (Teilen → Zum Dock hinzufügen). Es wird von einer nativen App nicht zu unterscheiden sein.
+> 💡 **Pro-Tipp:** Installiere pi-web als PWA von Chrome/Edge (Klicke das Installations-Symbol in der Adressleiste) oder Safari (Teilen → An Dock anheften). Es wird von einer Native-App ununterscheidbar.
 
 ---
 
@@ -64,60 +75,62 @@ Du willst mehr als nur Coden? Verwandle es in einen dedizierten [persönlichen A
 | | |
 |---|---|
 | 📱 **PWA** | Installiere pi-web als Progressive Web App auf Desktop, Handy oder Tablet für ein natives Gefühl. |
-| 🔄 **Sitzungen fortsetzen** | Nimm jeden Chat genau dort wieder auf, wo du aufgehört hast — Text, Bilder, Modellwechsel, alles aus dem Browser. |
-| 🆕 **Neue Sitzungen starten** | Erstelle neue Sitzungen für beliebige Projektpfade direkt aus der Web-UI. |
-| 📡 **Live-Streaming** | Sieh pi-Antworten in Echtzeit mit ~ms Latenz streamen. Der Follow-Modus hält dich stets auf dem neuesten Stand. |
-| 🌲 **Baumansicht** | Navigiere durch den nativen Nachrichtenbaum von pi — sieh die gesamte Gesprächsstruktur, springe zu jedem Zweig und verzweige von jedem Punkt aus. |
-| 🔀 **Sitzungen verzweigen** | Verzweige eine Sitzung von jeder Nachricht oder sogar einem bestimmten Tool-Aufruf — erkunde verschiedene Richtungen, ohne deinen Platz zu verlieren. |
-| 🔍 **Durchsuchen & Suchen** | Filtere Sitzungen projektübergreifend, suche nach Namen, navigiere durch Zweige — deine gesamte Sitzungshistorie auf einen Blick. |
-| 🌿 **Git-Integration** | Sieh den aktuellen Branch und öffne einen GitHub-PR direkt aus dem Sitzungsbetrachter. |
-| 📝 **Notizblock** | Notiere Ideen, Todos oder schnelle Gedanken neben deinen Sitzungen, ohne die App zu wechseln. |
-| 💬 **Anmerkungen** | Hebe beliebige Teile einer Sitzung hervor und kommentiere sie — ideal für Code-Review, Feedback oder das Markieren wichtiger Momente. |
-| 🎨 **Themes & Anpassung** | Wechsle zwischen dunklem und hellem Modus, passe die Benutzeroberfläche nach deinem Geschmack an — mach pi-web zu *deinem* Zuhause. |
-| 🌐 **Mehrere Sprachen** | 14 integrierte Sprachen (English, Español, Français, Deutsch, 中文, 日本語, Bahasa Indonesia, Bahasa Melayu, Tiếng Việt, ไทย, Filipino, မြန်မာ, ဗာသာခ្មែរ, ລາວ). Füge deine eigene benutzerdefinierte Sprache in den Einstellungen hinzu. |
-| 🐱 **Wohlbefinden & pomodoro** | Zu viel Vibe-Coding ist nicht gesund. Integrierter Pomodoro-Timer mit einem Katzenbegleiter und Schlaf-Erinnerungen, um dich im Gleichgewicht zu halten. |
-| 📤 **Teilen & Exportieren** | Lade JSONL herunter, exportiere statische Snapshots, die mit pis nativem `pi.dev`-Look gerendert werden, oder teile sie als private GitHub Gists — alles clientseitig gerendert. |
-| 🔔 **Benachrichtigungstöne** | Anpassbare Benachrichtigungsklänge für Sitzungsereignisse — bleib auf dem Laufenden, selbst wenn pi-web in einem anderen Tab geöffnet ist. |
-| ⌨️ **Tastaturkürzel** | Vim-artige Navigation, Schnellaktionen — [vollständige Referenz →](keyboard-shortcuts.md) |
-| 🤖 **Persönlicher Assistent** | Verwandle pi-web in deinen eigenen KI-Assistenten, der auf deinem Computer lebt — wie OpenClaw oder Hermes. [Einrichtung →](personal-assistant.md) |
+| 🔄 **Sitzungen fortsetzen** | Setze jeden Gesprächsteil genau dort fort, wo du aufgehört hast — Text, Bilder, Modellwechsel, alles aus dem Browser. |
+| 🆕 **Neue Sitzungen starten** | Erstelle neue Sitzungen gegen jeden Projekt-Pfad direkt aus der Web-UI. |
+| 📡 **Live-Streaming** | Beobachte pi-Antworten in Echtzeit mit ~ms Latenz. Follow-Mode hält dich auf dem neuesten Stand. |
+| 🌲 **Baumansicht** | Navigiere pi's natives Nachrichtenzweigesystem — sieh die gesamte Gesprächsstruktur, springe zu jedem Ast und forke von jedem Punkt aus. |
+| 🔀 **Sitzungen forkten** | Fork eine Sitzung von jeder Nachricht oder sogar einem spezifischen Tool-Aufruf — erkunde verschiedene Richtungen, ohne deinen Ort zu verlieren. |
+| 🔍 **Durchsuchen & suchen** | Filtere Sitzungen über Projekte hinweg, suche nach Namen, navigiere durch Branches — deine gesamte Sitzungshistorie auf einen Blick. |
+| 🌿 **Git-Integration** | Sieh den aktuellen Branch und öffne ein GitHub-PR direkt aus dem Sitzungs-Viewer. |
+| 📝 **Scratchpad** | Notiere Ideen, To-dos oder schnelle Gedanken neben deinen Sitzungen, ohne die App zu wechseln. |
+| 💬 **Annotationen** | Markiere und kommentiere jeden Teil einer Sitzung — perfekt für Code-Review, Feedback oder zumBookmarkenwichtigerMomente. |
+| 🎨 **Themes & Anpassung** | Wechsle zwischen dunklem und hellem Modus, passe die UI nach deinem Geschmack an — mache pi-web zu *deinem*. |
+| 🌐 **Multi-Sprachig** | 14 eingebaute Sprachen (English, Español, Français, Deutsch, 中文, 日本語, Bahasa Indonesia, Bahasa Melayu, Tiếng Việt, ไทย, Filipino, မြန်မာ, ភាសាខ្មែរ, ລາວ). Füge deine eigene Sprache in den Einstellungen hinzu. |
+| 🐱 **Wellness & Pomodoro** | Zu viel Vibe Coding ist nicht gesund. Eingebauter Pomodoro-Timer mit Katzenvorgabe und Schlaf-Erinnerungen, um dich im Gleichgewicht zu halten. |
+| 📤 **Teilen & exportieren** | Lade JSONL herunter, exportiere statische Snapshots, die mit pi's nativem `pi.dev`-Look gerendert werden, oder teile sie als private GitHub-Gists — alles clientseitig gerendert. |
+| 🔔 **Benachrichtigungstöne** | Anpassbare Benachrichtigungsklänge für Sitzungsevents — bleibe informiert, selbst wenn pi-web in einem anderen Tab ist. |
+| ⌨️ **Tastenkürzel** | Vim-Stil-Navigation, schnelle Aktionen — [vollständige Referenz →](keyboard-shortcuts.md) |
+| 🤖 **Persönlicher Assistent** | Wandle pi-web in deinen eigenen AI-Assistenten um, der auf deinem Computer lebt — wie OpenClaw oder Hermes. [Einrichtung →](personal-assistant.md) |
+| 🗓️ **Gespräche mit Zeitplänen** | Aus einer pi-Sitzung: „füge einen Zeitplan um 2 Uhr Singapur-Zeit hinzu, um …“ — `/skill:pi-web-schedule`. |
+| 📝 **Gespräche mit Notizen & Einstellungen** | „Schreibe das in die Notizen“ (`/skill:pi-web-notes`) oder „wechsel in dunkler Modus“ (`/skill:pi-web-settings`). |
 
 ---
 
-## Schnellnavigation
+## Schnelle Navigation
 
-| Wenn du suchst nach… | Lies |
+| Wenn du suchst… | Lies |
 |---|---|
-| Installation, Konfiguration und Nutzung von pi-web | [install.md](install.md) |
-| pi-web als persönlicher Assistent | [personal-assistant.md](personal-assistant.md) |
-| Tastaturkürzel-Referenz | [keyboard-shortcuts.md](keyboard-shortcuts.md) |
-| Warum es pi-web gibt | [why.md](why.md) |
+| Wie man pi-web installiert, konfiguriert und nutzt | [install.md](install.md) |
+| Wie man pi-web als persönlichen Assistenten nutzt | [personal-assistant.md](personal-assistant.md) |
+| Tastenkürzel-Referenz | [keyboard-shortcuts.md](keyboard-shortcuts.md) |
+| Warum pi-web existiert | [why.md](why.md) |
 | Was als Nächstes kommt | [roadmap.md](roadmap.md) |
-| Installationsprobleme? Lass dein LLM sie beheben — sende ihnen den llm-debug.md-Link | [llm-debug.md](llm-debug.md) |
-| Entwicklungsnotizen | [Entwicklungsnotizen](../../docs/dev/local-llm-development.md) |
+| Probleme bei der Installation? Lass deinen LLM es beheben — füge ihnen den llm-debug.md-Link ein | [llm-debug.md](llm-debug.md) |
+| Diese lokale Modell-Edition warten | [Entwickler-Notizen](../../docs/dev/local-llm-development.md) |
 
 ---
 
 ## Screenshots
 
-| Desktop | Mobile PWA |
+| Desktop | Mobil |
 |---|---|
-| ![Desktop](../assets/pi-web-desktop-screenshot.png) | ![Mobile PWA](../assets/pi-web-mobile-screenshot.png) |
+| ![Desktop](../assets/pi-web-desktop-screenshot.png) | ![Mobile](../assets/pi-web-mobile-screenshot.png) |
 
 ---
 
-## 💛 Unterstützen
+## 💛 Sponsor
 
-pi-web ist mit Liebe und vielen langen Nächten gebaut. Ich bezahle Coding-Pläne (Claude Code, OpenCode, etc.) aus eigener Tasche, um dieses Projekt voranzubringen. Wenn pi-web für dich nützlich war, würde deine Unterstützung die Welt bedeuten.
+pi-web wird mit Liebe und viel Arbeit in den späten Nächten gebaut. Ich zahle für Coding-Pläne (Claude Code, OpenCode, etc.) aus eigener Tasche, um dieses Projekt voranzubringen. Wenn pi-web für dich nützlich war, bedeutet deine Unterstützung mir die Welt.
 
-**Möglichkeiten zu helfen:**
+**Möglichkeiten, zu helfen:**
 
-- 💰 **[Sponsor auf GitHub](https://github.com/sponsors/setkyar)** — hilf, die Werkzeuge zu finanzieren, die das ermöglichen
-- ☕ **[Spendier mir einen Kaffee](https://buymeacoffee.com/setkyar)** — jeder kleine Beitrag hilft
-- ⭐ **Gib dem Repo einen Stern** — es kostet nichts und hilft, dass mehr Leute pi-web entdecken
-- 📢 **Teile es mit Freunden & Familie** — wenn du jemanden kennst, der pi-web lieben würde, schick es weiter
+- 💰 **[Sponsoring auf GitHub](https://github.com/sponsors/setkyar)** — hilf, die Tools zu finanzieren, die dies möglich machen
+- ☕ **[Kauf mir einen Kaffee](https://buymeacoffee.com/setkyar)** — jeder Beitrag hilft
+- ⭐ **Repo Sternchen geben** — kostet nichts und hilft mehr Menschen, pi-web zu entdecken
+- 📢 **Mit Freunden & Familie teilen** — wenn du jemanden kennst, der pi-web lieben würde, schicke es ihm
 
-Du kannst nicht unterstützen? Kein Problem — ein Stern und ein Teilen bewirken viel. Danke, dass du hier bist. 🙏
+Kannst du nicht sponsern? Keine Sorge — ein Sternchen und ein Beitrag tragen weit. Danke, dass du hier bist. 🙏
 
 ---
 
-Happy Coding! 🚀
+Guten Coding! 🚀

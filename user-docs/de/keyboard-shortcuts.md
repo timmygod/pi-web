@@ -1,85 +1,88 @@
-# Tastaturkürzel
+# Tastenkürzel
+
+Diese Kürzel gelten für die Local-Model-Edition von pi-web. Die editionspezifische
+Laufzeit ist in [Local-Model-Edition Entwicklung](../../docs/dev/local-llm-development.md) dokumentiert.
 
 ## Index-Seite (`/`)
 
-### Seiten-Scrolling (Vim-Stil)
+### Seitennavigation (vim-Stil)
 
-Dieselben Vim-artigen Tastaturkürzel funktionieren auf allen Seiten, wenn der Fokus **nicht** in einem input-, textarea- oder contenteditable-Element liegt.
+Die gleichen vim-Stil-Kürzel funktionieren auf allen Seiten, wenn der Fokus **nicht** in einem Eingabefeld, Textbereich oder contenteditable-Element liegt.
 
-| Tastaturkürzel | Aktion |
+| Kürzel | Aktion |
 |----------|--------|
 | `j` | 300px nach unten scrollen |
 | `k` | 300px nach oben scrollen |
 | `g g` | Zum Seitenanfang scrollen |
-| `G` (Umschalt+G) | Zum Seitenende scrollen |
-| `Escape` | Das aktive Eingabefeld verlassen, damit die j/k-Navigation funktioniert |
+| `G` (Shift+G) | Zum Seitenende scrollen |
+| `Escape` | Aktives Eingabefeld entfokusieren, damit j/k-Navigation funktioniert |
 
 ### Index-Befehle
 
-| Tastaturkürzel | Kontext | Aktion |
+| Kürzel | Kontext | Aktion |
 |----------|---------|--------|
-| `⌘K` / `Ctrl+K` | Seitenweit | Such-/Sitzungs-Palette öffnen |
-| `⌘⇧L` / `Ctrl+Shift+L` | Seitenweit | System-Design umschalten (hell/dunkel) |
-| `Escape` | Seitenweit | Palette, Menü oder Modal schließen |
-| `Enter` | Pfadeingabe für neue Sitzung | Neue Sitzung erstellen |
+| `⌘K` / `Ctrl+K` | Seitenebene | Such-/Sitzungspalette öffnen |
+| `⌘⇧L` / `Ctrl+Shift+L` | Seitenebene | Systemthema wechseln (hell/dunkel) |
+| `Escape` | Seitenebene | Palette, Menü oder Modal schließen |
+| `Enter` | Neues-Sitzung-Eingabefeld | Neue Sitzung erstellen |
 
-> `⌘K` / `Ctrl+K` ist auch Chromes Tastaturkürzel „Adressleiste fokussieren". Der Browser kann es abfangen, es sei denn, der Fokus befindet sich in einem Texteingabefeld.
+> `⌘K` / `Ctrl+K` ist zugleich das Chrome-Kürzel für „Fokus auf Adressleiste". Der Browser kann es abfangen, solange der Fokus nicht in einem Texteingabefeld liegt.
 
-## Sitzungsdetailseite (`/session?id=...`)
+## Sitzungs-Detailseite (`/session?id=...`)
 
-### Seiten-Scrolling (Vim-Stil)
+### Seitennavigation (vim-Stil)
 
-Diese funktionieren sowohl auf der Index- als auch auf der Sitzungsseite, wenn der Fokus **nicht** in einem input-, textarea- oder contenteditable-Element liegt.
+Diese funktionieren sowohl auf der Index- als auch auf der Sitzungsseite, wenn der Fokus **nicht** in einem Eingabefeld, Textbereich oder contenteditable-Element liegt.
 
-| Tastaturkürzel | Aktion |
+| Kürzel | Aktion |
 |----------|--------|
 | `j` | 300px nach unten scrollen |
 | `k` | 300px nach oben scrollen |
 | `g g` | Zum Seitenanfang scrollen |
-| `G` (Umschalt+G) | Zum Seitenende scrollen |
-| `I` (Umschalt+I) | Das Chat-Textfeld fokussieren |
-| `Escape` | Das aktive Eingabefeld verlassen, damit die j/k-Navigation funktioniert |
+| `G` (Shift+G) | Zum Seitenende scrollen |
+| `I` (Shift+I) | Fokus auf das Chat-Autoren-Textfeld setzen |
+| `Escape` | Aktives Eingabefeld entfokusieren, damit j/k-Navigation funktioniert |
 
 ### Seitenleiste & Navigation
 
-| Tastaturkürzel | Kontext | Aktion |
+| Kürzel | Kontext | Aktion |
 |----------|---------|--------|
-| `⌘B` / `Ctrl+B` | Seitenweit | Sichtbarkeit der Seitenleiste umschalten |
-| `⌘K` / `Ctrl+K` | Seitenweit | Sitzungslisten-Palette öffnen |
-| `⌘T` / `Ctrl+T` | Seitenweit | Neue Sitzung |
-| `⌘⇧L` / `Ctrl+Shift+L` | Seitenweit | System-Design umschalten (hell/dunkel) |
-| `⌘⇧N` / `Ctrl+Shift+N` | Seitenweit | Notizblock-/Notizen-Seitenleiste umschalten |
+| `⌘B` / `Ctrl+B` | Seitenebene | Seitenleiste ein-/ausblenden |
+| `⌘K` / `Ctrl+K` | Seitenebene | Sitzungslisten-Palette öffnen |
+| `⌘T` / `Ctrl+T` | Seitenebene | Neue Sitzung |
+| `⌘⇧L` / `Ctrl+Shift+L` | Seitenebene | Systemthema wechseln (hell/dunkel) |
+| `⌘⇧N` / `Ctrl+Shift+N` | Seitenebene | Scratchpad-/Notizen-Seitenleiste ein-/ausblenden |
 
-> `⌘K` und `⌘T` sind auch Browser-Tastaturkürzel (Adressleiste fokussieren / neuer Tab). Der Browser kann sie abfangen, es sei denn, der Fokus befindet sich in einem Texteingabefeld.
+> `⌘K` und `⌘T` sind zugleich Browser-Kürzel (Fokus auf Adressleiste / neuer Tab). Der Browser kann sie abfangen, solange der Fokus nicht in einem Texteingabefeld liegt.
 
-### Chat-Eingabe
+### Chat-Autor (Composer)
 
-| Tastaturkürzel | Kontext | Aktion |
+| Kürzel | Kontext | Aktion |
 |----------|---------|--------|
 | `Enter` | Chat-Textfeld | Nachricht senden |
-| `Umschalt+Enter` | Chat-Textfeld | Zeilenumbruch einfügen |
-| `Umschalt+Tab` | Chat-Textfeld | Zum nächsten Thinking-Level wechseln (`off` → `minimal` → … → `xhigh` → `off`) |
-| `Ctrl+I` / `Ctrl+L` | Chat-Textfeld | Modellauswahl-Popup öffnen (tippen zum Filtern, Enter zum Auswählen, Fokus kehrt zum Textfeld zurück) |
+| `Shift+Enter` | Chat-Textfeld | Zeilenumbruch einfügen |
+| `Shift+Tab` | Chat-Textfeld | Zum nächsten Denk-Stufe wechseln (`off` → `minimal` → … → `xhigh` → `off`) |
+| `Ctrl+I` / `Ctrl+L` | Chat-Textfeld | Modellauswahl-Popup öffnen (eingeben zum Filtern, Enter zum Auswählen, Fokus kehrt zum Textfeld zurück) |
 
-### Eintrag-Sichtbarkeitsumschalter
+### Eintrags-Sichtbarkeits-Schalter
 
-| Tastaturkürzel | Kontext | Aktion |
+| Kürzel | Kontext | Aktion |
 |----------|---------|--------|
-| `t` | Wenn der Fokus **nicht** in einem input/textarea liegt | Sichtbarkeit von Thinking umschalten |
-| `o` | Wenn der Fokus **nicht** in einem input/textarea liegt | Sichtbarkeit von Tools umschalten |
-| `p` | Wenn der Fokus **nicht** in einem input/textarea liegt | Sichtbarkeit von Tool-Ausgaben umschalten |
+| `t` | Wenn der Fokus **nicht** in einem Eingabefeld/Textbereich liegt | Denk-Sichtbarkeit umschalten |
+| `o` | Wenn der Fokus **nicht** in einem Eingabefeld/Textbereich liegt | Werkzeug-Sichtbarkeit umschalten |
+| `p` | Wenn der Fokus **nicht** in einem Eingabefeld/Textbereich liegt | Werkzeug-Ausgaben umschalten |
 
-### Paletten, Menüs & Sheets
+### Paletten, Menüs & Blätter
 
-| Tastaturkürzel | Kontext | Aktion |
+| Kürzel | Kontext | Aktion |
 |----------|---------|--------|
-| `Escape` | Seitenweit | Alle geöffneten Paletten, Menüs oder Sheets schließen |
-| `⌘K` / `Ctrl+K` | Seitenweit | Sitzungslisten-Palette öffnen |
-| `Pfeil hoch` / `Pfeil runter` | Sitzungslisten-Palette | Sitzungsergebnisse navigieren |
-| `Enter` | Sitzungslisten-Palette | Die ausgewählte (oder erste) Sitzung öffnen |
-| `Pfeil hoch` / `Pfeil runter` | Modellauswahl-Popup | Modellliste navigieren |
+| `Escape` | Seitenebene | Jede geöffnete Palette, jedes Menü oder jeden Blatt schließen |
+| `⌘K` / `Ctrl+K` | Seitenebene | Sitzungslisten-Palette öffnen |
+| `ArrowUp` / `ArrowDown` | Sitzungslisten-Palette | Durch Sitzungs-Ergebnisse navigieren |
+| `Enter` | Sitzungslisten-Palette | Ausgewählte (oder erste) Sitzung öffnen |
+| `ArrowUp` / `ArrowDown` | Modellauswahl-Popup | Durch Modellliste navigieren |
 | `Enter` | Modellauswahl-Popup | Hervorgehobenes Modell auswählen |
-| `Pfeil hoch` / `Pfeil runter` | Fork-Modal | Nachrichten navigieren |
-| `Enter` | Fork-Modal | Von hervorgehobener Nachricht forken |
-| `Tab` | Vollbild-Sheet | Fokus innerhalb des Sheets durchwechseln |
-| `Escape` | Vollbild-Sheet | Das Sheet schließen |
+| `ArrowUp` / `ArrowDown` | Fork-Modal | Durch Nachrichten navigieren |
+| `Enter` | Fork-Modal | Ab der hervorgehobenen Nachricht forken |
+| `Tab` | Vollbild-Blatt | Fokus innerhalb des Blatts wechseln |
+| `Escape` | Vollbild-Blatt | Blatt schließen |
