@@ -46,9 +46,6 @@ without accepting fragile long-running sessions. See the
 [local-model edition development](docs/dev/local-llm-development.md) for the
 implementation and synchronization policy.
 
-> [!WARNING]
-> pi-web is currently in **beta**. Things will change and break!
-
 > [!TIP]
 > New here? **[Read the user guide →](user-docs/en/README.md)** for a full tour of features, install steps, and tips. ([Other languages →](user-docs/README.md))
 
@@ -87,7 +84,7 @@ implementation and synchronization policy.
 ## Install
 
 ```bash
-pi install npm:@timmygod/pi-web-local@beta
+pi install npm:@timmygod/pi-web-local
 ```
 
 That's it — it downloads the matching binary, sets up auto‑start, and registers the `/web`, `/pi-web`, `/remote`, and `/refresh` commands.
@@ -100,7 +97,7 @@ For manual installs, binary downloads, or building from source, see [user-docs/i
 
 ## Pi Integration
 
-After `pi install npm:@timmygod/pi-web-local@beta`, you get:
+After `pi install npm:@timmygod/pi-web-local`, you get:
 
 | Command | What it does |
 |---------|--------------|
@@ -118,7 +115,7 @@ The package also installs the pi-web binary to `~/.pi/agent/bin/pi-web` and sets
 
 ## Auto-Start on Login
 
-The `pi install npm:@timmygod/pi-web-local@beta` command sets this up automatically:
+The `pi install npm:@timmygod/pi-web-local` command sets this up automatically:
 
 | OS | Mechanism |
 |----|-----------|
