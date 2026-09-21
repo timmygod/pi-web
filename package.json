@@ -1,7 +1,7 @@
 {
   "name": "@timmygod/pi-web-local",
   "description": "Local-model and LAN-optimized web UI for the pi coding agent",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.40",
   "keywords": [
     "pi-package",
     "pi-web",
