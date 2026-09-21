@@ -30,10 +30,13 @@ const SchedulesTableDDL = `CREATE TABLE IF NOT EXISTS schedules (
 	instructions   TEXT NOT NULL,
 	model_provider TEXT NOT NULL DEFAULT '',
 	model_id       TEXT NOT NULL DEFAULT '',
+	model_selector TEXT NOT NULL DEFAULT '',
 	thinking_level TEXT NOT NULL DEFAULT '',
 	project_path   TEXT NOT NULL DEFAULT '',
 	cron_expr      TEXT NOT NULL DEFAULT '',
+	run_at         DATETIME,
 	timezone       TEXT NOT NULL DEFAULT '',
+	callback_url   TEXT NOT NULL DEFAULT '',
 	enabled        INTEGER NOT NULL DEFAULT 1,
 	last_run_at    DATETIME,
 	created_at     DATETIME NOT NULL,
@@ -47,7 +50,14 @@ const RunsTableDDL = `CREATE TABLE IF NOT EXISTS schedule_runs (
 	session_file TEXT NOT NULL DEFAULT '',
 	fired_at     DATETIME NOT NULL,
 	status       TEXT NOT NULL,
-	error        TEXT NOT NULL DEFAULT ''
+	error        TEXT NOT NULL DEFAULT '',
+	result       TEXT NOT NULL DEFAULT '',
+	completed_at DATETIME,
+	model_provider TEXT NOT NULL DEFAULT '',
+	model_id       TEXT NOT NULL DEFAULT '',
+	callback_status TEXT NOT NULL DEFAULT '',
+	callback_attempts INTEGER NOT NULL DEFAULT 0,
+	callback_error TEXT NOT NULL DEFAULT ''
 )`
 
 const RunsScheduleIndexDDL = `CREATE INDEX IF NOT EXISTS idx_schedule_runs_schedule ON schedule_runs(schedule_id, fired_at DESC)`
@@ -55,11 +65,15 @@ const RunsSessionIndexDDL = `CREATE INDEX IF NOT EXISTS idx_schedule_runs_sessio
 
 // Run statuses recorded in schedule_runs.status.
 const (
-	RunStatusRunning = "running"
-	RunStatusError   = "error"
+	RunStatusRunning   = "running"
+	RunStatusSucceeded = "succeeded"
+	RunStatusFailed    = "failed"
+	RunStatusCancelled = "cancelled"
+	RunStatusSkipped   = "skipped"
+	RunStatusError     = RunStatusFailed
 )
 
-// Schedule is one automation definition. Empty CronExpr means manual-only.
+// Schedule is one automation definition. Empty CronExpr and RunAt means manual-only.
 // Empty model/thinking/project fields fall back to pi defaults / home dir.
 type Schedule struct {
 	ID            string `json:"id"`
@@ -67,10 +81,13 @@ type Schedule struct {
 	Instructions  string `json:"instructions"`
 	ModelProvider string `json:"modelProvider"`
 	ModelID       string `json:"modelId"`
+	ModelSelector string `json:"model"`
 	ThinkingLevel string `json:"thinkingLevel"`
 	ProjectPath   string `json:"projectPath"`
 	CronExpr      string `json:"cronExpr"`
+	RunAt         string `json:"runAt,omitempty"`
 	Timezone      string `json:"timezone"`
+	CallbackURL   string `json:"callbackUrl,omitempty"`
 	Enabled       bool   `json:"enabled"`
 	LastRunAt     string `json:"lastRunAt,omitempty"`
 	NextRunAt     string `json:"nextRunAt,omitempty"`
@@ -80,17 +97,28 @@ type Schedule struct {
 
 // Run is one firing of a schedule, mapping it to the session it created.
 type Run struct {
-	ID          int64  `json:"id"`
-	ScheduleID  string `json:"scheduleId"`
-	SessionID   string `json:"sessionId,omitempty"`
-	SessionFile string `json:"sessionFile,omitempty"`
-	FiredAt     string `json:"firedAt"`
-	Status      string `json:"status"`
-	Error       string `json:"error,omitempty"`
+	ID               int64  `json:"id"`
+	ScheduleID       string `json:"scheduleId"`
+	SessionID        string `json:"sessionId,omitempty"`
+	SessionFile      string `json:"sessionFile,omitempty"`
+	FiredAt          string `json:"firedAt"`
+	Status           string `json:"status"`
+	Error            string `json:"error,omitempty"`
+	Result           string `json:"result,omitempty"`
+	CompletedAt      string `json:"completedAt,omitempty"`
+	ModelProvider    string `json:"modelProvider,omitempty"`
+	ModelID          string `json:"modelId,omitempty"`
+	CallbackStatus   string `json:"callbackStatus,omitempty"`
+	CallbackAttempts int    `json:"callbackAttempts,omitempty"`
+	CallbackError    string `json:"callbackError,omitempty"`
 }
 
-// IsManual reports whether the schedule never fires on a timer.
+// IsManual reports whether the schedule has no recurring cron expression.
+// Callers must check IsOneShot before treating it as manual-only.
 func (s Schedule) IsManual() bool { return strings.TrimSpace(s.CronExpr) == "" }
+
+// IsOneShot reports whether the schedule fires once at RunAt and is then disabled.
+func (s Schedule) IsOneShot() bool { return strings.TrimSpace(s.RunAt) != "" }
 
 // ValidateCron parses a standard 5-field cron expression, returning an error if
 // it is malformed. An empty expression is valid (manual schedule).
@@ -148,15 +176,15 @@ func (st *Store) now() time.Time {
 	return time.Now()
 }
 
-const scheduleColumns = `id, name, instructions, model_provider, model_id, thinking_level,
-	project_path, cron_expr, timezone, enabled, last_run_at, created_at, updated_at`
+const scheduleColumns = `id, name, instructions, model_provider, model_id, model_selector, thinking_level,
+	project_path, cron_expr, COALESCE(run_at, ''), timezone, callback_url, enabled, last_run_at, created_at, updated_at`
 
 func scanSchedule(scan func(dest ...any) error) (Schedule, error) {
 	var s Schedule
 	var enabled int
 	var lastRun sql.NullString
-	err := scan(&s.ID, &s.Name, &s.Instructions, &s.ModelProvider, &s.ModelID,
-		&s.ThinkingLevel, &s.ProjectPath, &s.CronExpr, &s.Timezone, &enabled,
+	err := scan(&s.ID, &s.Name, &s.Instructions, &s.ModelProvider, &s.ModelID, &s.ModelSelector,
+		&s.ThinkingLevel, &s.ProjectPath, &s.CronExpr, &s.RunAt, &s.Timezone, &s.CallbackURL, &enabled,
 		&lastRun, &s.CreatedAt, &s.UpdatedAt)
 	if err != nil {
 		return Schedule{}, err
@@ -202,11 +230,11 @@ func (st *Store) Create(s Schedule) (Schedule, error) {
 		enabled = 1
 	}
 	_, err := st.db.Exec(`INSERT INTO schedules
-		(id, name, instructions, model_provider, model_id, thinking_level,
-		 project_path, cron_expr, timezone, enabled, created_at, updated_at)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		s.ID, s.Name, s.Instructions, s.ModelProvider, s.ModelID, s.ThinkingLevel,
-		s.ProjectPath, s.CronExpr, s.Timezone, enabled, s.CreatedAt, s.UpdatedAt)
+		(id, name, instructions, model_provider, model_id, model_selector, thinking_level,
+		 project_path, cron_expr, run_at, timezone, callback_url, enabled, created_at, updated_at)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		s.ID, s.Name, s.Instructions, s.ModelProvider, s.ModelID, s.ModelSelector, s.ThinkingLevel,
+		s.ProjectPath, s.CronExpr, nullableString(s.RunAt), s.Timezone, s.CallbackURL, enabled, s.CreatedAt, s.UpdatedAt)
 	if err != nil {
 		return Schedule{}, err
 	}
@@ -221,15 +249,34 @@ func (st *Store) Update(s Schedule) (Schedule, error) {
 		enabled = 1
 	}
 	_, err := st.db.Exec(`UPDATE schedules SET
-		name = ?, instructions = ?, model_provider = ?, model_id = ?, thinking_level = ?,
-		project_path = ?, cron_expr = ?, timezone = ?, enabled = ?, updated_at = ?
+		name = ?, instructions = ?, model_provider = ?, model_id = ?, model_selector = ?, thinking_level = ?,
+		project_path = ?, cron_expr = ?, run_at = ?, timezone = ?, callback_url = ?, enabled = ?, updated_at = ?
 		WHERE id = ?`,
-		s.Name, s.Instructions, s.ModelProvider, s.ModelID, s.ThinkingLevel,
-		s.ProjectPath, s.CronExpr, s.Timezone, enabled, s.UpdatedAt, s.ID)
+		s.Name, s.Instructions, s.ModelProvider, s.ModelID, s.ModelSelector, s.ThinkingLevel,
+		s.ProjectPath, s.CronExpr, nullableString(s.RunAt), s.Timezone, s.CallbackURL, enabled, s.UpdatedAt, s.ID)
 	if err != nil {
 		return Schedule{}, err
 	}
 	return st.Get(s.ID)
+}
+
+func nullableString(value string) any {
+	if value == "" {
+		return nil
+	}
+	return value
+}
+
+// DisableOneShot atomically claims an enabled one-shot before it is dispatched.
+// It returns false if another evaluator already claimed it.
+func (st *Store) DisableOneShot(id string) (bool, error) {
+	res, err := st.db.Exec(`UPDATE schedules SET enabled = 0, updated_at = ? WHERE id = ? AND enabled = 1 AND run_at IS NOT NULL`,
+		st.now().UTC().Format(time.RFC3339), id)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n == 1, err
 }
 
 // Delete removes a schedule and its run history.
@@ -269,8 +316,48 @@ func (st *Store) AttachSession(runID int64, sessionID, sessionFile string) error
 
 // FailRun marks a run as errored with a message.
 func (st *Store) FailRun(runID int64, msg string) error {
-	_, err := st.db.Exec(`UPDATE schedule_runs SET status = ?, error = ? WHERE id = ?`,
-		RunStatusError, msg, runID)
+	_, err := st.db.Exec(`UPDATE schedule_runs SET status = ?, error = ?, completed_at = ? WHERE id = ?`,
+		RunStatusFailed, msg, st.now().UTC().Format(time.RFC3339), runID)
+	return err
+}
+
+func (st *Store) CompleteRun(runID int64, status, result, errMessage, provider, modelID string) error {
+	_, err := st.db.Exec(`UPDATE schedule_runs SET status = ?, result = ?, error = ?, completed_at = ?, model_provider = ?, model_id = ? WHERE id = ?`,
+		status, result, errMessage, st.now().UTC().Format(time.RFC3339), provider, modelID, runID)
+	return err
+}
+
+func (st *Store) RunForSession(sessionID string) (Run, Schedule, error) {
+	var r Run
+	err := st.db.QueryRow(`SELECT id, schedule_id, session_id, session_file, fired_at, status, error, result,
+		COALESCE(completed_at, ''), model_provider, model_id, callback_status, callback_attempts, callback_error
+		FROM schedule_runs WHERE session_id = ? ORDER BY id DESC LIMIT 1`, sessionID).Scan(
+		&r.ID, &r.ScheduleID, &r.SessionID, &r.SessionFile, &r.FiredAt, &r.Status, &r.Error,
+		&r.Result, &r.CompletedAt, &r.ModelProvider, &r.ModelID, &r.CallbackStatus, &r.CallbackAttempts, &r.CallbackError)
+	if err != nil {
+		return Run{}, Schedule{}, err
+	}
+	sc, err := st.Get(r.ScheduleID)
+	return r, sc, err
+}
+
+func (st *Store) GetRun(runID int64) (Run, error) {
+	var r Run
+	err := st.db.QueryRow(`SELECT id, schedule_id, session_id, session_file, fired_at, status, error, result,
+		COALESCE(completed_at, ''), model_provider, model_id, callback_status, callback_attempts, callback_error
+		FROM schedule_runs WHERE id = ?`, runID).Scan(
+		&r.ID, &r.ScheduleID, &r.SessionID, &r.SessionFile, &r.FiredAt, &r.Status, &r.Error,
+		&r.Result, &r.CompletedAt, &r.ModelProvider, &r.ModelID, &r.CallbackStatus, &r.CallbackAttempts, &r.CallbackError)
+	return r, err
+}
+
+func (st *Store) SetRunModel(runID int64, provider, modelID string) error {
+	_, err := st.db.Exec(`UPDATE schedule_runs SET model_provider = ?, model_id = ? WHERE id = ?`, provider, modelID, runID)
+	return err
+}
+
+func (st *Store) SetCallbackDelivery(runID int64, status, errMessage string, attempts int) error {
+	_, err := st.db.Exec(`UPDATE schedule_runs SET callback_status = ?, callback_error = ?, callback_attempts = ? WHERE id = ?`, status, errMessage, attempts, runID)
 	return err
 }
 
@@ -279,7 +366,8 @@ func (st *Store) ListRuns(scheduleID string, limit int) ([]Run, error) {
 	if limit <= 0 {
 		limit = 50
 	}
-	rows, err := st.db.Query(`SELECT id, schedule_id, session_id, session_file, fired_at, status, error
+	rows, err := st.db.Query(`SELECT id, schedule_id, session_id, session_file, fired_at, status, error, result,
+		COALESCE(completed_at, ''), model_provider, model_id, callback_status, callback_attempts, callback_error
 		FROM schedule_runs WHERE schedule_id = ? ORDER BY fired_at DESC LIMIT ?`, scheduleID, limit)
 	if err != nil {
 		return nil, err
@@ -289,7 +377,8 @@ func (st *Store) ListRuns(scheduleID string, limit int) ([]Run, error) {
 	for rows.Next() {
 		var r Run
 		if err := rows.Scan(&r.ID, &r.ScheduleID, &r.SessionID, &r.SessionFile,
-			&r.FiredAt, &r.Status, &r.Error); err != nil {
+			&r.FiredAt, &r.Status, &r.Error, &r.Result, &r.CompletedAt, &r.ModelProvider,
+			&r.ModelID, &r.CallbackStatus, &r.CallbackAttempts, &r.CallbackError); err != nil {
 			return nil, err
 		}
 		out = append(out, r)

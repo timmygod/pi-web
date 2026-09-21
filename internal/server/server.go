@@ -78,6 +78,7 @@ type Server struct {
 	renderExportSession   func(s sessions.Session, theme string) string
 	renderAppShell        func(w io.Writer, bootstrap string) error
 	models                func(ctx context.Context) (json.RawMessage, error)
+	callbackHTTPClient    *http.Client
 	lastKnown             map[string]struct{} // session ids currently broadcast as running
 	lastKnownMu           sync.Mutex
 	push                  *PushManager
@@ -287,8 +288,54 @@ func initDB(agentDir string) (*sql.DB, error) {
 			return nil, fmt.Errorf("create %s: %w", s.name, err)
 		}
 	}
+	for _, migration := range []struct{ table, column, definition string }{
+		{"schedules", "model_selector", "TEXT NOT NULL DEFAULT ''"},
+		{"schedules", "run_at", "DATETIME"},
+		{"schedules", "callback_url", "TEXT NOT NULL DEFAULT ''"},
+		{"schedule_runs", "result", "TEXT NOT NULL DEFAULT ''"},
+		{"schedule_runs", "completed_at", "DATETIME"},
+		{"schedule_runs", "model_provider", "TEXT NOT NULL DEFAULT ''"},
+		{"schedule_runs", "model_id", "TEXT NOT NULL DEFAULT ''"},
+		{"schedule_runs", "callback_status", "TEXT NOT NULL DEFAULT ''"},
+		{"schedule_runs", "callback_attempts", "INTEGER NOT NULL DEFAULT 0"},
+		{"schedule_runs", "callback_error", "TEXT NOT NULL DEFAULT ''"},
+	} {
+		if err := ensureSQLiteColumn(db, migration.table, migration.column, migration.definition); err != nil {
+			db.Close()
+			return nil, fmt.Errorf("migrate %s.%s: %w", migration.table, migration.column, err)
+		}
+	}
 	migrateLegacyBtwSession(db)
 	return db, nil
+}
+
+func ensureSQLiteColumn(db *sql.DB, table, column, definition string) error {
+	rows, err := db.Query(`PRAGMA table_info(` + table + `)`)
+	if err != nil {
+		return err
+	}
+	found := false
+	for rows.Next() {
+		var cid int
+		var name, dataType string
+		var notNull, primaryKey int
+		var defaultValue any
+		if err := rows.Scan(&cid, &name, &dataType, &notNull, &defaultValue, &primaryKey); err != nil {
+			rows.Close()
+			return err
+		}
+		if name == column {
+			found = true
+		}
+	}
+	if err := rows.Close(); err != nil {
+		return err
+	}
+	if found {
+		return nil
+	}
+	_, err = db.Exec(`ALTER TABLE ` + table + ` ADD COLUMN ` + column + ` ` + definition)
+	return err
 }
 
 // Shutdown stops background goroutines and waits for them to exit.

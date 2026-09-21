@@ -2,8 +2,10 @@ package server
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -164,6 +166,87 @@ func TestFireScheduleKeepsDefaultsWhenUnset(t *testing.T) {
 	}
 }
 
+func TestScheduleModelCandidates(t *testing.T) {
+	s, _ := newScheduleTestServer(t)
+	s.models = func(context.Context) (json.RawMessage, error) {
+		return json.RawMessage(`{"models":[
+			{"provider":"openai","id":"gpt-5","name":"GPT 5"},
+			{"provider":"ollama","id":"qwen-local","name":"Qwen Local","baseUrl":"http://127.0.0.1:11434/v1"},
+			{"provider":"anthropic","id":"claude-sonnet","name":"Claude Sonnet","starred":true}
+		]}`), nil
+	}
+	local := s.scheduleModelCandidates(context.Background(), schedules.Schedule{ModelSelector: "local"})
+	if len(local) != 3 || local[0].ID != "qwen-local" {
+		t.Fatalf("local candidates = %+v", local)
+	}
+	free := s.scheduleModelCandidates(context.Background(), schedules.Schedule{ModelSelector: "free"})
+	if len(free) != 3 || free[0].ID != "claude-sonnet" {
+		t.Fatalf("free candidates = %+v", free)
+	}
+	named := s.scheduleModelCandidates(context.Background(), schedules.Schedule{ModelSelector: "sonnet"})
+	if len(named) != 3 || named[0].ID != "claude-sonnet" {
+		t.Fatalf("named candidates = %+v", named)
+	}
+}
+
+func TestScheduleCallbackDelivery(t *testing.T) {
+	s, _ := newScheduleTestServer(t)
+	received := make(chan scheduleCallbackPayload, 1)
+	s.callbackHTTPClient = &http.Client{Transport: roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		var payload scheduleCallbackPayload
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			t.Error(err)
+		}
+		received <- payload
+		return &http.Response{StatusCode: http.StatusNoContent, Body: io.NopCloser(strings.NewReader("")), Header: make(http.Header)}, nil
+	})}
+	sc, err := s.schedules.Create(schedules.Schedule{ID: "callback", Name: "Callback", Instructions: "go", CallbackURL: "http://callback.test/result", Enabled: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	runID, err := s.schedules.RecordRun(schedules.Run{ScheduleID: sc.ID, FiredAt: time.Now().UTC().Format(time.RFC3339), Status: schedules.RunStatusRunning})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := s.schedules.CompleteRun(runID, schedules.RunStatusSucceeded, "done", "", "openai", "gpt-5"); err != nil {
+		t.Fatal(err)
+	}
+	s.deliverScheduleCallback(context.Background(), sc, runID)
+	payload := <-received
+	if payload.Run.Status != schedules.RunStatusSucceeded || payload.Run.Result != "done" || payload.EventID == "" {
+		t.Fatalf("payload = %+v", payload)
+	}
+	run, _ := s.schedules.GetRun(runID)
+	if run.CallbackStatus != "delivered" || run.CallbackAttempts != 1 {
+		t.Fatalf("delivery = %+v", run)
+	}
+}
+
+type roundTripFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
+
+func TestScheduleResultStatuses(t *testing.T) {
+	entry := func(reason, text, errMessage string) []map[string]any {
+		return []map[string]any{{
+			"type": "message",
+			"message": map[string]any{
+				"role": "assistant", "stopReason": reason, "errorMessage": errMessage,
+				"content": []any{map[string]any{"type": "text", "text": text}},
+			},
+		}}
+	}
+	if status, result, _ := scheduleResult(entry("stop", "ok", "")); status != schedules.RunStatusSucceeded || result != "ok" {
+		t.Fatalf("success = %s %q", status, result)
+	}
+	if status, _, _ := scheduleResult(entry("error", "", "boom")); status != schedules.RunStatusFailed {
+		t.Fatalf("failure = %s", status)
+	}
+	if status, _, _ := scheduleResult(entry("aborted", "", "stopped")); status != schedules.RunStatusCancelled {
+		t.Fatalf("cancelled = %s", status)
+	}
+}
+
 func TestEvaluateSchedulesSkipsMissedRuns(t *testing.T) {
 	s, sender := newScheduleTestServer(t)
 	// A daily 09:00 schedule; "now" is 08:00. First evaluation must only arm the
@@ -207,6 +290,38 @@ func TestEvaluateSchedulesIgnoresManualAndDisabled(t *testing.T) {
 	s.evaluateSchedules(state)
 	if len(state) != 0 {
 		t.Errorf("manual/disabled schedules should not be armed; state=%v", state)
+	}
+}
+
+func TestEvaluateSchedulesRunsAndDisablesOneShot(t *testing.T) {
+	s, sender := newScheduleTestServer(t)
+	if _, err := s.schedules.Create(schedules.Schedule{
+		ID: "once", Name: "Once", Instructions: "remind me", ProjectPath: t.TempDir(),
+		RunAt: "2026-06-15T07:59:00Z", Enabled: true,
+	}); err != nil {
+		t.Fatal(err)
+	}
+	s.evaluateSchedules(map[string]scheduleState{})
+	s.wg.Wait()
+	sc, err := s.schedules.Get("once")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sc.Enabled {
+		t.Fatal("one-shot schedule remained enabled")
+	}
+	if _, _, req := sender.sentInfo(); req.Message != "remind me" {
+		t.Fatalf("message = %q", req.Message)
+	}
+	runs, err := s.schedules.ListRuns("once", 10)
+	if err != nil || len(runs) != 1 {
+		t.Fatalf("runs = %+v, err = %v", runs, err)
+	}
+	s.evaluateSchedules(map[string]scheduleState{})
+	s.wg.Wait()
+	runs, _ = s.schedules.ListRuns("once", 10)
+	if len(runs) != 1 {
+		t.Fatalf("one-shot fired more than once: %+v", runs)
 	}
 }
 
@@ -335,5 +450,18 @@ func TestSchedulesAPIValidation(t *testing.T) {
 	s.handleApiSchedules(w2, httptest.NewRequest(http.MethodPost, "/api/schedules", bytes.NewReader(body2)))
 	if w2.Code != http.StatusBadRequest {
 		t.Errorf("bad cron status = %d, want 400", w2.Code)
+	}
+	// One-shot timestamps are RFC3339 and cannot be combined with cron.
+	body3, _ := json.Marshal(map[string]any{"name": "n", "instructions": "x", "runAt": "tomorrow"})
+	w3 := httptest.NewRecorder()
+	s.handleApiSchedules(w3, httptest.NewRequest(http.MethodPost, "/api/schedules", bytes.NewReader(body3)))
+	if w3.Code != http.StatusBadRequest {
+		t.Errorf("bad runAt status = %d, want 400", w3.Code)
+	}
+	body4, _ := json.Marshal(map[string]any{"name": "n", "instructions": "x", "runAt": "2026-09-20T14:00:00Z", "cronExpr": "0 9 * * *"})
+	w4 := httptest.NewRecorder()
+	s.handleApiSchedules(w4, httptest.NewRequest(http.MethodPost, "/api/schedules", bytes.NewReader(body4)))
+	if w4.Code != http.StatusBadRequest {
+		t.Errorf("runAt+cron status = %d, want 400", w4.Code)
 	}
 }

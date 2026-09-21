@@ -3,6 +3,7 @@ package server
 import (
 	"database/sql"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -14,15 +15,18 @@ import (
 // scheduleInput is the editable payload for create/update. Server-managed fields
 // (id, timestamps, lastRun) are ignored on the way in.
 type scheduleInput struct {
-	Name          string `json:"name"`
-	Instructions  string `json:"instructions"`
-	ModelProvider string `json:"modelProvider"`
-	ModelID       string `json:"modelId"`
-	ThinkingLevel string `json:"thinkingLevel"`
-	ProjectPath   string `json:"projectPath"`
-	CronExpr      string `json:"cronExpr"`
-	Timezone      string `json:"timezone"`
-	Enabled       *bool  `json:"enabled"`
+	Name          string  `json:"name"`
+	Instructions  string  `json:"instructions"`
+	ModelProvider string  `json:"modelProvider"`
+	ModelID       string  `json:"modelId"`
+	Model         *string `json:"model"`
+	ThinkingLevel string  `json:"thinkingLevel"`
+	ProjectPath   string  `json:"projectPath"`
+	CronExpr      string  `json:"cronExpr"`
+	RunAt         *string `json:"runAt"`
+	Timezone      string  `json:"timezone"`
+	CallbackURL   *string `json:"callbackUrl"`
+	Enabled       *bool   `json:"enabled"`
 }
 
 func (in scheduleInput) validate() (string, bool) {
@@ -32,14 +36,31 @@ func (in scheduleInput) validate() (string, bool) {
 	if strings.TrimSpace(in.Instructions) == "" {
 		return "instructions are required", false
 	}
+	if in.Model != nil && strings.TrimSpace(*in.Model) != "" && (in.ModelProvider != "" || in.ModelID != "") {
+		return "model cannot be combined with modelProvider/modelId", false
+	}
 	if (in.ModelProvider == "") != (in.ModelID == "") {
 		return "model provider and id must be set together", false
 	}
 	if err := schedules.ValidateCron(in.CronExpr); err != nil {
 		return "invalid cron expression: " + err.Error(), false
 	}
+	if in.RunAt != nil && strings.TrimSpace(*in.RunAt) != "" {
+		if strings.TrimSpace(in.CronExpr) != "" {
+			return "runAt and cronExpr are mutually exclusive", false
+		}
+		if _, err := time.Parse(time.RFC3339, strings.TrimSpace(*in.RunAt)); err != nil {
+			return "runAt must be an RFC3339 timestamp", false
+		}
+	}
 	if _, err := schedules.LoadLocation(in.Timezone); err != nil {
 		return "invalid timezone: " + err.Error(), false
+	}
+	if raw := strings.TrimSpace(inputString(in.CallbackURL)); raw != "" {
+		u, err := url.ParseRequestURI(raw)
+		if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" {
+			return "callbackUrl must be an absolute http or https URL", false
+		}
 	}
 	return "", true
 }
@@ -49,18 +70,51 @@ func (in scheduleInput) apply(sc *schedules.Schedule) {
 	sc.Instructions = in.Instructions
 	sc.ModelProvider = in.ModelProvider
 	sc.ModelID = in.ModelID
+	if in.Model != nil {
+		sc.ModelSelector = strings.TrimSpace(*in.Model)
+	} else if in.ModelProvider != "" || in.ModelID != "" {
+		sc.ModelSelector = ""
+	}
 	sc.ThinkingLevel = in.ThinkingLevel
 	sc.ProjectPath = strings.TrimSpace(in.ProjectPath)
 	sc.CronExpr = strings.TrimSpace(in.CronExpr)
+	if sc.CronExpr != "" {
+		sc.RunAt = ""
+	}
+	if in.RunAt != nil {
+		raw := strings.TrimSpace(*in.RunAt)
+		if raw == "" {
+			sc.RunAt = ""
+		} else if parsed, err := time.Parse(time.RFC3339, raw); err == nil {
+			sc.RunAt = parsed.UTC().Format(time.RFC3339)
+		}
+	}
 	sc.Timezone = strings.TrimSpace(in.Timezone)
+	if in.CallbackURL != nil {
+		sc.CallbackURL = strings.TrimSpace(*in.CallbackURL)
+	}
 	if in.Enabled != nil {
 		sc.Enabled = *in.Enabled
 	}
 }
 
+func inputString(value *string) string {
+	if value == nil {
+		return ""
+	}
+	return *value
+}
+
 // withNextRun annotates a schedule with its next computed fire time (not stored).
 func (s *Server) withNextRun(sc schedules.Schedule) schedules.Schedule {
-	if !sc.Enabled || sc.IsManual() {
+	if !sc.Enabled {
+		return sc
+	}
+	if sc.IsOneShot() {
+		sc.NextRunAt = sc.RunAt
+		return sc
+	}
+	if sc.IsManual() {
 		return sc
 	}
 	if next, err := schedules.NextFire(sc.CronExpr, sc.Timezone, s.now()); err == nil {

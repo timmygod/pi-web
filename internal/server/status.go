@@ -111,6 +111,9 @@ func (s *Server) recomputeAndBroadcastStatus(sessionID string) {
 			})
 		}
 	}
+	if was && !now && s.schedules != nil {
+		s.startTask(func(context.Context) { s.completeScheduleRun(sessionID) })
+	}
 
 	// Transition running → idle is also the cue for the autonomous queue
 	// drainer: if items are waiting, dispatch the next one now instead of

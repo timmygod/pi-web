@@ -22,10 +22,13 @@ the chat workers and SSE broadcast.
 |--------|-------|
 | `id` | UUID |
 | `name`, `instructions` | required |
-| `model_provider`, `model_id`, `thinking_level` | optional → pi defaults |
+| `model_provider`, `model_id` | legacy exact model selection; optional → pi defaults |
+| `model_selector` | API model strategy: `local`, `free`, or a model name |
 | `project_path` | optional → user home dir |
 | `cron_expr` | empty = manual (Run-now only) |
+| `run_at` | optional RFC3339 instant for a one-shot run; mutually exclusive with cron |
 | `timezone` | IANA name; empty = server local |
+| `callback_url` | optional HTTP(S) completion webhook |
 | `enabled` | bool |
 | `last_run_at` | last fire time |
 
@@ -36,7 +39,9 @@ the chat workers and SSE broadcast.
 | `schedule_id` | FK |
 | `session_id` | created session UUID (filled after resolve) |
 | `session_file` | created `.jsonl` filename |
-| `fired_at`, `status`, `error` | `running` \| `error` |
+| `fired_at`, `status`, `error`, `result` | `running` \| `succeeded` \| `failed` \| `cancelled` \| `skipped` |
+| `completed_at`, `model_provider`, `model_id` | terminal time and actual selected model |
+| `callback_status`, `callback_attempts`, `callback_error` | webhook delivery audit fields |
 
 ## Firing sequence
 
@@ -82,16 +87,27 @@ the chat workers and SSE broadcast.
 
 ## Manual / Run-now
 
-A schedule with an empty `cron_expr` never fires on the timer. Any schedule can
-be fired immediately via `POST /api/schedule/run?id=<id>`, which calls the same
-`fireSchedule` path and returns the created `sessionId` so the UI can navigate to
-it.
+A schedule with both `cron_expr` and `run_at` empty never fires on the timer.
+Any schedule can be fired immediately via `POST /api/schedule/run?id=<id>`,
+which calls the same `fireSchedule` path and returns the created `sessionId` so
+the UI can navigate to it.
+
+## One-shot schedules
+
+Set `runAt` to an RFC3339 timestamp and leave `cronExpr` empty. When it becomes
+due, pi-web atomically disables the schedule before dispatching the run. It
+therefore executes at most once and remains available for run-history queries;
+Jarvis does not need to delete it after receiving the callback. If pi-web was
+offline at the requested instant, the enabled one-shot fires once when pi-web
+next evaluates schedules.
 
 ## Missed runs
 
 Schedules only fire while pi-web is running. On startup (and on first sight of
-any schedule) the loop computes the next fire time from *now*, so occurrences
-that elapsed while the process was down are **skipped** rather than replayed.
+any recurring schedule) the loop computes the next fire time from *now*, so
+cron occurrences that elapsed while the process was down are **skipped** rather
+than replayed. An enabled overdue one-shot is different: it fires once after
+startup, then disables itself.
 
 ## HTTP endpoints
 
@@ -110,6 +126,102 @@ route); the Svelte router renders `SchedulesPage.svelte`. Create/update/delete
 (and run-now) broadcast an SSE `schedules` event on `__all__` so an open
 schedules page refetches. Agents can create schedules via `/skill:pi-web-schedule`
 (`pi-web-ctl`); see [skills.md](./skills.md).
+
+## Agent API contract
+
+Create a schedule with `POST /api/schedules`. Authentication is the same as all
+other pi-web API routes. The existing `modelProvider` + `modelId` pair remains
+supported, but API integrations should normally use the single `model` field:
+
+- `local`: prefer the most-used available local/LAN model, then other local
+  models; available non-local models are fallback candidates.
+- `free`: prefer starred models exposed by the model source, then recently and
+  frequently used models.
+- any other string: exact provider/id, id, or display-name matches first,
+  followed by partial matches and recent known-working models.
+
+Candidates are tried in order. A model that is no longer available is omitted;
+if setting a candidate fails, the next candidate is tried. The actual model is
+recorded on the run as `modelProvider` and `modelId`.
+
+```json
+{
+  "name": "Jarvis reminder",
+  "instructions": "Remind me to take a break.",
+  "model": "local",
+  "runAt": "2026-09-20T13:40:00Z",
+  "callbackUrl": "http://127.0.0.1:8088/pi-web/callback",
+  "enabled": true
+}
+```
+
+Delete it with `DELETE /api/schedule?id=<schedule-id>`. `callbackUrl` must be an
+absolute `http` or `https` URL. Treat it as sensitive configuration because
+pi-web will make a server-side request to it.
+
+### Callback
+
+pi-web sends an HTTP `POST` with `Content-Type: application/json`,
+`User-Agent: pi-web-scheduler/1`, and `X-Pi-Web-Event-ID`. A `2xx` response
+acknowledges delivery. Other responses and network errors are retried up to
+three times with short backoff. Consumers must deduplicate by `eventId` because
+delivery is at-least-once across retries.
+
+```json
+{
+  "version": "1",
+  "event": "schedule.run.completed",
+  "eventId": "schedule-run-42",
+  "schedule": { "id": "…", "name": "Jarvis reminder" },
+  "run": {
+    "id": 42,
+    "scheduleId": "…",
+    "sessionId": "…",
+    "firedAt": "2026-09-20T08:00:00Z",
+    "completedAt": "2026-09-20T08:00:08Z",
+    "status": "succeeded",
+    "result": "Time to take a break.",
+    "modelProvider": "ollama",
+    "modelId": "qwen3",
+    "callbackStatus": "",
+    "callbackAttempts": 0
+  }
+}
+```
+
+`status` meanings:
+
+| status | meaning |
+|---|---|
+| `succeeded` | an assistant response completed normally; `result` is its text |
+| `failed` | setup/model/send failed or the assistant ended with an error; inspect `error` |
+| `cancelled` | execution ended with an aborted response |
+| `skipped` | reserved for a deliberately suppressed occurrence, such as a future overlap policy |
+
+The callback payload describes delivery *before* the current attempt, so its
+`callbackStatus` is normally empty. Query `GET /api/schedule/runs?id=<id>` for
+the authoritative delivery state: `delivered` or `failed`, attempt count, and
+the last delivery error.
+
+### Relative reminders
+
+For “remind me in one minute”, Jarvis computes an absolute RFC3339 instant from
+its current clock and sends it as `runAt`; cron conversion and callback-time
+cleanup are not needed:
+
+```json
+{
+  "name": "Bathroom reminder",
+  "instructions": "提醒我去拉屎",
+  "model": "free",
+  "runAt": "2026-09-20T13:40:00Z",
+  "callbackUrl": "http://127.0.0.1:8088/pi-web/callback"
+}
+```
+
+The create response returns the canonical UTC value in `schedule.runAt` and
+`schedule.nextRunAt`. After firing, `enabled` becomes `false`; keep or delete
+the schedule depending on whether Jarvis needs its history.
 
 ## Push notifications
 
